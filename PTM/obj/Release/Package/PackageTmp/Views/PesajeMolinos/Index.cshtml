@@ -1,0 +1,168 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .titleHeader {
+        background-color: #075DA5;
+        color: white;
+        font-size: 22px;
+        text-align: center;
+        height: 50px;
+        font-weight: bolder;
+    }
+
+    .containerTable {
+        background-color: white;
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #075DA5;
+        color: white;
+    }
+</style>
+
+<div class="totalDesglose" id="totalDesglose">
+    <div class="card">
+        <div class="card-header">
+            <h2>INFORMACIÓN DE PRODUCCIÓN</h2>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <label for="staticIDAnterior" id="staticIDAnterior" class="col-sm-2 col-form-label">Id Producción</label>
+                <div class="col-sm-9">
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="inputIdAnterior">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" id="btn-busqueda" type="button" onclick="buscarIdAnterior()"><i class="fa fa-search" aria-hidden="true"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <label>Operador PT</label>
+                    <input class="form-control" id="inputOperadorPT" disabled />
+                </div>
+                <div class="col-6">
+                    <label>Turno</label>
+                    <input class="form-control" id="inputTurnoPT" disabled />
+                </div>
+                <div class="col-6">
+                    <label>Peso</label>
+                    <input class="form-control" id="inputPesoPT" disabled />
+                </div>
+                <div class="col-6">
+                    <label>Fecha Envío</label>
+                    <input class="form-control" id="inputFechaPT" disabled />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+
+<div class="container titleHeader">
+    <h2>PESAJE DE MOLINOS</h2>
+</div>
+<br />
+<div class="container containerTable" style="display: grid; grid-auto-flow: column; grid-template-columns: 0% 50% 50%; padding: 3%">
+    <div class="col-8">
+        <form id="formularioEnvioScrap">
+            <div class="form-group row" style="display: none" id="divIdAntMolido">
+                <label for="staticIDAnterior" id="staticIdAntMolido" class="col-sm-2 col-form-label">Id Molido Scrap</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputIdAntMolido">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticOperador" class="col-sm-2 col-form-label">Operador</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="staticOperador" value="@Session["Name"]" disabled>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticEmail" class="col-sm-2 col-form-label">Código de Artículo</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="staticCodigo" onchange="escrituraTicket(this)">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticItemName" class="col-sm-2 col-form-label">Nombre del Código</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="staticItemName" @*onchange="escrituraTicket(this)"*@>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticEmail" class="col-sm-1 col-form-label">Peso</label>
+                <div class="col-sm-5">
+                    <input type="number" class="form-control" id="staticPeso" onchange="escrituraTicket(this)">
+                </div>
+                <label for="staticUnidad" class="col-sm-1 col-form-label">Unidad</label>
+                <div class="col-sm-5">
+                    <input type="text" pattern="[A-Za-z]+" class="form-control" id="staticUnidad" value="KG" disabled>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticEmail" class="col-sm-2 col-form-label">Proceso</label>
+                <div class="col-sm-10">
+                    <select class="form-control" id="staticProceso" onchange="escrituraTicket(this)">
+                        <option selected value="">Seleccione...</option>
+                        <option value="PPVC">PPVC</option>
+                        <option value="INY">INY</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticFamilia" class="col-sm-2 col-form-label">Familia</label>
+                <div class="col-sm-10">
+                    <input class="form-control" id="selectFamilia" type="text" onchange="escrituraTicket(this)"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticTipo" class="col-sm-2 col-form-label">Tipo</label>
+                <div class="col-sm-10">
+                    @*Esto lo voy a meter a la base de datos*@
+                    <select class="form-control" id="selectTipo">
+                        <option value="0" selected>Seleccione...</option>
+                        <option value="1">Bueno</option>
+                        <option value="2">Quemado/Contaminado</option>
+                        <option value="4">Polvo de vacío</option>
+                        <option value="5">Baja</option>
+                        <option value="6">Colada</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticEmail" class="col-sm-2 col-form-label">Sub Familia</label>
+                <div class="col-sm-10">
+                    <select class="form-control" id="selecteSFamilia" onchange="escrituraTicket(this)">
+                        <option value="0" selected>Seleccione...</option>
+                        <option value="1">Scrap</option>
+                        <option value="2">Viruta</option>
+                        <option value="3">Molido</option>
+                        <option value="4">Pulverizado</option>
+                        <option value="5">Polvo de Fltros de Vacio</option>
+                        <option value="6">Compuesto Virgen en Saco</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+        <div class="d-flex flex-row justify-content-end mt-5">
+            <button onclick="limpiarFormulario()" class="btn btn-primary border-0 p-3 btn-lg" style="background-color:#51b5e1;">Limpiar</button>
+            <button id="confirmarBtn" class="btn btn-primary border-0 p-3 btn-lg" style="background-color:#51b5e1; margin-left:20px;" onclick="agregarScrap()">Confirmar</button>
+        </div>
+    </div>
+    <div class="col-4 p-3" id="ticketMolinos" style="display:flex; max-width: 100%">
+
+    </div>
+</div>
+
+<script src="~/Scripts/PesajeMolinosJS/PesajeMolinosJS.js"></script>
+

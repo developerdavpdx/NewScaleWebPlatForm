@@ -1,0 +1,264 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <link href="~/Styles/ProductoTerminado.css" rel="stylesheet" />
+</head>
+
+
+<div class="containerFilters p-4">
+    <div class="row">
+        <div class="col-6">
+            <label>Fecha </label>
+            <div class="row align-items-center" style="padding-right: 33px;">
+                <div class="col-5">
+                    <input class="form-control" type="date" id="desdeFechaIny" />
+                </div>
+                <div class="col-auto">
+                    <label>Al</label>
+                </div>
+                <div class="col-5">
+                    <input class="form-control" type="date" id="aFechaIny" />
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <label>Turno</label>
+            <select id="turnoINY" class="form-control">
+            </select>
+        </div>
+        <div class="col-1">
+            <label>Código</label>
+            <input class="form-control" id="codigo" />
+        </div>
+        <div class="col-1">
+            <label>Linea</label>
+            <input class="form-control" id="linea" />
+        </div>
+        <div class="col-2 iconSearch" id="search">
+            <i class="fa fa-search" aria-hidden="true" style="font-size: 30px; cursor: pointer" onclick="filtradoHistorialPesadas()"></i>
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="container table-responsive">
+    <div class="mt-3 mb-3 d-flex justify-content-between">
+        <div class="Totales" style="display: flex; flex-direction: column; width: 80%;">
+
+            <div style="width: 100%;  display: flex; justify-content: space-between;">
+                <labe style="color:#075da5; font-weight: bold;">P. Neto Total: <span style="color: black" id="sumTotal">--</span></labe>
+                <labe style="color:#075da5; font-weight: bold;">P. Unit. Estandár: <span style="color: black" id="sumEstandar">--</span></labe>
+                <labe style="color:#075da5; font-weight: bold;">% Sobrepeso: <span style="color: black" id="sumSobrePeso"></span></labe>
+                @*<labe style="color:#075da5; font-weight: bold;">% Scrap: <span style="color: black" id="sumScrap">--</span></labe>*@
+                <labe style="color:#075da5; font-weight: bold;">% Eficiencia: <span style="color: black" id="sumEficiencia">--</span></labe>
+                <labe style="color:#075da5; font-weight: bold;">KG ScrapPT: <span style="color: black" id="sumScrapPtKg">--</span></labe>
+                <labe style="color:#075da5; font-weight: bold;">% Scrap PT: <span style="color: black" id="sumScrapPt">--</span></labe>
+            </div>
+        </div>
+        <div class="card-i p-3" style="width: auto; height: 60px;">
+            <i onclick="generarexcel();" class="fa fa-table m-1 fa-2x t-b" aria-hidden="true" style="color: #016E38"></i>
+            <i onclick="generarpdf();" class="fa-solid fa-file-pdf m-1 fa-2x t-b" style="color: #ad0b00"></i>
+            <i class="fa fa-envelope m-1 fa-2x t-b" aria-hidden="true" data-toggle="modal" data-target="#CorreoModal" style="color: #51B5E1; cursor: pointer"></i>
+            @*<i class="fa fa-print m-1 fa-2x t-b" aria-hidden="true" style="color: #51B5E1"></i>*@
+        </div>
+    </div>
+    <div class="container titleHeader">
+        <h2 style="padding-top: 7px;"> PRODUCTO TERMINADO INYECCION</h2>
+    </div>
+    <br />
+
+    <!--Tabla de producto terminado-->
+    <table id="finishProdTableIny" style="background-color: white">
+        <thead>
+            <tr class="info">
+                <th>Detalles</th>
+                <th>Línea</th>
+                <th>Código</th>
+                <th># Atados/Tarima</th>
+                <th># de Piezas</th>
+                <th>P. Neto Total</th>
+                <th>P. Unit. Estándar</th>
+                <th>% Sobrepeso</th>
+                @*<th class="scrap-head">% Scrap</th>*@
+                <th class="efficiency-head">% Eficiencia</th>
+                <th>KG Scrap Pt</th>
+                <th class="scrap-head">% ScrapPT</th>
+            </tr>
+        </thead>
+        <tbody id="tableProductoINY" class="text-center">
+        </tbody>
+    </table>
+
+    <!--Tabla de scrap title-->
+    <div class="container titleHeader">
+        <h2 style="padding-top: 7px;"> SCRAP ESCANEADO</h2>
+    </div>
+    <!--Filtros Scrap-->
+    <div class="containerFilters p-4">
+        <div class="row">
+            <div class="col-6">
+                <label>Fecha </label>
+                <div class="row align-items-center" style="padding-right: 33px;">
+                    <div class="col-5">
+                        <input class="form-control" type="date" id="desdeFechaScrapIny" />
+                    </div>
+                    <div class="col-auto">
+                        <label>Al</label>
+                    </div>
+                    <div class="col-5">
+                        <input class="form-control" type="date" id="aFechaScrapIny" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+
+                <label>Corte</label>
+                <select id="corteIny" class="form-control">
+                    <option value=null selected>Seleccione...</option>
+                    <option value="1">Corte 1 (De 5:45 am a 17:44 pm)</option>
+                    <option value="2">Corte 2 (De 17:45pm  a 5:44 am)</option>
+                </select>
+            </div>
+            <div class="col-1">
+                <label>Código</label>
+                <input class="form-control" id="codigoScrapIny" />
+            </div>
+            <div class="col-1">
+                <label>Línea</label>
+                <input class="form-control" id="lineaScrapIny" />
+            </div>
+            <div class="col-2 iconSearch">
+                <i id="btn21Iny" class="fa fa-search" aria-hidden="true" style="font-size: 30px; cursor: pointer"></i>
+            </div>
+            <div class="card-i p-3" style="width:auto;">
+                <i onclick="generarexcelScrapIny();" class="fa fa-table m-1 fa-2x t-b" aria-hidden="true" style="color: #016E38"></i>
+                <i onclick="generarpdfScrapIny();" class="fa-solid fa-file-pdf m-1 fa-2x t-b" style="color: #ad0b00"></i>
+                @*Total de scrap  *@
+                <labe style="color: #075da5; font-weight: bold; font-size: 13px; padding-left:35px;">KG ScrapPT: <span style="color: black; font-size: 13px;" id="SumScrapKG">--</span></labe>
+            </div>
+        </div>
+    </div>
+    <br />
+    <!--Tabla scrap-->
+    <table id="finishScrapTableIny" style="background-color: white">
+        <thead>
+            <tr class="info">
+                <th>Línea</th>
+                <th>Familia</th>
+                <th>Peso</th>
+                <th>Comentario</th>
+                <th>Fecha y hora</th>
+            </tr>
+        </thead>
+        <tbody id="tableScrapIny" class="text-center">
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="CorreoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title" id="myModalLabel">Envío de Correo</h4>
+            </div>
+            <div class="modal-body">
+                @*<div class="nuevo-correo">
+                        <h4>Nuevo Correo:</h4>
+                        <div>
+                            <label for="nombre" align="right">Nombre:</label>
+                            <input type="text" id="nombreInput" name="nombreInput">
+                        </div>
+                        <div>
+                            <label for="correo" align="right">Correo:</label>
+                            <input type="email" id="corroInput" name="correoInput">
+                        </div>
+                        <div class="btn-agregar">
+                            <a class="btn btn-info" id="btnCorreo">Agregar</a>
+                        </div>
+                    </div>
+                    <hr />*@
+                <div class="correos">
+                    <label>Correos:</label>
+                    <table id="tablaCorreo" class="table table-striped">
+                        <thead>
+                            <tr class="header-table">
+                                <th id="th-pedidas">Nombre</th>
+                                <th id="th-pedidas">Departamento</th>
+                                <th id="th-pedidas">Correo</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-info" onclick="emailreporte()">Enviar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" style="max-width: 100%; display: none; overflow: auto" id="dataInyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content modaldetailsCss">
+            <div class="modal-header">
+                @*<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>*@
+                <h4 class="modal-title" id="myModalLabel">Detalle Línea <b id="lineaModal" style="font-size: 16px; font-weight: normal;"></b></h4>
+            </div>
+            <div class="modal-body">
+                <div class="container titleHeader">
+                    <h2 style="padding-top: 7px;">INY: LÍNEA <b id="lineaTitleModal"></b></h2>
+                </div>
+                <br />
+                <table id="tableDetalladaLinea" class="table">
+                    <div class="Totales" style="display: flex; flex-direction: column; width: 80%;">
+                        <div style="width: 100%;  display: flex; justify-content: space-between;">
+                            <labe style="color: #075da5; font-weight: bold; font-size:13px;">P. Neto Total: <span style="color: black; font-size: 13px;" id="sumTotalLinea">--</span></labe>
+                            <labe style="color: #075da5; font-weight: bold; font-size: 13px;">P. Unit. Estandár: <span style="color: black; font-size: 13px;" id="sumEstandarLinea">--</span></labe>
+                            <labe style="color: #075da5; font-weight: bold; font-size: 13px;">% Sobrepeso: <span style="color: black; font-size: 13px;" id="sumSobrePesoLinea"></span></labe>
+                            <labe style="color: #075da5; font-weight: bold; font-size: 13px;">% Eficiencia: <span style="color: black; font-size: 13px;" id="sumEficienciaLinea">--</span></labe>
+                            @* <labe style="color: #075da5; font-weight: bold; font-size: 13px;">KG ScrapPT: <span style="color: black; font-size: 13px;" id="sumScrapPtKgLinea">--</span></labe>*@
+                            @*<labe style="color: #075da5; font-weight: bold; font-size: 13px;">% Scrap PT: <span style="color: black; font-size: 13px;" id="sumScrapPtLinea">--</span></labe>*@
+                        </div>
+                        @* Boton descargar excel details *@
+                        <div>
+                            <i onclick="generarexcelDetallesLinea();" class="fa fa-table m-1 fa-2x t-b" aria-hidden="true" style="color: #016E38"></i>
+                        </div>
+                    </div>
+                    @* TABLA DETALLES *@
+                    <thead>
+                        <tr id="tableHeadInfo">
+                            <th>Fecha</th>
+                            <th>Código</th>
+                            <th>Atados</th>
+                            <th># de Piezas</th>
+                            <th>P. Neto Total</th>
+                            <th>P. Unitario Estándar</th>
+                            <th>P. Unit. Real</th>
+                            <th>% Sobrepeso</th>
+                            <th>% Eficiencia</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBodyDetalleIny" class="text-center">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cerrarModalDetails" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                @*<button type="button" class="btn btn-primary"></button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/ProductoTerminadoINY/ProductoTermInyJS.js"></script>
+<script src="~/Scripts/FormulasPTM.js"></script>
+@*<script src="~/Scripts/EmailTXT/EmailTXT.js"></script>*@

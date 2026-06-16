@@ -1,0 +1,269 @@
+﻿        
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .containerFilters {
+        background-color: white;
+    }
+
+    .iconSearch {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+<div class="containerFilters p-4">
+    <div class="row">
+        <div class="col-6">
+            <label>Fecha </label>
+            <div class="row">
+                <div class="col-5">
+                    <input class="form-control" type="date" id="fechaInicioInp" />
+                </div>
+                <label style="display: flex; align-items: center; justify-content: center">Al</label>
+                <div class="col-5">
+                    <input class="form-control" type="date" id="fechaFinInp" />
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <label>Turno</label>
+            <input class="form-control" id="turnoInp" />
+        </div>
+        <div class="col-2">
+            <label>Folio</label>
+            <input class="form-control" id="folioInp" />
+        </div>
+        <div class="col-2 iconSearch" id="search">
+            <i class="fa fa-search" aria-hidden="true" style="font-size: 30px; cursor: pointer" onclick="FiltrarTickets()"></i>
+        </div>
+    </div>
+</div>
+<br />
+
+<input type="hidden" value="@ViewBag.txttemplate" id="ivb">
+<div class="container p-4" style="background-color: white">
+    <table class="table table-striped" id="tableTickets">
+        <thead>
+            <tr>
+                <th>Folio</th>
+                <th style="width: 150.461px !important ">Orden Fabricacion</th>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody id="tableTickts" class="text-center">
+
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="TicketModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="headerModalFlejes" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                @*<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>*@
+                <h4 class="modal-title" id="myModalLabel">Vista previa del ticket</h4>
+            </div>
+            <div class="modal-body" id="modal-ticket-body">
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" onclick="Imprimir()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //var convertir = document.getElementById("convertirPDF")
+
+    //convertir.addEventListener("click", () => {
+    //    var ticketDiv = document.getElementById("ivb")
+    //    window.jsPDF = window.jspdf.jsPDF;
+    //    var doc = new jsPDF({
+    //        format: 'letter',
+    //        orientation: 'landscape',
+    //        compress: true,
+    //        objcompress: true
+    //    });
+    //    doc.html(ticketDiv, {
+    //        callback: function (pdf) {
+    //            var base64String = btoa(pdf.output())
+    //            console.log(base64String)
+    //        }
+    //    })
+    //})
+
+    let loader = document.getElementById("loaderDiv")
+    let tableTickets;
+    let planta
+    $(document).ready(() => {
+        loader.style.display = "flex";
+        localStorage.planta == '335' ? planta = '2' : planta = '1'
+        tableTickets = $("#tableTickets").DataTable({
+            ordering: false,
+            responsive: true
+        })
+        peticionObtenerTickets()
+    })
+
+    function peticionObtenerTickets() {
+        let data = {
+            "planta": planta
+        }
+
+        fetch("/ReimpresionTicket/GetAllTickets", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        }).then((response) => {
+            return response.ok ? response.json() : Promise.reject(response)
+        }).then((jsonData) => {
+            if (jsonData.status == 200) {
+                let data = JSON.parse(jsonData.data)
+                let tickets = data.ticketsInfos
+                let Rows = []
+                for (x = 0; x < tickets.length; x++) {
+                    Rows.push([tickets[x].folio, tickets[x].ordenFabricacion, tickets[x].itemCode, tickets[x].itemName, `<buton class="btn btn-info" data-toggle="modal" data-target="#TicketModal" data-id="${tickets[x].idTicket}" onclick="ReimprimirTicket(this)">Reimpresión</buton>`])
+                }
+
+                tableTickets.rows.add(Rows).draw();
+                loader.style.display = "none"
+            } else {
+                loader.style.display = "none"
+            }
+        }).catch((error) => {
+            loader.style.display = "none"
+        })
+    }
+
+    function ReimprimirTicket(btnElement) {
+        let id = $(btnElement).data('id')
+        var data = {
+            "id" : id.toString()
+        }
+
+        fetch("/ReimpresionTicket/GetTicketById", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        }).then((response) => {
+            return response.ok ? response.json() : Promise.reject(response)
+        }).then((jsonData) => {
+            console.log(jsonData)
+            let data = JSON.parse(jsonData.data)
+            let ticketsInfos = data.ticketsInfos
+            console.log(ticketsInfos)
+            let obj = JSON.parse($("#ivb").val());
+            txttickettemplate = obj.response;
+            let dateFP = ConvertDate(ticketsInfos[0].fechaPesaje)
+            var now = new Date();
+
+            let datetime = now.getDate() + '/' + (now.getMonth() + 1) + '/' + now.getFullYear() + '  ' + now.getHours() + ':' + now.getMinutes();
+            txttickettemplate = txttickettemplate.replace("--datetimepesaje", dateFP);
+            txttickettemplate = txttickettemplate.replace("--folio", ticketsInfos[0].folio);
+            txttickettemplate = txttickettemplate.replace("--turno", ticketsInfos[0].turno);
+            txttickettemplate = txttickettemplate.replace("--linea", ticketsInfos[0].id_Linea);
+            txttickettemplate = txttickettemplate.replace("--operacion", ticketsInfos[0].operacion);
+            txttickettemplate = txttickettemplate.replace("--codigo", ticketsInfos[0].itemCode);
+            txttickettemplate = txttickettemplate.replace("--pesonetotub", ticketsInfos[0].pesoTubo.toFixed(3));
+            txttickettemplate = txttickettemplate.replace("--numtubos", ticketsInfos[0].numTubos);
+            txttickettemplate = txttickettemplate.replace("--pesoneto", ticketsInfos[0].pesoNeto.toFixed(3));
+            txttickettemplate = txttickettemplate.replace("--porcentaje", ticketsInfos[0].porcentaje.toFixed(2) + '%');
+            txttickettemplate = txttickettemplate.replace("--ordenfabricacion", ticketsInfos[0].ordenFabricacion);
+            txttickettemplate = txttickettemplate.replace("--descripcion", ticketsInfos[0].itemName);
+            txttickettemplate = txttickettemplate.replace("--categoria", ticketsInfos[0].categoria);
+
+            document.getElementById("modal-ticket-body").innerHTML = txttickettemplate;
+        })
+    }
+
+    function Imprimir() {
+        var modalContent = document.getElementById('modal-ticket-body').innerHTML;
+
+        // Open a popup window to print the content of the modal
+        var printWindow = window.open('', '_blank');
+        printWindow.document.write(txttickettemplate);
+        printWindow.document.close();
+
+        // Wait for the popup window to load its content and then call the print function
+        printWindow.onload = function () {
+            printWindow.print();
+
+        };
+    }
+
+    function ConvertDate(dateTime) {
+        const fecha = new Date(dateTime);
+        const day = fecha.getDate().toString().padStart(2, '0');
+        const month = (fecha.getMonth() + 1).toString().padStart(2, '0');
+        const year = fecha.getFullYear();
+        var date = `${day}/${month}/${year}`
+        console.log(date)
+        var hours = `${fecha.getHours().toString().padStart(2, '0')}:${fecha.getMinutes().toString().padStart(2, '0')} ${fecha.getHours() >= 12 ? 'PM' : 'AM'}`
+        console.log(hours)
+        let listInfoDate = `${date} ${hours}`
+        return listInfoDate
+    }
+
+    function FiltrarTickets() {
+        loader.style.display = 'flex'
+        let folio = document.getElementById("folioInp").value
+        let turno = document.getElementById("turnoInp").value
+        let fechaInicio = document.getElementById("fechaInicioInp").value
+        let fechaFin = document.getElementById("fechaFinInp").value
+
+        if (folio == "" && turno == "" && fechaInicio == "" && fechaFin == "") {
+            tableTickets.clear().draw()
+            peticionObtenerTickets()
+            return;
+        }
+
+        let data = {
+            "folio": folio,
+            "turno": turno,
+            "fechaInicio": fechaInicio,
+            "fechaFin": fechaFin,
+            "planta": planta
+        }
+
+        fetch("/ReimpresionTicket/FilterTickets", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        }).then((response) => {
+            return response.ok ? response.json() : Promise.reject(response)
+        }).then((jsonData) => {
+            tableTickets.clear().draw()
+            if (jsonData.status == 200) {
+                let data = JSON.parse(jsonData.data)
+                
+                let ticketsInfo = data.tickets
+                
+                let rows = []
+                for (let x = 0; x < ticketsInfo.length; x++) {
+                    rows.push([ticketsInfo[x].folio, ticketsInfo[x].ordenFabricacion, ticketsInfo[x].itemCode, ticketsInfo[x].itemName, `<buton class="btn btn-info" data-toggle="modal" data-target="#TicketModal" data-id="${ticketsInfo[x].idTicket}" onclick="ReimprimirTicket(this)">Reimpresión</buton>`])
+                }
+                tableTickets.rows.add(rows).draw()
+                loader.style.display = "none"
+            } else {
+                loader.style.display = "none"
+            }
+        }).catch((error) => {
+            loader.style.display = "none"
+            console.log(error)
+        })
+    }
+</script>

@@ -1,0 +1,104 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <link href="~/Styles/PesajePt/PesajePtStyles.css" rel="stylesheet" />
+</head>
+
+<input type="hidden" value="@ViewBag.txttemplate" id="ivb">
+<div class="buttonSection" id="buttonSection">
+
+</div>
+
+<button id="boton-convertir" hidden></button>
+<div class="ticketDiv" id="ticketPDF" style="width: 270px; max-width: 270px; margin: auto; padding: 10px" hidden>
+
+</div>
+
+
+<div class="modal fade" id="TicketModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="headerModalFlejes" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                @*<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>*@
+                <h4 class="modal-title" id="myModalLabel">Vista previa del ticket</h4>
+            </div>
+            <div class="modal-body" id="modal-ticket-body">
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" onclick="Imprimir()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="EscaneoSKU" tabindex="-1" role="dialog" aria-labelledby="scanSKU">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" id="headerModalFlejes" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                @*<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>*@
+                <h4 class="modal-title" id="myModalLabel">Escanear Código del Item</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label style="font-size: 1.5rem">Código del Item</label>
+                        <input class="form-control" id="skuScan" required />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-info" id="cerrarScan" data-dismiss="modal" style="display: none"></button>
+                <button class="btn btn-info" id="abrirModalFine" data-toggle="modal" data-target="#TicketModal" style="display: none"></button>
+                <button class="btn btn-info" id="errorLimites" data-toggle="modal" data-target="#exampleModal" style="display: none"></button>
+                <button class="btn btn-info" id="errorSobrePeso" data-toggle="modal" data-target="#sobrePeso" style="display: none"></button>
+                <button class="btn btn-info" onclick="ValidarSkuLinea()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style=" padding-top: 60px;">
+    <div class="modal-dialog modal-confirm" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom:none;">
+                <div class="icon-box">
+                    <i class="fa fa-exclamation" aria-hidden="true" style="font-size: 58px; position: relative; top: 3px;"></i>
+                </div>
+                <h4 class="modal-title" id="myModalLabel" style="text-align: center; margin-top: 33px; font-size: 23px; color: #f8b15d; font-weight: bolder;">Alerta de Bajo Peso</h4>
+            </div>
+            <div class="modal-body text-center" style="padding: 1rem !important">
+                @*<h2>El sku <b id="itemCodeSKU"></b> esta fuera de los límites de peso. Favor mandar a verificar con calidad y enviar a molinos</h2>*@
+                <h2>Se está detectando un bajo peso en la línea <b id="lineModal"></b> con el código <b id="itemCodeModal"></b>. Favor de verificar.</h2>
+            </div>
+            <div class="modal-footer" style="border-top:none; display: flex; justify-content: center; width: 100%">
+                <button class="btn" id="CerrarModal" data-dismiss="modal" style="width: 45%">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="sobrePeso" tabindex="-1" role="dialog" aria-labelledby="sobrePesoModalLabel" aria-hidden="true" style=" padding-top: 60px;">
+    <div class="modal-dialog modal-confirm" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom:none;">
+                <div class="icon-box" style="background-color: #d73a3a">
+                    <i class="fa fa-exclamation" aria-hidden="true" style="font-size: 58px; position: relative; top: 3px;"></i>
+                </div>
+                <h4 class="modal-title" id="myModalLabel" style="text-align: center; margin-top: 33px; font-size: 23px; color: #d73a3a; font-weight: bolder;">Alerta de Sobrepeso</h4>
+            </div>
+            <div class="modal-body text-center" style="padding: 1rem !important">
+                <h2>Se está detectando un sobrepeso en la línea <b id="lineModalSP"></b> con el código <b id="itemCodeModalSP"></b>. Favor de verificar.</h2>
+            </div>
+            <div class="modal-footer" style="border-top:none; display: flex; justify-content: center; width: 100%">
+                <button class="btn" id="CerrarModal" data-dismiss="modal" style="width: 45%">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/PesajePtJS/PesajePtScripts.js"></script>

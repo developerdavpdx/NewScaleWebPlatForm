@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    input::file-selector-button {
+        color: #808080;
+        background-color: #eee;
+        border: none;
+        border-radius: 10%;
+    }
+
+    .titleHeader {
+        text-align: center;
+        background-color: #002D52;
+        color: white;
+        font-size: 22px;
+        height: 50px;
+        font-weight: bolder;
+    }
+</style>
+
+@* -------------TABLA DE TARAS------------------ *@
+<div class="container titleHeader">
+    <h2 style="padding-top: 7px;">ACTUALIZACIÓN DE TARAS</h2>
+</div>
+<br />
+
+<div class="row mt-3 mb-3">
+    <div class="col-auto">
+        <input type="file" class="form-control" name="archivoexcel" id="archivoexcel" accept=".xlsx, .xls" />
+    </div>
+    <div class="col-auto">
+        <button id="cargaTaras" class="btn btn-info"><i class="fa fa-table" aria-hidden="true"></i> Cargar datos</button>
+    </div>
+</div>
+
+
+<div class="bg-white p-3 rounded-sm">
+    <table id="tablaDatos" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Tara</th>
+                <th>Nombre del item</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<button id="ActualizaTara" class="btn btn-success m-3"><i class="fa fa-check-circle" aria-hidden="true"></i> Confirmar Actualización</button>
+
+
+@* -------------TABLA DE KGHORA------------------ *@
+<br />
+<br />
+<div class="container titleHeader">
+    <h2 style="padding-top: 7px;">ACTUALIZACIÓN DE KG/HORA</h2>
+</div>
+<br />
+
+<div class="row mt-3 mb-3">
+    <div class="col-auto">
+        @* input para el excel *@
+        <input type="file" class="form-control" name="archivoexcelKgHora" id="archivoexcelKgHora" accept=".xlsx, .xls" />
+    </div>
+    <div class="col-auto">
+        <button id="cargaDatosKgHora" class="btn btn-info"><i class="fa fa-table" aria-hidden="true"></i> Cargar datos</button>
+    </div>
+</div>
+
+
+<div class="bg-white p-3 rounded-sm">
+    <table id="tablaDatosKgHora" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>KgHora</th>
+                <th>Línea</th>
+                <th>Planta</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<button id="ActualizaKgHora" class="btn btn-success m-3"><i class="fa fa-check-circle" aria-hidden="true"></i> Confirmar Actualización</button>
+
+
+<script src="~/Scripts/Taras/Taras.js"></script>

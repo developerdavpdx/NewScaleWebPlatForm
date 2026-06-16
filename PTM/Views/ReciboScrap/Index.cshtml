@@ -1,0 +1,195 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Styles/ReciboScrapCSS/ReciboScrapStyles.css" rel="stylesheet" />
+
+@if (Session["Rol"].ToString() == "AdmMolinos" || Session["Rol"].ToString() == "Consulta")
+{
+    <div class="mt-3 mb-3 d-flex justify-content-end">
+        <div class="card-i p-3" style="width:auto; display: flex; align-items: center;">
+            <i onclick="generarexcel()" class="fa fa-table m-1 fa-2x t-b" aria-hidden="true" style="color: #016E38"></i>
+            <i onclick="generarpdf()" class="fa-solid fa-file-pdf m-1 fa-2x t-b" style="color: #ad0b00"></i>
+            <i class="fa fa-envelope m-1 fa-2x t-b" aria-hidden="true" data-toggle="modal" data-target="#CorreoModal" style="color: #51B5E1"></i>
+            @*<i class="fa fa-print m-1 fa-2x t-b" aria-hidden="true" style="color: #51B5E1"></i>*@
+        </div>
+    </div>
+}
+    <div class="container titleHeader mt-4">
+        <h2>RECIBO SCRAP</h2>
+    </div>
+
+    <br />
+
+    <div class="containerFilters p-4">
+        <div class="row">
+            <div class="col-4">
+                <label>Fecha </label>
+                <div class="row">
+                    <div class="col-5">
+                        <input class="form-control" type="date" id="desdeFecha" />
+                    </div>
+                    <label style="display: flex; align-items: center; justify-content: center">Al</label>
+                    <div class="col-5">
+                        <input class="form-control" type="date" id="aFecha" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <label>Turno</label>
+                <select class="form-control" id="turno" onchange="verifyTurn(this)">
+                    <option value="0" selected>Seleccione...</option>
+                    <option value="1">Turno 1</option>
+                    <option value="2">Turno 2</option>
+                    <option value="3">Turno completo</option>
+                </select>
+            </div>
+            <div class="col-4" id="search" onclick="filtradoReciboScrap()">
+                <i class="fa fa-search" aria-hidden="true" style="font-size: 30px"></i>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="contentContainer">
+        <div class="containerTitle p-4">
+            <table id="tablaReciboScrap">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Turno</th>
+                        <th>IPS</th>
+                        <th>CLAY</th>
+                        <th>DWV</th>
+                        <th>C900</th>
+                        <th>ESMERALDA</th>
+                        <th>CONDUIT</th>
+                        <th>PURGA</th>
+                        <th>PROCESO</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center" id="tableReciboScrap">
+                </tbody>
+            </table>
+            <br />
+            <div class="totalDesglose">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>TOTAL SCRAP FAMILIAS</h2>
+                    </div>
+                    <div class="card-body">
+                        <table class="totalTotalScrap" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th>IPS</th>
+                                    <th>CLAY</th>
+                                    <th>DWV</th>
+                                    <th>C900</th>
+                                    <th>ESMERALDA</th>
+                                    <th>CONDUIT</th>
+                                    <th>PURGA</th>
+                                </tr>
+                            </thead>
+                            <tbody class="totalBodyScrap">
+                                <tr>
+                                    <td id="tdIPS"></td>
+                                    <td id="tdCLAY"></td>
+                                    <td id="tdDWV"></td>
+                                    <td id="tdC900"></td>
+                                    <td id="tdESMERALD"></td>
+                                    <td id="tdCONDUIT"></td>
+                                    <td id="tdPURGA"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="detalleLineModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    @*<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>*@
+                    <h4 class="modal-title" id="myModalLabel">Detalle Línea <b id="lineaModal" style="font-size: 16px; font-weight: normal;"></b></h4>
+                </div>
+                <div class="modal-body">
+                    <table id="tableDetalladaLinea" class="table">
+                        <thead>
+                            <tr>
+                                <th colspan="5" id="LineasNumeros" style="color: #075DA5; font-size: 2rem; text-align: center; ">PVC: LÍNEA <b id="lineaTitleModal" style="font-weight: bold;"></b></th>
+                            </tr>
+                        </thead>
+                        <thead>
+                            <tr id="tableHeadInfo">
+                                <th># Tubos</th>
+                                <th>P. Neto Total</th>
+                                <th>P. Unitario Estándar</th>
+                                <th>% Sobrepeso</th>
+                                <th id="eficienciaTH">% Eficiencia</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBodyDetalle" class="text-center">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="CorreoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="modal-title" id="myModalLabel">Envío de Correo</h4>
+                </div>
+                <div class="modal-body">
+                    @*<div class="nuevo-correo">
+                            <h4>Nuevo Correo:</h4>
+                            <div>
+                                <label for="nombre" align="right">Nombre:</label>
+                                <input type="text" id="nombreInput" name="nombreInput">
+                            </div>
+                            <div>
+                                <label for="correo" align="right">Correo:</label>
+                                <input type="email" id="corroInput" name="correoInput">
+                            </div>
+                            <div class="btn-agregar">
+                                <a class="btn btn-info" id="btnCorreo">Agregar</a>
+                            </div>
+                        </div>
+                        <hr />*@
+                    <div class="correos">
+                        <label>Correos:</label>
+                        <table id="tablaCorreo" class="table table-striped">
+                            <thead>
+                                <tr class="header-table">
+                                    <th id="th-pedidas">Nombre</th>
+                                    <th id="th-pedidas">Departamento</th>
+                                    <th id="th-pedidas">Correo</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-info" onclick="emailReporte()">Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/ReciboScrapJS/ReciboScrapJS.js"></script>

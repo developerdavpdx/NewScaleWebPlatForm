@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .titleHeader {
+        background-color: #075DA5;
+        color: white;
+        font-size: 22px;
+        text-align: center;
+        height: 50px;
+        font-weight: bolder;
+    }
+
+    .containerTable {
+        background-color: white;
+    }
+
+    tbody tr {
+        text-align: center
+    }
+</style>
+
+<div class="container titleHeader mt-4">
+    <h2 style="padding-top: 7px;">DETALLES ORDEN DE FABRICACIÓN</h2>
+</div>
+
+<br />
+
+<div class="container containerTable p-4">
+
+    <table id="tablaDetallesOF" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Cant. Base</th>
+                <th>Cant. Requerida</th>
+                <th>Clave</th>
+                <th>Almacen</th>
+                <th>Proceso</th>
+            </tr>
+        </thead>
+        <tbody class="TBOFDetail">
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const loader = document.getElementById('loaderDiv')
+
+    var docEntry = localStorage.getItem("docEntry")
+    let tableDetallesOF;
+    $(document).ready(() => {
+        tableDetallesOF = $('#tablaDetallesOF').DataTable({
+            ordering: false,
+            responsive: true
+        });
+        loader.style.display = "flex"
+        peticionDetallesOF()
+    })
+
+    function peticionDetallesOF() {
+        var data = {
+            "docEntry": docEntry
+        }
+        tableDetallesOF.clear()
+        fetch("/DetallesFO/GetDetailFabricOrder", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data)
+        }).then((response) => {
+            return response.ok ? response.json() : Promise.reject(response)
+        }).then((jsonData) => {
+            if (jsonData.status == 200) {
+                var json = JSON.parse(jsonData.data)
+                console.log(json)
+                json = json.data
+                let Rows = []
+                for (x = 0; x < json.length; x++) {
+                    Rows.push([json[x].codigoitem, json[x].nombreitem, json[x].cantidadbase, json[x].cantrequerida, json[x].docentry, json[x].almacen, json[x].proceso])
+                }
+                tableDetallesOF.rows.add(Rows).draw()
+                loader.style.display = "none"
+            } else {
+                loader.style.display = "none"
+                iziToast.error({
+                    position: "topRight",
+                    title: `Ha surgido un error`,
+                    message: `<p>Error al obtener los datos del Item</p>`,
+                })
+            }
+        }).catch((error) => {
+            console.log(error)
+            loader.style.display = "none"
+            iziToast.error({
+                position: "topRight",
+                title: `Ha surgido un error`,
+                message: `<p>Favor de verificar la conexión con el servidor</p>`,
+            })
+        })
+    }
+
+</script>
+@*<script src="~/Scripts/EmailTXT/EmailTXT.js"></script>*@

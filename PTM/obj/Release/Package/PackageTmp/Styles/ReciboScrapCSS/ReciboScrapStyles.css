@@ -1,0 +1,67 @@
+﻿.titleHeader {
+    background-color: #075DA5;
+    color: white;
+    font-size: 22px;
+    text-align: center;
+    height: 50px;
+    font-weight: bolder;
+}
+
+.containerTitle {
+    background-color: white;
+}
+
+.containerFilters {
+    background-color: white;
+}
+
+tbody tr {
+    text-align: center
+}
+
+.btn-details {
+    width: 100%
+}
+
+#tableReciboScrap tr:nth-child(odd) {
+    background-color: #d1fcff73;
+}
+
+#tableReciboScrap tr {
+    box-shadow: inset 0 5px 8px -7px rgba(0,0,0,0.5);
+}
+
+label {
+    font-size: 1.5rem;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #075DA5;
+    color: white;
+}
+
+.totalBodyScrap tr td {
+    padding: 8px 10px;
+    background-color: #d1fcff73;
+    box-shadow: inset 0 5px 8px -7px rgba(0,0,0,0.5);
+}
+
+#search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer
+}
+
+.modal-header {
+    color: white;
+    background-color: #595959;
+    font-size: 20px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    border-top-left-radius: 4px;
+}

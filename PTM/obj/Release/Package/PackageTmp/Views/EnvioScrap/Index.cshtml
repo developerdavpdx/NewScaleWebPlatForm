@@ -1,0 +1,105 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Styles/EnvioScrap/EnvioScrapStyle.css" />
+
+<style>
+    .tooltipOperador .tooltiptext {
+        visibility: hidden;
+        width: 150px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        /*bottom: 125%;*/
+        top: 5px;
+        left: 110%;
+        margin-left: -60px;
+    }
+
+    .tooltipOperador:hover .tooltiptext {
+        visibility: visible;
+    }
+</style>
+
+<div class="container titleHeader">
+    <h3>ENVÍO SCRAP</h3>
+</div>
+<br />
+<div class="container containerTable" style="display:flex">
+    <div class="col-8 p-3">
+        <form id="formularioEnvioScrap">
+            <div class="form-group row">
+                <label for="staticLinea" class="col-sm-1 col-form-label">Línea</label>
+                <div class="col-sm-11 tooltipOperador">
+                    <select class="form-control" id="selectLinea">
+                        <option selected>Seleccione...</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticOperador" class="col-sm-1 col-form-label">Operador</label>
+                <div class="col-sm-11 tooltipOperador">
+                    <input type="text" class="form-control" id="staticOperador" value="@Session["Name"]" readonly>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticEmail" class="col-sm-1 col-form-label">Código de Artículo</label>
+                <div class="col-sm-11 tooltipOperador">
+                    <input type="text" class="form-control" id="staticCodigo" onchange="escrituraTicket(this)" autofocus>
+                    <span class="tooltiptext">Favor de escanear el código del producto</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticEmail" class="col-sm-1 col-form-label">Peso</label>
+                <div class="col-sm-5">
+                    <input type="number" class="form-control" id="staticPeso" onchange="escrituraTicket(this)">
+                </div>
+                <label for="staticUnidad" class="col-sm-1 col-form-label">Unidad</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="staticUnidad" onchange="escrituraTicket(this)" value="KG" readonly>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticEmail" class="col-sm-1 col-form-label">Proceso</label>
+                <div class="col-sm-11">
+                    <select class="form-control" id="staticProceso">
+                        <option selected value="">Seleccione...</option>
+                        <option value="PPVC">PPVC</option>
+                        <option value="INY">INY</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticEmail" class="col-sm-1 col-form-label">Familia</label>
+                <div class="col-sm-11 tooltipOperador">
+                    <input type="text" class="form-control" id="staticFamilia" onchange="escrituraTicket(this)">
+                    <span class="tooltiptext">Seleccione la familia de scrap del código.</span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="staticComentario" class="col-sm-1 col-form-label">Comentarios</label>
+                <div class="col-sm-11 tooltipOperador">
+                    <textarea id="comentariosArea" class="form-control"></textarea>
+                    <span class="tooltiptext">Agrega un comentario al registro</span>
+                </div>
+            </div>
+        </form>
+        <div class="d-flex flex-row justify-content-end mt-5">
+            <button class="btn btn-primary border-0 p-3 btn-lg" style="background-color:#51b5e1;" onclick="limpiarFormulario()">Limpiar</button>
+            <button class="btn btn-primary border-0 p-3 btn-lg" style="background-color:#51b5e1; margin-left:20px;" onclick="EnviarMolinos()">Confirmar</button>
+        </div>
+    </div>
+    <div class="col-4 p-3" id="ticketMolinos" style="display:inline-block; max-width: 50%">
+        <h5 style="font-size: 2rem !important; text-align: center; margin-bottom: 20px; ">Vista Previa</h5>
+    </div>
+</div>
+
+
+<script src="~/Scripts/EnvioScrapJS/EnvioScrapJS.js"></script>

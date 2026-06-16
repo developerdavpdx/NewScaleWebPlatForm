@@ -1,0 +1,144 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <link href="~/Styles/HistorialPedida.css" rel="stylesheet" />
+    <script src="~/Scripts/HistorialPesadas/HistorialPesada.js"></script>
+</head>
+
+<div class="container table-responsive">
+    <div class="mt-3 mb-3 d-flex justify-content-end">
+        <div class="card-i p-3" style="width:auto;">
+            <i class="fa fa-table m-1 fa-2x t-b" aria-hidden="true" style="color: #016E38"></i>
+            <i class="fa-solid fa-file-pdf m-1 fa-2x t-b" style="color: #ad0b00"></i>
+            <i class="fa fa-envelope m-1 fa-2x t-b" aria-hidden="true" data-toggle="modal" data-target="#CorreoModal" style="color: #51B5E1"></i>
+            <i class="fa fa-print m-1 fa-2x t-b" aria-hidden="true" style="color: #51B5E1"></i>
+        </div>
+    </div>
+    <br />
+    <div class="container titleHeader">
+        <h2>Reportes</h2>
+    </div>
+    <br />
+    <table id="PesadasTable" class="table">
+        <thead>
+            <tr class="info" style="text-align: center;">
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Línea</th>
+                <th>Código</th>
+                <th>Tipo</th>
+                <th>Atado</th>
+                <th>P.Neto</th>
+                <th>Tara</th>
+                <th>Anillo</th>
+                <th>Fleje</th>
+                <th>Porcentaje</th>
+                <th>Folio</th>
+                <th>Estatus</th>
+                <th >Comentarios</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="trBodyPesadas">
+                <td>21/02/2023</td>
+                <td>9:33 am</td>
+                <td>1</td>
+                <td>3SNL100</td>
+                <td>PT</td>
+                <td>222</td>
+                <td>34</td>
+                <td>5.01</td>
+                <td>0</td>
+                <td>0</td>
+                <td>50.3%</td>
+                <td>773</td>
+                <td class="statusTd">Agregado</td>
+                <td>Este es una prueba de agregar un comentario para ver si se alarga la tabla de manera correcta</td>
+            </tr>
+            <tr class="trBodyPesadas">
+                <td>21/02/2023</td>
+                <td>9:33 am</td>
+                <td>2</td>
+                <td>3SNL100</td>
+                <td>PT</td>
+                <td>222</td>
+                <td>34</td>
+                <td>5.01</td>
+                <td>0</td>
+                <td>0</td>
+                <td>50.3%</td>
+                <td>773</td>
+                <td class="statusTd">Agregado</td>
+                <td>Este es una prueba de agregar un comentario para ver si se alarga la tabla de manera correcta</td>
+            </tr>
+            <tr class="trBodyPesadas">
+                <td>21/02/2023</td>
+                <td>9:33 am</td>
+                <td>3</td>
+                <td>3SNL100</td>
+                <td>Scrap</td>
+                <td>222</td>
+                <td>34</td>
+                <td>5.01</td>
+                <td>0</td>
+                <td>0</td>
+                <td>50.3%</td>
+                <td>773</td>
+                <td style="color: forestgreen; font-weight:bolder">Agregado</td>
+                <td>Este es una prueba de agregar un comentario para ver si se alarga la tabla de manera correcta</td>
+            </tr>
+            <tr class="trBodyPesadas">
+                <td>21/02/2023</td>
+                <td>9:33 am</td>
+                <td>4</td>
+                <td>3SNL100</td>
+                <td>834349</td>
+                <td>222</td>
+                <td>34</td>
+                <td>5.01</td>
+                <td>0</td>
+                <td>0</td>
+                <td>50.3%</td>
+                <td>773</td>
+                <td class="statusTd">Agregado</td>
+                <td>Este es una prueba de agregar un comentario para ver si se alarga la tabla de manera correcta</td>
+            </tr>
+            <tr class="trBodyPesadas" style="font-size: 14px; text-align: center; color: black; font-size: 11px">
+                <td>21/02/2023</td>
+                <td>9:33 am</td>
+                <td>5</td>
+                <td>3SNL100</td>
+                <td>834349</td>
+                <td>222</td>
+                <td>34</td>
+                <td>5.01</td>
+                <td>0</td>
+                <td>0</td>
+                <td>50.3%</td>
+                <td>773</td>
+                <td class="statusTd">Agregado</td>
+                <td>Este es una prueba de agregar un comentario para ver si se alarga la tabla de manera correcta</td>
+            </tr>
+            <tr class="trBodyPesadas">
+                <td>21/02/2023</td>
+                <td>9:33 am</td>
+                <td>6</td>
+                <td>3SNL100</td>
+                <td>834349</td>
+                <td>222</td>
+                <td>34</td>
+                <td>5.01</td>
+                <td>0</td>
+                <td>0</td>
+                <td>50.3%</td>
+                <td>773</td>
+                <td class="statusTd">Agregado</td>
+                <td>Este es una prueba de agregar un comentario para ver si se alarga la tabla de manera correcta</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

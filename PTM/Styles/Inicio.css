@@ -1,0 +1,31 @@
+﻿body {
+    background-color: #8080801c;
+}
+
+#scaleIcon {
+    font-size: 35px;
+}
+
+i.fa.fa-exclamation {
+    font-size: 35px;
+    color: #D77878;
+}
+
+i.fa.fa-check {
+    font-size: 35px;
+    color: #009231;
+}
+
+.right-div {
+    display: flex;
+    justify-content: center;
+}
+
+.col-lg-3 {
+    border-right: #80808085 solid 2px;
+    font-size: 1.65rem;
+}
+
+.col-lg-6 {
+    font-size: 1.65rem;
+}

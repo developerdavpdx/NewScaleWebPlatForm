@@ -1,0 +1,95 @@
+﻿.ttb {
+    color: #0094ff;
+    background-color: white;
+}
+
+.ttr {
+    background-color: #fcbebe;
+}
+
+.bg-r {
+    background-color: #075DA5;
+    color: white
+}
+
+.bg-rl {
+    background-color: #ffe0e0;
+    color: #BE5F5F;
+}
+
+.card-i {
+    background-color: white;
+    border-radius: 10px;
+}
+
+.t-b {
+    color: #51B5E1;
+}
+
+#excelIcon {
+    color: #016E38
+}
+
+#pdfIcon {
+    color: #ad0b00
+}
+
+#cardIcon #printerIcon {
+    color: #51B5E1
+}
+
+.card-i {
+    background-color: white;
+    border-radius: 10px;
+}
+
+.t-b {
+    color: #51B5E1;
+}
+
+#headerScrapPvc {
+    text-align: center;
+    background-color: #075DA5;
+    color: white;
+    font-size: 22px;
+    height: 50px
+}
+
+td {
+    box-shadow: inset 0 5px 8px -7px rgba(0,0,0,0.5);
+}
+
+
+#tableBodyScrapPVC tr:nth-child(odd) {
+    background-color: #8080801c
+}
+
+#tableBodyScrapPVC tr:nth-child(even) {
+    background-color: white
+}
+
+.thStyle {
+    text-align: center;
+    font-size: 15px;
+    background-color: white !important;
+    color: rgb(7, 93, 165);
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 2px -3px;
+    border: 1px solid rgba(128, 128, 128, 0.09);
+}
+
+.text-danger {
+    text-align: center;
+    font-size: 15px;
+    background-color: white !important;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 4px 2px -3px;
+    border: 1px solid rgba(128, 128, 128, 0.09);
+}
+
+.thInfoScrap {
+    background-color: #ffe0e0;
+    color: #BE5F5F;
+}
+
+td {
+    font-size: 11px;
+}

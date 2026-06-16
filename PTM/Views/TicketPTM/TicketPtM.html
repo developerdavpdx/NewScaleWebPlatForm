@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+    <head>
+       <style>
+        
+* {
+    font-size: 12px;
+    font-family: 'Times New Roman';
+}
+
+td,
+th,
+tr,
+table {
+    border-top: 1px solid black;
+    border-collapse: collapse;
+}
+
+td.columna1,
+th.columna1 {
+    width: 75px;
+    max-width: 75px;
+}
+
+td.columna2,
+th.columna2 {
+    width: 75px;
+    max-width: 75px;
+    word-break: break-all;
+}
+
+.centrado {
+    text-align: center;
+    align-content: center;
+}
+
+.ticket {
+    width: 155px;
+    max-width: 155px;
+    margin:auto; 
+}
+
+img {
+    max-width: inherit;
+    width: inherit;
+} 
+
+
+@media print {
+    .oculto-impresion,
+    .oculto-impresion * {
+        display: none !important;
+    }
+
+    @page {
+    margin-top: 0;
+  }
+  #header {
+    display: none;
+  }
+
+  /* Ocultar el footer */
+  @page {
+    margin-bottom: 0;
+  }
+  #footer {
+    display: none;
+  }
+}
+
+
+       </style>
+        <script>
+            function imprimir() {
+  window.print();
+}
+        </script>
+    </head>
+    <body>
+        <div class="ticket">
+            <img
+                src="../../Images/LogoNWScale2.png"
+                alt="Logotipo">
+            <p class="centrado">
+            23/08/2023 09:22 a.m.
+        </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="columna1">DESC.</th>
+                        <th class="columna2">VALOR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="cantidad">FOLIO</td>
+                        <td class="producto">: 3033166</td>
+                    </tr> 
+
+                    <tr>
+                        <td class="cantidad">TURNO</td>
+                        <td class="producto">: 1</td>
+                    </tr>
+
+                    <tr>
+                        <td class="cantidad">LÍNEA</td>
+                        <td class="producto">: 11</td>
+                    </tr>
+
+                    <tr>
+                        <td class="cantidad">OPERACIÓN</td>
+                        <td class="producto">: 10</td>
+                    </tr>
+
+                    <tr>
+                        <td class="cantidad">CÓDIGO</td>
+                        <td class="producto">: 31MT35315</td>
+                    </tr> 
+
+                    <tr>
+                        <td class="cantidad">NUM. DE TUBOS</td>
+                        <td class="producto">: 9</td>
+                    </tr>
+
+                    <tr>
+                        <td class="cantidad">PESO NETO</td>
+                        <td class="producto">: 309 KG</td>
+                    </tr>
+
+                    <tr>
+                        <td class="cantidad">PORCENTAJE</td>
+                        <td class="producto">: 2.62%</td>
+                    </tr>
+                   
+                </tbody>
+            </table>
+            <p class="centrado" style="color: gray;">POWERED BY
+                <br><img src="../../Images/Paradox1.png" style="width: 60%;"></p>
+        </div> 
+
+	<div style="width:100%;">
+		<button class="oculto-impresion" onclick="imprimir()" style="margin: auto;">Imprimir</button>
+	</div>
+        
+    </body>
+</html>

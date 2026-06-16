@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .titleHeader {
+        background-color: #075DA5;
+        color: white;
+        font-size: 22px;
+        text-align: center;
+        height: 50px;
+        font-weight: bolder;
+    }
+
+    .containerTable {
+        background-color: white;
+    }
+
+    tbody tr {
+        text-align: center
+    }
+
+    .btn-details {
+        width: 120px
+    }
+</style>
+
+<div class="container titleHeader mt-4">
+    <h2 style="padding-top: 7px;">ORDENES DE FABRICACIÓN</h2>
+</div>
+
+<br />
+
+<div class="container containerTable p-4">
+    <table id="tablaOrdenesFabricacion" class="table-striped">
+        <thead>
+            <tr>
+                <th>Num. Documento</th>
+                <th>Clave</th>
+                <th>Código</th>
+                <th style="width: 33% !important;">Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="bodyTableOF">
+        </tbody>
+    </table>
+</div>
+
+@*<script src="~/Scripts/EmailTXT/EmailTXT.js"></script>*@
+<script src="~/Scripts/OrdenesFabricacion/OrdenesFabricacion.js"></script>

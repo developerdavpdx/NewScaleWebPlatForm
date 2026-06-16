@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .titleHeader {
+        background-color: #075DA5;
+        color: white;
+        font-size: 22px;
+        text-align: center;
+        height: 50px;
+        font-weight: bolder;
+    }
+
+    .containerTable {
+        background-color: white;
+    }
+    tbody tr {
+        text-align: center
+    }
+
+    .btn-details {
+        width: 120px
+    }
+
+    .modal-header {
+        color: white;
+        background-color: #595959;
+        font-size: 20px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        border-top-left-radius: 5px;
+    }
+</style>
+
+<div class="container titleHeader mt-4">
+    <h2 style="padding-top: 7px;">DATOS MAESTROS DEL ARTÍCULO</h2>
+</div>
+
+
+<div class="d-flex justify-content-end">
+    <div class="card-i p-3" style="width:auto;">
+        <i onclick="generarexcelDm();" class="fa fa-table m-1 fa-2x t-b" aria-hidden="true" style="color: #016E38"></i>
+        <button class="btn" style="background-color: #00986c; color: white; margin-bottom: 24px;" data-toggle="modal" data-target="#updateCode">Agregar Código</button>
+    </div>
+    
+</div>
+
+
+<div class="container containerTable p-4">
+    <table id="DatosMaestros" class="table-striped">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th style="width: 33% !important;">Descripción</th>
+                <th>Actualizado</th>
+                <th>Fecha de última actualización</th>
+                <th>Usuario</th>
+                <th>Tara (Kg)</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="bodyTableSKU">
+            
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="updateCode" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Agregar Código</h4>
+            </div>
+            <div class="modal-body">
+                <label style="font-size: 1.4rem !important">Ingrese el código que desee agregar dentro del sistema.</label>
+                <input class="form-control" id="updateCodeInp" />
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" data-dismiss="modal" id="CerrarModal">Cerrar</button>
+                <button class="btn btn-primary" onclick="ActualizarItemCode()">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/DatosMaestros/DatosMaestroJS.js"></script>
+@*<script src="~/Scripts/EmailTXT/EmailTXT.js"></script>*@

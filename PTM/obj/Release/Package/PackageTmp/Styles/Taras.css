@@ -1,0 +1,23 @@
+﻿thead {
+    box-shadow: 0 1px 9px 1px rgba(0, 0, 0, 0.28) !important;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #8080801c !important
+}
+
+th {
+    background-color: white !important;
+    text-align: center !important;
+    font-size: 15px !important;
+    text-align: center;
+    color: #075DA5;
+    /*box-shadow: 0 4px 2px -3px rgba(0,0,0,0.5);*/
+    border: solid 1px #80808017 !important;
+}
+
+tbody tr td {
+    box-shadow: inset 0 5px 8px -7px rgba(0,0,0,0.5);
+    border: solid 1px #80808017;
+    font-size: 11px;
+}

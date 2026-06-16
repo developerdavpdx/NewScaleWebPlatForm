@@ -1,0 +1,360 @@
+﻿@using System.Web;
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PTM NewScale</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <script src="~/Scripts/jquery-3.7.1.min.js"></script>
+    <link href="//cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <link href="~/Styles/_layOut.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="~/Content/DataTables-1.13.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Content/IziToast/dist/css/iziToast.min.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Styles/Flje.css" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9.1.1/swiper-bundle.min.js"></script>
+    <script src="~/Scripts/all.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+    @*<script src="cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js" ></script>*@
+    @*<script src="~/Scripts/datatables.min.js"></script>*@
+</head>
+<body id="page-top">
+    <div class="loader" style="display: none;" id="loaderDiv">
+        <svg class="pl" width="240" height="240" viewBox="0 0 240 240">
+            <circle class="pl__ring pl__ring--a" cx="120" cy="120" r="105" fill="none" stroke="#000" stroke-width="20" stroke-dasharray="0 660" stroke-dashoffset="-330" stroke-linecap="round"></circle>
+            <circle class="pl__ring pl__ring--b" cx="120" cy="120" r="35" fill="none" stroke="#000" stroke-width="20" stroke-dasharray="0 220" stroke-dashoffset="-110" stroke-linecap="round"></circle>
+            <circle class="pl__ring pl__ring--c" cx="85" cy="120" r="70" fill="none" stroke="#000" stroke-width="20" stroke-dasharray="0 440" stroke-linecap="round"></circle>
+            <circle class="pl__ring pl__ring--d" cx="155" cy="120" r="70" fill="none" stroke="#000" stroke-width="20" stroke-dasharray="0 440" stroke-linecap="round"></circle>
+        </svg>
+    </div>
+    <div id="wrapper">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center">
+                <img src="~/Images/LogoNWScale2.png" width="225px" style=" filter: drop-shadow(0 0 0.2rem white);" />
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <li class="nav-item">
+                <a class="nav-link" href="../Inicio/Index" style="margin-bottom: 10px; margin-top: 10px;">
+                    <i class="fa fa-chart-simple" aria-hidden="true" style="font-size: 15px; margin-right: 18px; margin-left: 18px;"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            @if (Session["Rol"].ToString() != "Operador" && Session["Rol"].ToString() != "Molinos" && Session["Rol"].ToString() != "AdmMolinos" && Session["Rol"].ToString() != "Consulta")
+            {
+                <li class="nav-item nav-dropdown">
+                    <a class="nav-link btnDropDown" data-toggle="collapse" data-target="#collapseOne"
+                       aria-expanded="true" aria-controls="collapseTwo" style="margin-bottom: 10px; margin-top: 10px;">
+                        <i class="fa fa-clipboard-list" aria-hidden="true" style="font-size: 15px; margin-right: 18px; margin-left: 18px;"></i>
+                        <span>Catálogos</span>
+                        <i class="fa fa-caret-down" aria-hidden="true" style=" font-size: 15px; margin-left: 47px;"></i>
+
+                    </a>
+                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="../DatosMaestros/Index">Datos Maestros de Artículos</a>
+                        </div>
+                    </div>
+                </li>
+            }
+
+            @if (Session["Rol"].ToString() != "Operador" && Session["Rol"].ToString() != "Molinos" && Session["Rol"].ToString() != "Consulta" && Session["Rol"].ToString() != "AdmMolinos")
+            {
+                <li class="nav-item">
+                    <a class="nav-link" href="../AsignacionLinia/Index" style="margin-bottom: 10px; margin-top: 10px;">
+                        <i class="fa fa-list-check" aria-hidden="true" style="font-size: 15px; margin-right: 18px; margin-left: 18px;"></i>
+                        <span>Asignación Línea</span>
+                    </a>
+                </li>
+            }
+
+            @if (Session["Rol"].ToString() != "Operador" && Session["Rol"].ToString() != "Molinos" && Session["Rol"].ToString() != "AdmMolinos")
+            {
+                <li class="nav-item">
+                    <a class="nav-link" href="../OrdenesFabricacion/Index" style="margin-bottom: 10px; margin-top: 10px;">
+                        <i class="fa fa-list-check" aria-hidden="true" style="font-size: 15px; margin-right: 18px; margin-left: 18px;"></i>
+                        <span>Ordenes Fabricación</span>
+                    </a>
+                </li>
+            }
+
+            @if (Session["Rol"].ToString() == "Operador")
+            {
+                <li class="nav-item">
+                    <a class="nav-link" href="../PesajePT/Index" style="margin-bottom: 10px; margin-top: 10px;">
+                        <i class="fa fa-weight-scale" aria-hidden="true" style="font-size: 15px; margin-right: 18px; margin-left: 18px;"></i>
+                        <span>Pesaje PT</span>
+                    </a>
+                </li>
+            }
+
+            @if (Session["Rol"].ToString() == "Operador" && Session["Rol"].ToString() != "Molinos" && Session["Rol"].ToString() != "AdmMolinos")
+            {
+                <li class="nav-item">
+                    <a class="nav-link" href="/EnvioScrap/Index" style="margin-bottom: 10px; margin-top: 10px;">
+                        <i class="fa fa-paper-plane" aria-hidden="true" style="font-size: 15px; margin-right: 18px; margin-left: 18px;"></i>
+                        <span>Envío Scrap</span>
+                    </a>
+                </li>
+            }
+
+            @if (Session["Rol"].ToString() == "Operador" && Session["Rol"].ToString() != "Molinos" && Session["Rol"].ToString() != "AdmMolinos")
+            {
+                <li class="nav-item">
+                    <a class="nav-link" href="../ReimpresionTicket/Index" style="margin-bottom: 10px; margin-top: 10px;">
+                        <i class="fa fa-print" aria-hidden="true" style="font-size: 15px; margin-right: 18px; margin-left: 18px;"></i>
+                        <span>Reimpresion</span>
+                    </a>
+                </li>
+            }
+
+
+            @if (Session["Rol"].ToString() == "Administrador" || Session["Rol"].ToString() == "Consulta")
+            {
+                <!-- Nav Item - Pages Collapse Menu -->
+                <li class="nav-item nav-dropdown">
+                    <a class="nav-link btnDropDown" data-toggle="collapse" data-target="#collapseTwo"
+                       aria-expanded="true" aria-controls="collapseTwo" style="margin-bottom: 10px; margin-top: 10px;">
+                        <i class="fa fa-archive" aria-hidden="true" style="font-size: 15px; margin-right: 18px; margin-left: 18px;"></i>
+                        <span>Productos</span>
+                        <i class="fa fa-caret-down" aria-hidden="true" style=" font-size: 15px; margin-left: 47px;"></i>
+                        @*<i class="fa fa-arrow-right" aria-hidden="true" id="arrowIcon"></i>*@
+                    </a>
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <a class="collapse-item" href="../ProductoTerminado/Index">Producto Terminado PVC</a>
+                            <a id="LinkPTINY" class="collapse-item" href="../ProdTerminadoINY/Index">Producto Terminado INY</a>
+                            @*<a class="collapse-item" href="../Pvc/Index">Detalle Línea PVC</a>
+                                <a class="collapse-item" href="../Inyecciones/Index">Detalle Línea INY</a>*@
+                        </div>
+                    </div>
+                </li>
+            }
+
+            @if (@*Session["Rol"].ToString() == "Consulta" ||*@ Session["Rol"].ToString() == "Molinos" || Session["Rol"].ToString() == "AdmMolinos")
+{
+<li class="nav-item nav-dropdown">
+    <a class="nav-link" data-toggle="collapse" data-target="#collapseMolino"
+       aria-expanded="true" aria-controls="collapseTwo" style="margin-bottom: 10px; margin-top: 10px;">
+        <i class="fa fa-recycle" style="font-size: 15px; margin-right: 18px; margin-left: 18px;"></i>
+        <span>Molino</span>
+        <i class="fa fa-caret-down" aria-hidden="true" style=" font-size: 15px; margin-left: 47px;"></i>
+    </a>
+    <div id="collapseMolino" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
+        <div class="bg-white py-2 collapse-inner rounded">
+            @if (Session["Rol"].ToString() == "Molinos")
+            {
+                <a class="collapse-item" href="../PesajeMolinos/Index">Pesaje Molinos</a>
+            }
+            <a class="collapse-item" href="../ReciboScrap/Index">Recibo de Scrap</a>
+            <a class="collapse-item" href="../Molinos/Index">Inventario físico de Scrap y Molino</a>
+        </div>
+    </div>
+</li>
+}
+
+            @if (Session["Rol"].ToString() != "Operador" && Session["Rol"].ToString() != "Molinos" && Session["Rol"].ToString() != "AdmMolinos" && Session["Rol"].ToString() != "Consulta")
+            {
+                <!-- Nav Item - Utilities Collapse Menu -->
+                <li class="nav-item">
+                    <a class="nav-link" href="../HistorialPedidas/Index" style="margin-bottom: 10px; margin-top: 10px;">
+                        <i class="fa fa-inbox" aria-hidden="true" style="font-size: 15px; margin-right: 18px; margin-left: 18px;"></i>
+                        <span>Historial Pesadas</span>
+                    </a>
+                </li>
+            }
+
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+        </ul>
+
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto" style="font-size: x-small;">
+
+                        <!-- Nav Item - Alerts -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-bell" aria-hidden="true" style="font-size: 20px; color: #51B5E1 "></i>
+                                <span class="badge badge-danger badge-counter" id="alert_noti"></span>
+                            </a>
+                            <!-- Dropdown - Alerts -->
+                            @*<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                     aria-labelledby="alertsDropdown" id="dropdown-alerts">
+                                    <h6 class="dropdown-header">
+                                        Notificaciones
+                                    </h6>
+                                </div>*@
+                        </li>
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="bienvenido-mensaje">Bienvenido <span style="color: #51B5E1; font-weight:bolder" id="labelName">@Session["Name"]</span></span>
+                                <i class="fa fa-user-circle" aria-hidden="true" style="font-size: 20px; color: #51B5E1"></i>
+                                <i class="fa fa-caret-down" aria-hidden="true" style="margin-left: 10px; font-size: 15px;"></i>
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in "
+                                 aria-labelledby="userDropdown" style="text-align: center; padding: 20px;" id="userMenu">
+                                <h6 class="dropdown-header" id="labelName">
+                                    @Session["Name"]
+                                </h6>
+                                <hr id="hr-name" />
+                                <a>
+                                    Usuario: <b id="rolUsuario" style="color: #51B5E1">@Session["Rol"]</b>
+                                </a>
+                                <br />
+                                <a>
+                                    Conexión:
+                                    <b id="conexionDate">@Session["DateConection"]</b>
+                                </a>
+                                <hr style="margin-top: 12px; margin-bottom: 10px;" />
+                                <a class="dropdown-item" id="btnlogOut" href="#" data-toggle="modal" data-target="#logoutModal"
+                                   style=" background-color: #51B5E1; color: white; margin-bottom: -7px;">
+                                    <i class="fa fa-power-off" aria-hidden="true" style="margin-right: 5px;"></i>
+                                    Cerrar Sesión
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+
+                @if (Session["Rol"].ToString() != "AdmMolinos" && Session["Rol"].ToString() != "Operador" && Session["Rol"].ToString() != "Molinos" && Session["Rol"].ToString() != "Consulta")
+                {
+                    <nav class="navbar navbar-expand navbar-light topbar mb-4 static-top shadow" style="background-color: #8BCDED;">
+                        <!-- Topbar Navbar -->
+                        <ul class="navbar-nav">
+                            <!-- Nav Item - Charts -->
+                            <li class="nav-item" style="cursor: pointer" onclick="window.location.href = '../DatosMaestros/Index' ">
+                                <a class="nav-link" style="font-size: 18px">
+                                    <i class="fa fa-barcode" aria-hidden="true" style="font-size: 15px; margin-right: 18px; margin-left: 18px;"></i>
+                                    <span>Códigos</span>
+                                </a>
+                            </li>
+
+                            <!-- Nav Item - Tables -->
+                            <li class="nav-item" id="LineasId" style="cursor: pointer" onclick="window.location.href = '../AsignacionLinia/Index'">
+                                <a class="nav-link" style="font-size: 18px">
+                                    <i class="fa fa-cogs" aria-hidden="true" style="font-size: 15px; margin-right: 18px; margin-left: 18px;"></i>
+                                    <span>Líneas</span>
+                                </a>
+                            </li>
+
+                            <!-- Nav Item - Tables -->
+                            <li class="nav-item" id="LineasId" style="cursor: pointer" onclick="window.location.href = '../Taras/Index'">
+                                <a class="nav-link" style="font-size: 18px">
+                                    <i class="fa fa-balance-scale" aria-hidden="true" style="font-size: 15px; margin-right: 18px; margin-left: 18px;"></i>
+                                    <span>Taras y Kg/Hora</span>
+                                </a>
+                            </li>
+
+                            <!-- Nav Item - Tables -->
+                            <li class="nav-item" id="LineasId" style="cursor: pointer" data-toggle="modal" data-target="#correoTXT">
+                                <a class="nav-link" style="font-size: 18px">
+                                    <i class="fa fa-envelope" aria-hidden="true" style="font-size: 15px; margin-right: 18px; margin-left: 18px;"></i>
+                                    <span>Correos</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
+
+                <div class="container-fluid">
+                    @*<br />*@
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="correoTXT" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                    <h4 class="modal-title" id="myModalLabel">Agregar Correo</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="ulTabs">
+                        <li id="agregarCorreo" class="active" style="width: 50%; text-align: center; font-size: 15px; font-weight: bolder;"><a data-toggle="tab" class="tabHeader headerBackground" href="#menuAgregar" id="asignacion">Asignación</a></li>
+                        <li id="ListaCorreos" onclick="getCorreosTXT()" style="width: 50%; text-align: center; font-size: 15px; font-weight: bolder;"><a data-toggle="tab" class="tabHeader" href="#menuCorreos" id="historial">Correos</a></li>
+                    </ul>
+                    <br />
+                    <div class="tab-content">
+                        <div id="menuAgregar" class="tab-pane fade active show">
+                            <div id="selectDocEntrys">
+                                <h2 style="font-size: 27px;">Ingrese el correo que se agregará al correo automático</h2>
+
+                                <input class="form-control" id="correoInput" />
+                            </div>
+                            <br />
+                            <div id="btn" style="display: flex; align-items: center; justify-content: flex-end;">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal" id="cerrarModal" style=" margin-right: 15px;">Cerrar</button>
+                                <button type="button" class="btn btn-info" onclick="GuardarCorreo()" id="AsignarLinea">Asignar</button>
+                            </div>
+                        </div>
+                        <div id="menuCorreos" class="tab-pane fade">
+                            <table id="tableCorreos">
+                                <thead>
+                                    <tr>
+                                        <th>Correo</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="correosbody" class="table table-striped text-center">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    @RenderSection("scripts", required: false)
+    @*<script src="~/Content/DataTables-1.13.3/js/jquery.dataTables.min.js"></script>*@
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+    <script src="~/Content/IziToast/dist/js/iziToast.min.js"></script>
+    @*<script src="~/Scripts/LayOutScripts/LayOutScript.js"></script>*@
+    <script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    <script src="~/Scripts/EmailTXT/EmailTXT.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js" integrity="sha512-z8IYLHO8bTgFqj+yrPyIJnzBDf7DDhWwiEsk4sY+Oe6J2M+WQequeGS7qioI5vT6rXgVRb4K1UVQC5ER7MKzKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.16/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="~/Scripts/LayOutScripts/LayOutScript.js"></script>
+</body>
+</html>

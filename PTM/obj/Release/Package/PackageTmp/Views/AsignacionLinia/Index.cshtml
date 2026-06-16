@@ -1,0 +1,239 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .buttonSection .btn-info {
+        width: 49%;
+        padding: 2%;
+        margin-bottom: 5px;
+        height: 187px;
+    }
+
+
+
+
+    .btnAsignada {
+        width: 49%;
+        padding: 2%;
+        margin-bottom: 5px;
+        background-color: #80808099;
+        color: white;
+    }
+
+        .btnAsignada:hover {
+            background-color: #808080c4;
+            color: white;
+        }
+
+    #btn-item {
+        font-size: 20px
+    }
+
+    .nav-tabs li {
+        width: 50%;
+        text-align: center;
+        font-size: 15px;
+        font-weight: bolder;
+    }
+
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+        cursor: default;
+        background-color: #2C9FAF !important;
+        color: white !important;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .box {
+        width: 100px;
+        height: 100px;
+        background-color: #ccc;
+        border: 1px solid #000;
+        margin-right: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .box1 {
+        background-color: #66c2ff;
+    }
+
+    .box2 {
+        background-color: #ffcc66;
+    }
+
+    .text {
+        font-size: 18px;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    #sugerencias-autocompletar {
+        position: absolute;
+        top: 47%;
+        left: 15px;
+        width: 95.5%;
+        background-color: #fff;
+        /*border: 1px solid #ccc;*/
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        overflow: auto;
+        max-height: 100%;
+        line-height: 30px;
+        font-size: 14px;
+    }
+
+        #sugerencias-autocompletar li {
+            padding: 5px;
+            border-bottom: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+            #sugerencias-autocompletar li:hover { /* Añadir efecto hover a los elementos de la lista */
+                background-color: #1966d2;
+                color: white
+            }
+
+    .TitualoFormAsignacion {
+        font-size: 25px;
+    }
+</style>
+
+<div>
+    <div class="card-i p-3" style="width:auto;">
+        <i onclick="infoExcel();" class="fa fa-table m-1 fa-2x t-b" aria-hidden="true" style="color: #016E38"></i>
+    </div>
+    <button class="btn btn-info" data-toggle="modal" data-target="#agregarLinea" onclick="AgregaLineaBtn()">Agregar Línea</button>
+    <button class="btn btn-info" data-toggle="modal" data-target="#QuitarLinea">Eliminar Línea</button>
+</div>
+<br />
+<div class="buttonSection" id="buttonSection">
+
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <!--Revison-->
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title" id="myModalLabel">Línea Número <b id="lineaNumber"></b></h4>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" id="ulTabs">
+                    <li id="asignacionLi"><a data-toggle="tab" class="tabHeader headerBackground" href="#menuAsignacion" id="asignacion">Asignación</a></li>
+                    <li id="historialLi" onclick="getBitacoraInfo()"><a data-toggle="tab" class="tabHeader" href="#menuHistorial" id="historial">Historial</a></li>
+                </ul>
+                <br />
+                <div class="tab-content">
+                    <div id="menuAsignacion" class="tab-pane fade in active show">
+                        <div class="selectDocEntrys">
+                            <h2 class="TitualoFormAsignacion">Favor de seleccionar el producto a asignar a la línea <b id="lineaNumber"></b></h2>
+                            <br />
+                            <input class="form-control" style="width: 100%; line-height: 30px;" type="text" id="entrada-busqueda" placeholder="Ingresar codigo">
+                            <ul id="sugerencias-autocompletar"></ul>
+                        </div>
+                        <br />
+                        <div class="selectDocEntrys">
+                            <h2 class="TitualoFormAsignacion">Favor de ingresar los Kg por hr del producto</h2>
+                            <input class="form-control" id="kgxhora" />
+                        </div>
+                        <div class="selectDocEntrys">
+                            <h2 class="TitualoFormAsignacion">Favor de Seleccionar la Orden de Fabricación</h2>
+                            <select class="form-control" style="width: 100%; line-height: 30px" id="selectOF">
+                                <option value="0" selected>Seleccionar...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="menuHistorial" class="tab-pane fade">
+                        <table id="tableHistorial">
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Fecha de Asignación</th>
+                                    <th>Código Ingresado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyTableHistorial" class="table table-striped text-center">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="desasignarBtn" onclick="DesasignarTicket(this)">Desasignar</button>
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-info" onclick="PeticionAsignarLinea()" id="AsignarLinea">Asignar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal Agregar Linea *@
+<div class="modal fade" id="agregarLinea" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title" id="myModalLabel">Agregar Línea</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <label>Agregar Línea</label>
+                        <input id="inputNumLinea" class="form-control" disabled />
+                    </div>
+                    <div class="col-6">
+                        <label>Proceso</label>
+                        <select id="selectInputProcess" class="form-control" style="width: 92%;">
+                            <option value="0" selected>Seleccionar...</option>
+                            <option value="1">PPVC</option>
+                            <option value="2">INY</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-info" onclick="AgregarNuevaLinea()">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal Quitar Linea *@
+<div class="modal fade" id="QuitarLinea" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title">Eliminar Línea</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <label>Eliminar Línea</label>
+                        <input id="inputNumLineaQuitar" class="form-control"/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-info" id="EliminarLineaBtn">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/AsignacionLineas/AsignacionLineasJS.js"></script>
+@*<script src="~/Scripts/EmailTXT/EmailTXT.js"></script>*@

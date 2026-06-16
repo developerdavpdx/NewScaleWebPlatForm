@@ -1,0 +1,1 @@
+8/9/2023 1:42:23 PM - Ocurrio un error al enviar el reporte:The process cannot access the file 'C:\Users\partner\Documents\PTM\PTM\Shedule\ErroresStore.txt' because it is being used by another process. line: 99

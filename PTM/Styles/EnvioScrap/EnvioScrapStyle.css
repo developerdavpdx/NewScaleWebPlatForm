@@ -1,0 +1,12 @@
+﻿.titleHeader {
+    background-color: #075DA5;
+    color: white;
+    font-size: 22px;
+    text-align: center;
+    height: 50px;
+    font-weight: bolder;
+}
+
+.containerTable {
+    background-color: white;
+}

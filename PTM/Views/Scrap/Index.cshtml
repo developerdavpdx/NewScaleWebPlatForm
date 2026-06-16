@@ -1,0 +1,116 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <link href="~/Styles/ScrapPVC.css" rel="stylesheet" />
+</head>
+
+<div class="container">
+
+    <div class="mt-3 mb-3 d-flex justify-content-end">
+        <div class="card-i p-3" style="width:auto;">
+            <i class="fa fa-table m-1 fa-2x t-b" aria-hidden="true" id="excelIcon"></i>
+            <i class="fa-solid fa-file-pdf m-1 fa-2x t-b" id="pdfIcon"></i>
+            <i class="fa fa-envelope m-1 fa-2x t-b" aria-hidden="true" data-toggle="modal" data-target="#CorreoModal" id="cardIcon"></i>
+            <i class="fa fa-print m-1 fa-2x t-b" aria-hidden="true" id="printerIcon"></i>
+        </div>
+    </div>
+    <br />
+    <div class="container" id="headerScrapPvc">
+        <h2> SCRAP PVC</h2>
+    </div>
+    <br />
+    <table id="ScrapTable" class="table">
+        <thead style="box-shadow: 0 1px 9px 1px rgba(0, 0, 0, 0.28);">
+            <tr class="info">
+                <th class="thStyle">Línea</th>
+                <th class="thStyle">Código</th>
+                <th class="thStyle"># Atados/Tarima</th>
+                <th class="thStyle">P. Neto Total</th>
+                <th class="bg-white text-danger" id="trScrapPVC">% Scrap</th>
+                <th class="text-danger">Usuario</th>
+                <th class="text-danger">Código</th>
+                <th class="text-danger"># Atados/Tarima</th>
+                <th class="text-danger">P. Neto Total</th>
+            </tr>
+        </thead>
+        <tbody class="text-center" id="tableBodyScrapPVC">
+            <tr>
+                <td>1</td>
+                <td>3SNL100</td>
+                <td>4</td>
+                <td>1544.11</td>
+                <td class="bg-danger text-white">0.0</td>
+                <td class="thInfoScrap"> </td>
+                <td class="thInfoScrap"> </td>
+                <td class="thInfoScrap"> </td>
+                <td class="thInfoScrap"> </td>
+            </tr>
+            <tr>
+                <td >2</td>
+                <td >8RLS09</td>
+                <td >5</td>
+                <td >1159.45</td>
+                <td class="bg-danger text-white">0.0</td>
+                <td class="thInfoScrap"> </td>
+                <td class="thInfoScrap"> </td>
+                <td class="thInfoScrap"> </td>
+                <td class="thInfoScrap"> </td>
+            </tr>
+
+            <tr>
+                <td >3</td>
+                <td >17365</td>
+                <td >2</td>
+                <td >1687.98</td>
+                <td class="bg-danger text-white">0.0</td>
+                <td class="thInfoScrap"> </td>
+                <td class="thInfoScrap"> </td>
+                <td class="thInfoScrap"> </td>
+                <td class="thInfoScrap"> </td>
+            </tr>
+
+            <tr>
+                <td >4</td>
+                <td >3SNL100</td>
+                <td >2</td>
+                <td >1833.33</td>
+                <td class="bg-danger text-white">0.0</td>
+                <td class="thInfoScrap"> </td>
+                <td class="thInfoScrap"> </td>
+                <td class="thInfoScrap"> </td>
+                <td class="thInfoScrap"> </td>
+            </tr>
+            <tr>
+                <td >5</td>
+                <td >617NP7</td>
+                <td >2</td>
+                <td >1833.33</td>
+                <td class="bg-danger text-white">11.03</td>
+                <td class="thInfoScrap">BRT</td>
+                <td class="thInfoScrap">617NP6</td>
+                <td class="thInfoScrap">1</td>
+                <td class="thInfoScrap">187.14</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>476238</td>
+                <td>2</td>
+                <td>1049.34</td>
+                <td class="bg-danger text-white">11.03</td>
+                <td class="thInfoScrap">FPC</td>
+                <td class="thInfoScrap">476238</td>
+                <td class="thInfoScrap">1</td>
+                <td class="thInfoScrap">172.84</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+
+</div>
+
+<script src="~/Scripts/Scrap/Scrap.js"></script>

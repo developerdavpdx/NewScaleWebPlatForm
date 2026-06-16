@@ -1,0 +1,63 @@
+﻿body {
+    background-color: #8080801c
+}
+
+.divDetalle {
+    background-color: white;
+}
+
+#tableDetallada {
+    border: solid grey 1px;
+}
+
+#LineasNumeros {
+    text-align: center;
+    background-color: #075DA5;
+    color: white;
+    font-size: 22px;
+}
+
+#tableHeadInfo {
+    color: #2695ef;
+}
+
+th {
+    text-align: center
+}
+
+#eficienciaTH {
+    color: #39a63b;
+}
+
+#tdEficienccia {
+    color: white;
+    background-color: #a0d433;
+}
+
+.ttb {
+    color: #0094ff;
+    background-color: white;
+}
+
+.ttr {
+    background-color: #fcbebe;
+}
+
+.bg-r {
+    background-color: #075DA5;
+    color: white
+}
+
+.bg-rl {
+    background-color: #ffe0e0;
+    color: #BE5F5F;
+}
+
+.card-i {
+    background-color: white;
+    border-radius: 10px;
+}
+
+.t-b {
+    color: #51B5E1;
+}
