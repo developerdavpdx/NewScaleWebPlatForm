@@ -1,12 +1,7 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\partner2\\Desktop\\PDXDevelopmentPTMNewScale\\PTM Web Current Version\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{9677FDB6-326B-4694-9B9E-5F33CAE4A737}|PTM\\PTM.csproj|c:\\users\\partner2\\desktop\\pdxdevelopmentptmnewscale\\ptm web current version\\ptm\\scripts\\historialpesadas\\historialpesada.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{9677FDB6-326B-4694-9B9E-5F33CAE4A737}|PTM\\PTM.csproj|solutionrelative:ptm\\scripts\\historialpesadas\\historialpesada.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
-    }
-  ],
+  "WorkspaceRootPath": "C:\\Paradox\\NEWSCALEPORTALWEB\\NewScaleWebPlatForm\\",
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -14,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -47,19 +42,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:1613416671:0:{71f361cc-493f-47c0-923f-f2570b6f8618}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "HistorialPesada.js",
-              "DocumentMoniker": "C:\\Users\\partner2\\Desktop\\PDXDevelopmentPTMNewScale\\PTM Web Current Version\\PTM\\Scripts\\HistorialPesadas\\HistorialPesada.js",
-              "RelativeDocumentMoniker": "PTM\\Scripts\\HistorialPesadas\\HistorialPesada.js",
-              "ToolTip": "C:\\Users\\partner2\\Desktop\\PDXDevelopmentPTMNewScale\\PTM Web Current Version\\PTM\\Scripts\\HistorialPesadas\\HistorialPesada.js",
-              "RelativeToolTip": "PTM\\Scripts\\HistorialPesadas\\HistorialPesada.js",
-              "ViewState": "AgIAAIUDAAAAAAAAAAAwwJUDAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2026-06-16T00:23:58.097Z",
-              "EditorCaption": ""
             }
           ]
         }
