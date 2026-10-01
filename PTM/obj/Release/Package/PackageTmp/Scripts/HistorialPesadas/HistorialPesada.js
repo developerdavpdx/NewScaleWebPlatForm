@@ -902,7 +902,12 @@ function VerBitacora(idHPesada) {
 
 //iniciamos el proceso para enviar a SAP
 function EnviarASap() {
-    loader.style.display = 'flex'
+    // Deshabilitar botón inmediatamente
+    const btnEnviar = document.querySelector('button[onclick="EnviarASap()"]');
+    btnEnviar.disabled = true;
+    btnEnviar.innerText = 'Enviando...';
+
+    loader.style.display = 'flex';
     let checked = false;
     let idHistorialSAP = [];
     var tableHistorialP = document.getElementById("PesadasTable")
@@ -953,6 +958,7 @@ function peticionEnvioSap(data) {
                 .catch(err => {
                     clearTimeout(timer); // Limpiamos el timeout si fetch falla
                     reject(err);
+                    rehabilitarBoton();
                 });
         });
     }
@@ -997,6 +1003,7 @@ function peticionEnvioSap(data) {
                 message: `<p>Error: ${error} .</p>`,
             });
             loader.style.display = 'none';
+            rehabilitarBoton();
             //nos aseguramos de que el 'backdrop' deje de existir al terminar el loader
            // $('.modal-backdrop').remove();
         });
@@ -1027,6 +1034,7 @@ function peticionGenerarXML(identifier) {
                 .catch(err => {
                     clearTimeout(timer); // Limpiamos el timeout si fetch falla
                     reject(err);
+                    rehabilitarBoton();
                 });
         });
     }
@@ -1064,6 +1072,7 @@ function peticionGenerarXML(identifier) {
                     message: `<p>` + error + '</p>',
                 });
                 loader.style.display = 'none';
+                rehabilitarBoton();
                 //nos aseguramos de que el 'backdrop' deje de existir al terminar el loader
                 //$('.modal-backdrop').remove();
             }
@@ -1077,9 +1086,18 @@ function peticionGenerarXML(identifier) {
                 message: `<p> ${error}.</p>`,
             });
             loader.style.display = 'none';
+            rehabilitarBoton();
             //nos aseguramos de que el 'backdrop' deje de existir al terminar el loader
             //$('.modal-backdrop').remove();
         });
+}
+
+function rehabilitarBoton() {
+    const btnEnviar = document.querySelector('button[onclick="EnviarASap()"]');
+    if (btnEnviar) {
+        btnEnviar.disabled = false;
+        btnEnviar.innerText = 'Enviar SAP';
+    }
 }
 
 

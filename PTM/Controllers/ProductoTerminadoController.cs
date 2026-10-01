@@ -24,7 +24,10 @@ namespace PTM.Controllers
                 {
                     HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"{IpWebApi}/api/Account/ValidateToken");
                     request.Headers.Add("userId", Session["UserId"].ToString());
-
+                    ViewBag.HoraInicioCorte1 = ConfigurationManager.AppSettings["HoraInicioCorte1"];
+                    ViewBag.HoraFinCorte1 = ConfigurationManager.AppSettings["HoraFinCorte1"];
+                    ViewBag.HoraInicioCorte2 = ConfigurationManager.AppSettings["HoraInicioCorte2"];
+                    ViewBag.HoraFinCorte2 = ConfigurationManager.AppSettings["HoraFinCorte2"];
                     HttpResponseMessage response = await http.SendAsync(request);
 
                     if (response.IsSuccessStatusCode)

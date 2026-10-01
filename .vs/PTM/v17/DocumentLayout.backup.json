@@ -1,10 +1,18 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\partner2\\Desktop\\PDXDevelopmentPTMNewScale\\PTM Web Current Version\\",
+  "WorkspaceRootPath": "C:\\Paradox\\DEVELOPMENT\\NEWSCALEPORTALWEB\\NewScaleWebPlatForm\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9677FDB6-326B-4694-9B9E-5F33CAE4A737}|PTM\\PTM.csproj|c:\\users\\partner2\\desktop\\pdxdevelopmentptmnewscale\\ptm web current version\\ptm\\scripts\\historialpesadas\\historialpesada.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
-      "RelativeMoniker": "D:0:0:{9677FDB6-326B-4694-9B9E-5F33CAE4A737}|PTM\\PTM.csproj|solutionrelative:ptm\\scripts\\historialpesadas\\historialpesada.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+      "AbsoluteMoniker": "D:0:0:{9677FDB6-326B-4694-9B9E-5F33CAE4A737}|PTM\\PTM.csproj|c:\\paradox\\development\\newscaleportalweb\\newscalewebplatform\\ptm\\controllers\\productoterminadocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9677FDB6-326B-4694-9B9E-5F33CAE4A737}|PTM\\PTM.csproj|solutionrelative:ptm\\controllers\\productoterminadocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9677FDB6-326B-4694-9B9E-5F33CAE4A737}|PTM\\PTM.csproj|c:\\paradox\\development\\newscaleportalweb\\newscalewebplatform\\ptm\\views\\productoterminado\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{9677FDB6-326B-4694-9B9E-5F33CAE4A737}|PTM\\PTM.csproj|solutionrelative:ptm\\views\\productoterminado\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9677FDB6-326B-4694-9B9E-5F33CAE4A737}|PTM\\PTM.csproj|c:\\paradox\\development\\newscaleportalweb\\newscalewebplatform\\ptm\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{9677FDB6-326B-4694-9B9E-5F33CAE4A737}|PTM\\PTM.csproj|solutionrelative:ptm\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 9,
           "Children": [
             {
               "$type": "Bookmark",
@@ -50,15 +58,41 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Web.config",
+              "DocumentMoniker": "C:\\Paradox\\DEVELOPMENT\\NEWSCALEPORTALWEB\\NewScaleWebPlatForm\\PTM\\Web.config",
+              "RelativeDocumentMoniker": "PTM\\Web.config",
+              "ToolTip": "C:\\Paradox\\DEVELOPMENT\\NEWSCALEPORTALWEB\\NewScaleWebPlatForm\\PTM\\Web.config",
+              "RelativeToolTip": "PTM\\Web.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2026-10-01T17:10:19.803Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "HistorialPesada.js",
-              "DocumentMoniker": "C:\\Users\\partner2\\Desktop\\PDXDevelopmentPTMNewScale\\PTM Web Current Version\\PTM\\Scripts\\HistorialPesadas\\HistorialPesada.js",
-              "RelativeDocumentMoniker": "PTM\\Scripts\\HistorialPesadas\\HistorialPesada.js",
-              "ToolTip": "C:\\Users\\partner2\\Desktop\\PDXDevelopmentPTMNewScale\\PTM Web Current Version\\PTM\\Scripts\\HistorialPesadas\\HistorialPesada.js",
-              "RelativeToolTip": "PTM\\Scripts\\HistorialPesadas\\HistorialPesada.js",
-              "ViewState": "AgIAAIUDAAAAAAAAAAAwwJUDAAAYAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
-              "WhenOpened": "2026-06-16T00:23:58.097Z",
+              "Title": "ProductoTerminadoController.cs",
+              "DocumentMoniker": "C:\\Paradox\\DEVELOPMENT\\NEWSCALEPORTALWEB\\NewScaleWebPlatForm\\PTM\\Controllers\\ProductoTerminadoController.cs",
+              "RelativeDocumentMoniker": "PTM\\Controllers\\ProductoTerminadoController.cs",
+              "ToolTip": "C:\\Paradox\\DEVELOPMENT\\NEWSCALEPORTALWEB\\NewScaleWebPlatForm\\PTM\\Controllers\\ProductoTerminadoController.cs",
+              "RelativeToolTip": "PTM\\Controllers\\ProductoTerminadoController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAABbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-01T17:09:45.04Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Paradox\\DEVELOPMENT\\NEWSCALEPORTALWEB\\NewScaleWebPlatForm\\PTM\\Views\\ProductoTerminado\\Index.cshtml",
+              "RelativeDocumentMoniker": "PTM\\Views\\ProductoTerminado\\Index.cshtml",
+              "ToolTip": "C:\\Paradox\\DEVELOPMENT\\NEWSCALEPORTALWEB\\NewScaleWebPlatForm\\PTM\\Views\\ProductoTerminado\\Index.cshtml",
+              "RelativeToolTip": "PTM\\Views\\ProductoTerminado\\Index.cshtml",
+              "ViewState": "AgIAAGMAAAAAAAAAAAAhwG0AAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-10-01T17:08:04.72Z",
               "EditorCaption": ""
             }
           ]
