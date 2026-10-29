@@ -26,7 +26,7 @@ namespace PTM.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> GetPTbySku(string sku, string planta)
+        public async Task<ActionResult> GetPTbySku(string sku, string planta,string ignorenewscale)
         {
             try
             {
@@ -34,6 +34,7 @@ namespace PTM.Controllers
                 {
                     http.DefaultRequestHeaders.Add("sku", sku);
                     http.DefaultRequestHeaders.Add("planta", planta);
+                    http.DefaultRequestHeaders.Add("IgnoreNewScale", ignorenewscale);
                     var response = await http.GetAsync($"{webapi}/api/SapPtm/GetPTbySku");
                     if (response.IsSuccessStatusCode)
                     {
@@ -59,7 +60,7 @@ namespace PTM.Controllers
         [HttpPost]
         public async Task<ActionResult> UpdateMaterialEmbalaje(string id, string MultiploCant, string MultiploCat, string Variable,
         string itemName, string minWeight, string flejeCant, string anilloCant, string maderaCant,
-        string arpillaCant, string costalesCant, string tarimaCant, string planta, string usuario)
+        string arpillaCant, string costalesCant, string tarimaCant, string planta, string usuario, string proceso)
         {
             using (HttpClient http = new HttpClient())
             {
@@ -82,6 +83,7 @@ namespace PTM.Controllers
                     tarimaCant = tarimaCant,
                     planta = planta,
                     usuario = usuario,
+                    proceso = proceso,
                     userId = user
                 };
 

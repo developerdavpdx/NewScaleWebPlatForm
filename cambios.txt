@@ -1,0 +1,1227 @@
+========================================================================
+ PTM NewScale - Contexto del proyecto y bitacora de cambios
+ Ultima actualizacion: 29/10/2026
+========================================================================
+
+1. CONTEXTO GENERAL
+------------------------------------------------------------------------
+- Proyecto: PTM NewScale (portal web de planta).
+- Tecnologia: ASP.NET MVC 5 sobre .NET Framework 4.8 (Visual Studio).
+- Base de datos: SAP HANA Cloud, consumida a traves de una Web API externa
+  (el portal solo hace peticiones HTTP a esa API).
+- API: C:\Paradox\PTM\DEVELOPMENT\NEWSCALE\NewScaleWebApi (ASP.NET Core).
+  El usuario autorizo ajustar la API cuando el portal lo requiera
+  (28/10/2026). API local: https://localhost:7227
+- Servidor local: IIS Express en https://localhost:44390
+- Raiz del repo: NewScaleWebPlatForm
+  - PTM.sln
+  - PTM/            -> proyecto web (Controllers, Views, Scripts, Styles)
+  - packages/       -> paquetes NuGet
+  - .vs/            -> cache de Visual Studio (NO versionar)
+
+- El layout fija <title>PTM NewScale</title>, por lo que ViewBag.Title
+  no cambia el titulo de la pestana del navegador.
+- La sesion debe tener Session["Rol"]; sin ella el layout lanza
+  NullReferenceException al entrar a cualquier vista.
+
+
+2. OBJETIVO DEL REDISENO
+------------------------------------------------------------------------
+Modernizar visualmente las vistas con un lenguaje unico, tomando como
+modelo la vista de Ordenes de Fabricacion.
+
+Reglas:
+- Solo se toca presentacion (vistas .cshtml, CSS y JS de la vista).
+- NO se tocan controladores, endpoints, ni logica de negocio.
+- Se conservan todos los IDs y funciones que usa el JavaScript
+  (sumTotal, SumScrapKG, #search, #btn21, verLinea, emailreporte, etc.).
+- La validacion visual la hace el usuario en el navegador.
+
+
+3. SISTEMA DE DISENO ACORDADO
+------------------------------------------------------------------------
+- Fuente: Nunito (ya cargada en _Layout.cshtml).
+- Color primario: #0058A1 (azul corporativo).
+- Titulo de pagina: texto en mayusculas con barra azul a la izquierda
+  (border-left de 5px) y subtitulo en gris.
+- Contadores: "pills" redondeadas (ej. "11 registros").
+- Tarjetas: fondo blanco, radio 12px, sombra suave.
+- Header de seccion: fondo #eef4fb, texto azul, icono a la izquierda.
+- Header de tabla: fondo #eef4fb, texto azul, borde inferior azul,
+  SIN sombra (se neutraliza Flje.css con !important).
+- Celdas: centradas, fuente ~13.4px, filas de ~50px.
+- Botones: alto 38px, radio 8px, variantes primary / outline / ghost.
+- Badges de estado: fondo suave (verde #eaf6e8 / rojo #fdecec) en lugar
+  de bloques solidos con texto blanco.
+- DataTables: interfaz en espanol (Mostrar N registros, Buscar,
+  Mostrando X a Y de Z registros, paginacion Primero/Anterior/...).
+- Modales: sistema comun en Styles/Modales.css (header con degradado
+  azul, body, footer con Cancelar/Confirmar).
+- Iconos: el layout carga Font Awesome 4.7 (Content/font-awesome.min.css).
+  Usar SOLO nombres de FA4 (fa-clock-o, fa-bar-chart, fa-tachometer,
+  fa-balance-scale, fa-info-circle, fa-calendar, fa-times, fa-save,
+  fa-refresh). Los nombres de FA5/FA6 (fa-clock, fa-chart-column,
+  fa-gauge-high, fa-weight-scale, fa-circle-info, fa-calendar-day,
+  fa-xmark, fa-floppy-disk) no existen en esa hoja y se ven en blanco.
+
+
+4. VISTAS REDISENADAS (terminadas y verificadas)
+------------------------------------------------------------------------
+[OK] Ordenes de Fabricacion
+     - PTM/Views/OrdenesFabricacion/Index.cshtml
+     - PTM/Styles/OrdenesFabricacion.css   (nuevo, sin trackear)
+     - PTM/Scripts/OrdenesFabricacion/OrdenesFabricacion.js
+     - Vista modelo del rediseno.
+
+[OK] Datos Maestros
+     - PTM/Views/DatosMaestros/Index.cshtml
+     - PTM/Styles/DatosMaestros.css        (nuevo, sin trackear)
+     - PTM/Scripts/DatosMaestros/DatosMaestroJS.js
+
+[OK] Datos Maestros (Corrugado)
+     - PTM/Views/DatosMaestros/DatosMaestrosCorrugado.cshtml
+     - PTM/Styles/DatosMaestros.css        (compartida con la vista normal)
+     - PTM/Scripts/Corrugado/DatoasMaestros/DatosMaestrosCorrugado.js
+     - Header con barra azul, subtitulo, pill "N codigos", boton
+       Actualizar, boton de Excel (icono) y boton Agregar Codigo.
+     - Tabla en tarjeta con header #eef4fb: Codigo, Descripcion,
+       Proceso (badge azul), Actualizado (badge Si/No), Fecha, Usuario,
+       Tara y Acciones ("Ver detalles"). La fecha muestra dd/mm/aaaa HH:mm.
+     - Se conservaron los IDs y funciones (DatosMaestros, updateCode,
+       modalDetalleSKU, BtnAddCode, btnExportExcel, btn-details, etc.).
+     - Los 2 modales siguen en Modales.css; se agrego un handler para
+       que la X y Cancelar cierren siempre el modal de detalle.
+     - Actualizar SKU guarda en SkuInfos (tara/embalaje) y en
+       SKUkgHrporLinea (lineas), igual que Detalle SKU normal.
+     - El boton "Agregar Codigo" queda OCULTO: los codigos de corrugado
+       vienen de HANA Cloud y no se dan de alta manualmente.
+
+[OK] Asignacion de Lineas
+     - PTM/Views/AsignacionLinia/Index.cshtml
+     - PTM/Styles/AsignacionLinia.css      (nuevo, sin trackear)
+     - PTM/Scripts/AsignacionLineas/AsignacionLineasJS.js
+     - Incluye 3 modales migrados a Modales.css.
+
+[OK] Asignacion de Lineas (Corrugado)
+     - PTM/Views/AsignacionLinia/AsignacionLineaCorrugado.cshtml
+     - PTM/Styles/AsignacionLinia.css      (compartida con PVC/INY)
+     - PTM/Scripts/Corrugado/AsignacionLineas/AsignacionLineasCorrugado.js
+     - Misma estructura que la vista PVC/INY: header con barra azul,
+       contador (lineas/asignadas/disponibles), Actualizar, Exportar
+       con texto, Agregar Linea y Eliminar Linea.
+     - Tarjetas .linea-card (asignada/libre) con estado, proceso y los
+       datos Orden / Kg x Hr / Codigo.
+     - 3 modales migrados a Modales.css; se conservaron todos los IDs y
+       funciones que usa el JS (BtnAddLineaModal, DivIconEcel,
+       BtnAddNweLine, EliminarLineaBtn, desasignarBtn, AsignarLinea,
+       tableHistorial, etc.).
+     - Estado vacio "No hay lineas registradas".
+     - Iconos solo Font Awesome 4.7.
+
+[OK] Detalle SKU
+     - PTM/Views/DetallesSKU/Index.cshtml
+     - PTM/Styles/DetallesSku.css          (nuevo, sin trackear)
+     - PTM/Scripts/DetallesSku/DetallesSkuJS.js
+     - Cuadricula de 4 columnas, boton "Guardar cambios" y "Volver".
+
+[OK] Producto Terminado (PVC)
+     - PTM/Views/ProductoTerminado/Index.cshtml
+     - PTM/Styles/ProductoTerminado.css    (reescrito, trackeado)
+     - PTM/Scripts/ProductoTerminado/ProductoTerminado.js
+     - 6 KPIs en tarjetas, 2 tablas (PT y Scrap) y 2 modales
+       (Correo y Detalle de linea).
+
+[OK] Producto Terminado INY
+     - PTM/Views/ProdTerminadoINY/Index.cshtml
+     - PTM/Styles/ProductoTerminado.css    (compartida con PVC)
+     - PTM/Scripts/ProductoTerminadoINY/ProductoTermInyJS.js
+     - Misma estructura que PVC: header con barra azul, tarjeta de
+       filtros, 6 KPIs, tarjeta de PT y tarjeta de Scrap con sus
+       propios filtros (fecha, corte, codigo y linea).
+     - Los modales de Correo y Detalle de linea se migraron a
+       Modales.css; se conservaron todos los IDs y funciones que usa
+       ProductoTermInyJS.js.
+
+[OK] Historial de Pesadas
+     - PTM/Views/HistorialPedidas/Index.cshtml
+     - PTM/Styles/HistorialPedida.css      (reescrito, trackeado)
+     - PTM/Scripts/HistorialPesadas/HistorialPesada.js
+     - Tabla de 20 columnas con scroll horizontal propio, badges de
+       tipo (PT/SCRPT) y estatus SAP, puntos de estatus, acciones
+       compactas y 4 modales migrados a Modales.css
+       (Correo, Deshabilitar, Editar y Bitacora).
+
+[OK] Dashboard (Inicio)
+     - PTM/Views/Inicio/Index.cshtml
+     - PTM/Styles/Inicio.css               (reescrito, trackeado)
+     - PTM/Scripts/Inicio/InicioJS.js
+     - Header nuevo, 4 KPIs con color de acento y badge contra
+       objetivo, tarjeta de Objetivos responsiva, aviso de "sin
+       produccion" y boton Actualizar (auto-refresh cada 5 min).
+     - El carrusel (Swiper) se conservo tal cual: mismas 4 graficas,
+       flechas, scrollbar y autoplay. Solo se restilizaron las
+       graficas (paleta corporativa, tooltips y ejes).
+
+[OK] Taras y Kg/Hora
+     - PTM/Views/Taras/Index.cshtml
+     - PTM/Styles/Taras.css                (nuevo, sin trackear)
+     - PTM/Scripts/Taras/Taras.js
+     - Dos tarjetas (Taras y Kg/Hora) con header claro, pill de
+       "N registros", selector de archivo propio, boton Cargar datos,
+       tabla y footer con Confirmar actualizacion.
+     - Se quito el <style> embebido de la vista y el bloque .titleHeader.
+
+[OK] Dashboard Molinos
+     - PTM/Views/Molinos/DashboardMolinos.cshtml   (nuevo, sin trackear)
+     - PTM/Styles/Molinos/DashboardMolinos.css     (nuevo, sin trackear)
+     - PTM/Scripts/Molinos/DashboardMolinos.js     (nuevo, sin trackear)
+     - Header con barra azul, subtitulo, pills de Turno y Fecha, boton
+       Actualizar y el switch "Vista molinos" integrado a la derecha.
+     - 2 KPIs en tarjetas (Volumen equipo molienda y Kg/Hora) y aviso
+       de "sin informacion" cuando el turno no trae registros.
+     - Tarjeta "Graficas por molino" con el carrusel (Swiper) intacto:
+       mismas 2 graficas, flechas, scrollbar y autoplay de 5 s.
+       Solo se restilizaron las graficas (paleta corporativa, tooltips
+       en espanol, ejes y sin credito de Highcharts).
+     - La vista ya NO carga EmailTXT.js (el layout ya lo trae).
+     - El switch "Vista molinos" (#DivSwitch) quedo OCULTO por ahora:
+       el markup y el JS siguen intactos, solo hay una regla
+       ".mol-page #DivSwitch { display: none !important }" al final de
+       DashboardMolinos.css. Para reactivarlo, borrar ese bloque.
+
+[OK] Ingresos (Molinos)
+     - PTM/Views/Molinos/Ingresos.cshtml
+     - PTM/Styles/Molinos/Ingresos/Ingresos.css   (reescrito)
+     - PTM/Scripts/Molinos/Ingresos.js
+     - Header con barra azul, subtitulo y pill "Formato .xlsx / .xls".
+     - 3 tarjetas: "Ingreso de scrap" (carga masiva), "Filtros" y
+       "Historial de ingresos".
+     - Carga masiva con selector de archivo propio (nombre del archivo),
+       boton Cargar datos, tabla de previsualizacion con contador
+       "N registros" y footer con nota + Confirmar ingresos.
+     - Filtros: fecha inicial, fecha final, turno y botones
+       Buscar / Excel / PDF.
+     - Historial: contador "N registros", boton Agregar en la cabecera,
+       tabla con header #eef4fb y boton de edicion 32x32 por fila.
+     - Los 2 modales (Agregar y Editar) migrados a Modales.css con
+       header degradado, icono, subtitulo e inputs comunes.
+     - Se conservaron todos los IDs y funciones (archivoexcel,
+       cargaDatosExcelIngresos, tablaDatosIngresos, BtnIngresarDatosExcel,
+       FechaInicioScrapIngreso, FechafinScrapIngreso,
+       InputturnoScrapIngreosMolinos, SearchScrapIngreso,
+       DescargarExcelHistorialIngresos, DescargarPDFHistorialIngresos,
+       AddScrapRegister, TablaIngresosScrap, TableMolineros y los modales).
+
+[OK] Inventario fisico de Scrap y Molinos
+     - PTM/Views/Molinos/Index.cshtml
+     - PTM/Styles/Molinos/InventarioScrapMolinos/InventarioScrapMolinos.css (nuevo)
+     - PTM/Scripts/Molinos/MolinosJs.js
+     - Header con barra azul, subtitulo y botones Excel, PDF, Correo y
+       Agregar acumulado (solo AdmMolinos).
+     - Tarjeta "Inventario por proceso" con tabla de 10 columnas y
+       scroll horizontal propio; encabezado azul oscuro, celdas de
+       proceso/categoria, filas de totales y columna de acumulado.
+     - Se reemplazo el <style> embebido por CSS scopeado .mi-page y los
+       modales de Correo y Agregar acumulado se migraron a Modales.css.
+     - Se conservaron los IDs y funciones (tablePTMWindMill, bodytab,
+       tablaCorreo, staticPeso, selectProces, selectSubFam, closeModal,
+       generarexcel(), generarpdf(), emailreporte(), GuardarAcumulado()).
+     - Iconos Font Awesome 4.7 (se corrigio el icono de PDF).
+     - El DataTable de correos quedo en espanol y se corrigieron los
+       textos "Srap" y "Vacio" del encabezado de totales.
+
+[OK] Detalles Orden de Fabricacion
+     - PTM/Views/DetallesFO/Index.cshtml
+     - PTM/Styles/DetallesFO.css            (nuevo, sin trackear)
+     - PTM/Scripts/DetallesFO/DetallesFO.js (nuevo, sin trackear)
+     - Se elimino el <style> embebido y la tabla sin DataTables; ahora
+       usa el mismo lenguaje visual que Ordenes de Fabricacion.
+     - Header con barra azul, subtitulo, pills de Orden (num. documento),
+       Clave (DocEntry) y "N componentes", boton Volver y boton
+       Actualizar.
+     - Tarjeta "Componentes de la orden" con header #eef4fb y tabla:
+       Codigo, Descripcion, Cant. base, Cant. requerida, Cant. planeada,
+       Almacen (badge gris) y Proceso (badge azul).
+     - Se quito la columna "Clave" repetida en cada fila; la clave de la
+       orden ahora se muestra en el pill del encabezado.
+     - Se agrego la columna "Cant. planeada" (cantidadplaneada), que el
+       endpoint ya devolvia.
+     - DataTables en espanol, sin ordenamiento, responsive y estado
+       vacio "Sin componentes registrados".
+     - El boton Volver regresa a /OrdenesFabricacion/Index.
+     - Si no hay docEntry en localStorage (entrada directa), muestra el
+       aviso "Sin orden seleccionada" y no dispara la peticion.
+     - Se conservaron tablaDetallesOF, TBOFDetail, peticionDetallesFO y
+       docEntry; la logica inline se movio a DetallesFO.js.
+     - OrdenesFabricacion.js: verDetallesFO ahora recibe tambien
+       NUMERODOCUMENTO e ITEMCODE y los guarda en localStorage
+       (dfoNumero, dfoItem) para el encabezado del detalle.
+     - Iconos Font Awesome 4.7.
+
+
+5. INFRAESTRUCTURA COMPARTIDA
+------------------------------------------------------------------------
+- PTM/Views/Shared/_Layout.cshtml
+    Se reordeno la carga de CSS/JS y se agrego:
+      - Styles/NavbarEnhancements.css
+      - Bootstrap Icons
+      - Cache-buster en hojas/scripts propios
+    OJO: _layOut.css y NavbarEnhancements.css tambien llevan cache-buster
+         desde el 28/10/2026; antes el navegador seguia mostrando el fondo
+         viejo del menu despues de editarlos.
+    OJO: el layout mezcla Bootstrap 5 (CSS) con Bootstrap 4 (JS).
+         Por eso los modales usan data-toggle / data-dismiss,
+         NUNCA data-bs-*.
+
+- PTM/Styles/NavbarEnhancements.css (nuevo, sin trackear)
+    Corrige contraste y espaciado del navbar/topbar superior.
+
+- PTM/Styles/Modales.css (nuevo, sin trackear)
+    Estilos reutilizables de modales:
+    .modal-header-custom, .modal-title-custom, .modal-body-custom,
+    .modal-footer-custom, .btn-modal-cancelar, .btn-modal-guardar,
+    .btn-close-custom, .modal-banner-info, .modal-90.
+
+- PTM/Styles/CorreosModal.css (nuevo, sin trackear)
+    Modal global "Correos" (#correoTXT), que vive en _Layout.cshtml.
+    Header con degradado azul, tabs segmentadas, tabla con header claro,
+    boton de eliminar 30x30 y body.modal-open. Se carga solo desde el
+    layout y todo va scopeado a #correoTXT para no tocar otros modales.
+
+- PTM/Styles/_layOut.css
+    Se limpio/redujo (antes 12,000+ lineas). Sigue forzando
+    .nav-link { color: #fff !important }, por lo que los tabs requieren
+    overrides con !important en cada vista.
+
+- PTM/Styles/Flje.css
+    NO se edita. Sus reglas globales de thead/th/td se neutralizan
+    por pagina con !important dentro de cada CSS scopeado.
+
+- Patron de scope: cada vista envuelve todo en un contenedor propio
+    (.of-page, .dm-page, .pt-page, etc.) y sus reglas CSS viven dentro
+    de ese scope para no filtrar estilos al resto del sistema.
+
+
+6. CORRECCIONES TECNICAS APLICADAS
+------------------------------------------------------------------------
+- Producto Terminado / filtradoHistorialPesadas():
+    Faltaba "return" despues del aviso de fecha vacia, por lo que la
+    peticion se disparaba igual. Corregido en los dos bloques de corte.
+
+- Producto Terminado / emailreporte():
+    Enviaba tambien la columna del boton de detalle. Ahora usa
+    row.slice(1), igual que las exportaciones a Excel y PDF.
+
+- Producto Terminado / id="btnDetails" duplicado:
+    Se generaba un id repetido por fila (HTML invalido). Ahora se usa
+    la clase .pt-row-btn y la delegacion de eventos es por clase.
+
+- Producto Terminado / NaN en KPIs:
+    Cuando no habia registros, % Sobrepeso, % Eficiencia y % Scrap
+    mostraban NaN. Se agregaron guardas de division por cero.
+
+- Modales / bloqueo de scroll:
+    El CSS de Bootstrap cargado no define .modal-open; se agrego
+    body.modal-open { overflow: hidden; } en ProductoTerminado.css.
+
+- Modales de Detalle de linea:
+    Se corrigio el cierre por X, por boton y por clic en el fondo,
+    liberando siempre el scroll del body.
+
+- Cache-buster:
+    CSS y JS propios se referencian con
+    ?v=@System.IO.File.GetLastWriteTime(...).Ticks
+    para evitar que el navegador sirva versiones viejas.
+
+- Historial de Pesadas / filtradoHistorialPesadas() y GetHistorialWeight():
+    Igual que en Producto Terminado, faltaba "return" en los avisos de
+    fecha vacia, asi que la peticion se disparaba de todos modos.
+    Corregido en los dos bloques de validacion (corte y turno).
+
+- Historial de Pesadas / GuardarEdicion():
+    Los "return" estaban comentados: sin comentario, linea o codigo se
+    seguia con el guardado. Ahora cortan la ejecucion y apagan el loader.
+
+- Historial de Pesadas / NaN en "Sobrepeso":
+    pesoEstandar = 0 (SKU sin peso minimo) producia NaN. Se agrego la
+    misma guarda de division por cero que en Producto Terminado.
+
+- Historial de Pesadas / ObtenerEmail():
+    La tercera columna del modal de Correo repetia el nombre completo.
+    Ahora muestra sapemail[x].email, como en Producto Terminado.
+
+- Historial de Pesadas / contadores:
+    Se agregaron los pills "N registros" y "N seleccionados". Se
+    actualizan en drawCallback y al marcar/desmarcar checkboxes, por lo
+    que respetan la paginacion y los filtros.
+
+- Historial de Pesadas / checkBoxSeleccionar():
+    "Seleccionar todos" ahora llama a actualizarSeleccionados() para
+    refrescar el contador en el mismo instante.
+
+- Historial de Pesadas / EnviarASap():
+    El boton ahora conserva su icono: el texto "Enviando..." se aplica
+    al span .hp-btn-label en lugar de borrar todo el contenido. Si el
+    boton no existe (vista Reportes) ya no lanza excepcion.
+
+- Historial de Pesadas / errores de red:
+    Las ramas else y catch de GetHistorialWeight y del filtro estaban
+    vacias. Ahora muestran un aviso con iziToast para que el usuario
+    sepa que la consulta fallo.
+
+- Historial de Pesadas / body.modal-open:
+    Se agrego tambien en HistorialPedida.css, porque este layout no
+    define la clase y el fondo seguia scrolleando con el modal abierto.
+
+- Dashboard / clases inexistentes en las tarjetas KPI:
+    Usaba border-bottom-dark/danger/success/warning, text-xs y
+    text-gray-800 (de SB Admin 2), que no existen en el Bootstrap 5
+    cargado. Las 4 tarjetas se veian iguales, sin color de acento.
+    Ahora el color va por clase propia (.inicio-kpi-*) y la tipografia
+    esta definida en Inicio.css.
+
+- Dashboard / fila de objetivos desbordada:
+    Era flex-nowrap con etiquetas de 24px: necesitaba ~842px en un
+    contenedor de ~697px. Ahora es flex-wrap con etiquetas de 12px,
+    inputs de 118px y el boton alineado a la derecha.
+
+- Dashboard / contenido encajonado:
+    Habia un .container dentro del container-fluid del layout, asi que
+    la vista medía ~673px contra ~1117px del resto. Ahora ocupa el ancho
+    completo, como las demas vistas.
+
+- Dashboard / id="SobrePeso" duplicado:
+    Se repetia en la tarjeta de PPVC y en la de INY. Renombrado a
+    lblSobrepesoPPVC / lblSobrepesoINY.
+
+- Dashboard / las graficas dependian de INY:
+    CrearGraficos() solo se llamaba en el success de la peticion INY.
+    Si INY fallaba, PPVC tampoco se dibujaba. Ahora la carga usa
+    Promise.allSettled, PPVC se pinta aunque INY falle y, en planta 1,
+    las peticiones y graficas de INY se omiten por completo.
+
+- Dashboard / if (jsonData.status = 200):
+    Era una asignacion, no una comparacion: siempre entraba al success.
+    Corregido a != 200 con throw.
+
+- Dashboard / Highcharts.setOptions repetido:
+    Se llamaba antes de cada grafica y la ultima configuracion ganaba
+    globalmente. Ahora hay un solo tema (aplicarTema) y las graficas se
+    generan con funciones reutilizables (volumen, sobrepeso, eficiencia,
+    scrap), destruyendo la instancia anterior antes de redibujar.
+
+- Dashboard / guardar objetivos recargaba la pagina:
+    Hacia location.reload() a los 2s. Ahora recarga solo los datos y
+    redibuja las graficas en sitio.
+
+- Dashboard / errores silenciosos:
+    Los catch solo hacian console.log y el loader podia quedarse
+    prendido. Ahora se avisa con iziToast, el loader siempre se apaga y
+    se muestra un aviso de "sin produccion" cuando todo esta en cero.
+
+- Dashboard / indicadores nuevos:
+    Pills de turno, planta y hora de actualizacion; contador de lineas
+    con produccion; badge "Dentro/Fuera del objetivo" para sobrepeso y
+    scrap; boton Actualizar y auto-refresh cada 5 minutos (solo con la
+    pestana visible).
+
+- Taras / datosfinales compartido:
+    Una sola variable guardaba el ultimo excel cargado, sin importar la
+    seccion. Si se cargaba el archivo de Kg/Hora y luego se presionaba
+    "Confirmar actualizacion" en Taras, se enviaban los datos de
+    Kg/Hora al endpoint de taras (y viceversa). Ahora cada seccion usa
+    su propio arreglo (datosTaras / datosKgHora) y avisa si se intenta
+    confirmar una seccion sin archivo cargado.
+
+- Taras / loader atorado:
+    Los XHR no tenian onerror, asi que un fallo de red dejaba el loader
+    prendido. Ahora todos los catch apagan el loader y avisan con
+    iziToast.
+
+- Taras / "NaN" en la tara:
+    parseFloat(...).toFixed(3) convertia celdas vacias o no numericas en
+    "NaN". Ahora se respeta el valor original cuando no es numero.
+
+- Taras / textos con encoding roto:
+    El toast de taras decia "Actualizaci?n" (caracter invalido en el
+    archivo). Se reescribio el JS con acentos correctos.
+
+- Taras / DataTables en ingles:
+    Las dos tablas no tenian idioma ni estado vacio. Ahora usan el mismo
+    objeto en espanol que el resto de las vistas ("Mostrar N registros",
+    "Sin registros para mostrar", "Ultimo", etc.).
+
+- Correos (modal global) / "Error: SyntaxError: undefined is not valid JSON":
+    getCorreosTXT() hacia JSON.parse(jsonData.data) sin revisar el status.
+    Cuando el controlador responde 400 no manda "data", asi que el parse
+    reventaba y el usuario solo veia un error tecnico. Ahora se valida el
+    status y, si no hay lista, la tabla queda vacia con un aviso claro.
+
+- Correos / planta2 nunca se asignaba:
+    Se declaraba "let planta2" pero jamas recibia valor, asi que las tres
+    peticiones viajaban sin planta. Ahora se resuelve en document.ready
+    con la misma regla que el resto del sistema (335 -> planta 2).
+
+- Correos / parametros por JSON a un controlador MVC:
+    Los endpoints GetMailsTXT, AddNewMailTXT y RemoveMailTXT reciben sus
+    parametros por formulario/query, no por body JSON, por lo que siempre
+    llegaban en null. Ahora el JS manda URLSearchParams.
+
+- Correos / mensaje equivocado al agregar:
+    El controlador devuelve "El correo ya existe" para cualquier fallo de
+    la API. El JS ya no muestra ese texto: pide revisar la lista del
+    servidor y los correos repetidos.
+
+- Correos / tabla dentro de una pestana oculta:
+    DataTables calculaba los anchos con la tabla oculta. Ahora se llama a
+    columns.adjust() al mostrar la pestana y al abrir el modal.
+
+- Correos / cache del JS:
+    EmailTXT.js y CorreosModal.css se cargan ahora con cache-buster; el
+    navegador seguia sirviendo la version vieja del script.
+
+- Producto Terminado INY / referencias a la tabla de PVC:
+    emailreporte() y la exportacion del PDF leian tablePvcProdTerm, que
+    no existe en esta vista (es la tabla de PVC), asi que al enviar el
+    correo lanzaba ReferenceError. Ahora usan tableInyProdTerm.
+
+- Producto Terminado INY / reset de filtros roto:
+    filtradoHistorialPesadas() comparaba document.getElementById("aFecha")
+    (id de PVC) y limpiaba tablePvcProdTerm. Al buscar sin filtros
+    lanzaba TypeError. Ahora usa aFechaIny, corte == "0" y
+    tableInyProdTerm.
+
+- Producto Terminado INY / contadores, idioma y NaN:
+    Las 4 tablas usan ahora el idioma en espanol y las dos principales
+    tienen contador "N registros". Se limpian antes de repintar (antes
+    se duplicaban filas al volver a filtrar) y se evitan NaN/Infinity
+    cuando no hay registros. El detalle de linea ya limpia la tabla
+    (clear().draw sin parentesis no hacia nada).
+
+- Producto Terminado INY / boton de detalle:
+    El icono <i> de la primera columna se cambio por el mismo boton
+    .pt-row-btn de PVC (32x32), conservando el id btnDetails que usa el
+    JS para abrir el modal.
+
+- Dashboard Molinos / SyntaxError "Identifier 'tablecorreostxtEmail' has
+    already been declared":
+    La vista cargaba EmailTXT.js y el layout tambien, asi que el script
+    se ejecutaba dos veces y el segundo let reventaba el archivo. Se
+    quito de la vista y quedo solo el del layout (como en las demas
+    vistas).
+
+- Dashboard Molinos / KPIs en "--" y graficas vacias por concatenacion:
+    VolumenMolienda += pesoTot concatenaba strings ("0" + "1234.5") y
+    KgHoraReal = Volumen / HorasDiferencia podia dividir entre 0 o entre
+    undefined. Ahora todo pasa por Number(...) || 0 y la division solo se
+    hace cuando HorasDiferencia > 0.
+
+- Dashboard Molinos / el boton Actualizar duplicaba datos:
+    Los arreglos (MolinoLINEAS, MolinoVOLUMEN, KgHoraObjetivoMolino,
+    KgHoraRealMolino) y los acumulados no se limpiaban, asi que cada
+    recarga sumaba otra vez. Ahora cargarDashboardMolinos() los resetea
+    antes de pedir los datos y recalcula turno y fecha.
+
+- Dashboard Molinos / graficas duplicadas al redibujar:
+    Highcharts.chart() sobre un contenedor con una grafica viva dejaba
+    dos instancias. Ahora destruirGraficaMolinos() busca la instancia por
+    renderTo y la destruye antes de crear la nueva.
+
+- Dashboard Molinos / tema de Highcharts:
+    Se reemplazo el tema claro generico y el setOptions de colores por un
+    solo aplicarTemaMolinos() con la paleta corporativa (azul #0058A1
+    para volumen, gris #94a3b8 para objetivo y verde #2e7d32 para real).
+
+- Dashboard Molinos / iconos en blanco:
+    La vista usaba nombres de FA6 (fa-clock, fa-gauge-high, etc.) que no
+    existen en el Font Awesome 4.7 que carga el layout. Se cambiaron por
+    los equivalentes de FA4. Mismo pendiente en otras vistas (ver
+    seccion 7).
+
+- Ingresos / el modal se abria y se cerraba al instante:
+    El handler global de "clic fuera del modal" cerraba cualquier modal
+    visible, incluido el que se acababa de abrir con el boton Agregar.
+    Ahora solo cierra cuando el clic cae en el fondo (.modal) y se uso
+    la API de Bootstrap 5 para abrir/cerrar. El boton X, Cancelar y el
+    clic fuera liberan siempre el scroll del body.
+
+- Ingresos / "$.ajax is not a function":
+    El layout carga jQuery slim al final del body y reemplaza a
+    window.jQuery, por lo que la version completa (con $.ajax) se perdia.
+    La vista guarda esa referencia al inicio ($jq) y la usa para
+    ProcesarExcel y GuardarDatosExcelIngresosEnBD.
+
+- Ingresos / la tabla no se limpiaba al recargar:
+    RecargarTabla() llamaba tableScrapIngresosoMolino.clear().draw sin
+    parentesis, asi que no hacia nada. Corregido y el contador se
+    refresca al limpiar.
+
+- Ingresos / validacion de fecha vacia:
+    El boton Buscar comparaba la variable global FechaFinFiltro en lugar
+    del valor del input, por lo que la peticion se disparaba igual.
+    Ahora valida FechaInicioSearch y corta con return.
+
+- Ingresos / iconos FA6:
+    La vista y el JS usaban fa-solid fa-pen-to-square y fa-file-pdf.
+    Se cambiaron por fa fa-pencil y fa fa-file-pdf-o (FA4).
+
+- EPPlus 8 / licencia en los controladores:
+    EPPlus 8.7.2 ya no acepta LicenseContext = NonCommercial; hay que
+    usar ExcelPackage.License.SetNonCommercialPersonal(...). Se
+    reemplazo en MolinosController (798, 859), DatosMaestrosController
+    (168, 254) y OperadorController (681, 742) con la misma cadena que
+    el resto del proyecto ("IrvingPDX140102"). Con eso ProcesarExcel y
+    GenerarExcel volvieron a funcionar.
+
+- Ingresos / columna "Planta" vacia y warning de DataTables:
+    La API no devolvia la propiedad "planta" en el historial (el modelo
+    MolinosRegistrosIngresos no la incluia), asi que DataTables lanzaba
+    "Requested unknown parameter '6'". Se agrego Planta al modelo del API
+    y, como respaldo, el JS usa la planta de la sesion si el campo falta.
+
+- Menu / rol AdmMolinos:
+    Se conserva el menu completo (Dashboard, Ingresos, Catalogos,
+    Asignacion Linea, Catalogos de Molinos, Reporte Molinos y Concentrado),
+    pero se quitaron los enlaces a DatosMaestros/Index y
+    AsignacionLinia/Index. Las versiones CORRUGADO de ambos siguen
+    visibles.
+
+- Datos Maestros (Corrugado) / estilos heredados:
+    La vista usaba titleHeader, containerTable y botones btn-filtro-*.
+    Ahora usa el mismo sistema que Datos Maestros normal (dm-page,
+    dm-header, dm-count, dm-card, dm-table), con badges para Proceso y
+    Actualizado, contador "N codigos" y DataTables en espanol. Se agrego
+    el boton Actualizar (recarga sin refrescar) y el de Excel quedo como
+    icono, igual que en la vista normal.
+
+- Datos Maestros (Corrugado) / cerrar el modal de detalle:
+    data-dismiss no respondia cuando el modal se abria por JavaScript.
+    Se agrego un handler explicito para la X y para Cancelar/Cerrar; el
+    scroll del body se libera correctamente.
+
+- Datos Maestros (Corrugado) / actualizar SKU:
+    El JS no enviaba flejeCant, costalesCant, tarimaCant, anilloCant,
+    maderaCant ni arpillaCant; el API hacia float.Parse(null) y fallaba.
+    Ahora se envian con '0' por defecto. Tambien se corrigio UserNameSes
+    (no existia en el script) y las lineas nuevas: UpdateDataLinea solo
+    actualiza, asi que las nuevas se insertan con AddNewDataLine.
+
+- Datos Maestros (Corrugado) / Proceso:
+    El API guardaba Proceso = "PT" en los registros nuevos. Se agrego el
+    parametro Proceso al portal y al API; la vista manda "Corrugado".
+
+- Datos Maestros (Corrugado) / readonly:
+    Los campos disabled/readonly de los modales ahora tienen fondo gris
+    (form-control-custom y el form-control plano del detalle).
+
+- Datos Maestros (Corrugado) / exportar:
+    El boton de Excel ahora muestra el texto "Exportar" junto al icono.
+
+- Datos Maestros (Corrugado) / badge "Actualizado":
+    Solo consideraba el turno 1 (04:30-16:30), asi que un cambio en el
+    turno 2 se veia como "No". Ahora usa la misma logica que Datos
+    Maestros normal: turno 1 y turno 2 (16:30-04:30).
+
+- Datos Maestros (Corrugado) / boton Agregar Codigo:
+    Se oculto por regla de negocio: los codigos vienen de HANA Cloud y no
+    se dan de alta manualmente. El modal y el JS se conservan por si se
+    reactivan despues.
+
+- Datos Maestros / fecha de actualizacion con hora:
+    La columna "Fecha de ultima actualizacion" ahora muestra
+    dd/mm/aaaa HH:mm (24 h) en Datos Maestros normal y en Corrugado.
+
+- Corrugado / "WebApiURL is not defined":
+    AsignacionLineasCorrugado.js y DatosMaestrosCorrugado.js usaban la
+    constante sin declararla. Ahora la leen de localStorage ("webapiurl"),
+    igual que el resto de scripts de Corrugado. Esas vistas cargan sus
+    scripts con cache-buster.
+
+- Asignacion de Lineas (Corrugado) / migracion visual:
+    Se aplico la misma plantilla de AsignacionLinia/Index (PVC/INY).
+    El JS ahora genera tarjetas .linea-card y actualiza los contadores
+    del encabezado; el boton Actualizar reutiliza getLineas().
+    El DataTable del historial quedo en espanol y se agrego el estado
+    vacio. No se tocaron endpoints ni la logica de asignar, desasignar,
+    eliminar o exportar. El boton Exportar conserva el id DivIconEcel
+    (lo usa el JS) y ahora muestra el texto "Exportar".
+
+- Asignacion de Lineas (Corrugado) / boton Agregar Linea:
+    AgregaLineaBtn reutilizaba la variable numLineas (la respuesta de
+    lineas) para guardar el siguiente numero. Al abrir el modal una
+    segunda vez, numLineas ya era un numero y el boton fallaba con
+    "Cannot read properties of undefined (reading 'length')". Ahora el
+    numero se calcula sin sobrescribir numLineas y se toma del input al
+    guardar la linea.
+
+- Molinos / Inventario fisico de Scrap y Molinos:
+    El controlador MolinosController habia perdido los metodos
+    GetAllMolinos, generarexcel y AgregarAcumuladoEmbarque al
+    reorganizar los scripts de Molinos. Se restauraron. GetAllMolinos
+    ahora manda la planta por query string porque la API
+    /api/Scrap/GetAllScrap la recibe asi; AgregarAcumuladoEmbarque lee
+    el JSON del body (proceso, familia, peso, planta) y manda los 4
+    headers que espera la API. Sin estos metodos la vista no cargaba
+    datos (404) y el modal de acumulado no guardaba.
+
+- Molinos / Inventario fisico de Scrap y Molinos / PDF:
+    generarpdf armaba el PDF sin compresion: salia de ~21 MB y la
+    descarga fallaba (0 bytes en el navegador). Se agregaron
+    compress/objcompress al constructor de jsPDF; el PDF baja a
+    ~183 KB (3 paginas) y descarga correctamente.
+
+- Molinos / Inventario fisico de Scrap y Molinos / Correo:
+    La API SPPDX_GETEMAILSMOLINOS no devuelve correos en el ambiente
+    actual. El modal muestra "Sin correos registrados" y el JS ya no
+    lanza error en consola (valida la respuesta antes de parsear).
+
+- Iconos FA5/FA6 en TODO el portal (resuelto 29/10/2026):
+    El layout solo carga Content/font-awesome.min.css (Font Awesome
+    4.7). Los nombres de FA5/FA6 no existen en esa hoja y se dibujaban
+    en blanco. Se revisaron TODAS las vistas y scripts contra el CSS
+    real y se cambiaron por su equivalente FA4:
+        fa-clock                -> fa-clock-o
+        fa-chart-column         -> fa-bar-chart
+        fa-chart-bar            -> fa-bar-chart
+        fa-chart-line           -> fa-line-chart
+        fa-chart-simple         -> fa-tachometer
+        fa-gauge-high           -> fa-tachometer
+        fa-weight-scale         -> fa-balance-scale
+        fa-scale-balanced       -> fa-balance-scale
+        fa-circle-info          -> fa-info-circle
+        fa-clock-rotate-left    -> fa-history
+        fa-xmark                -> fa-times
+        fa-floppy-disk          -> fa-save
+        fa-pen-to-square        -> fa-pencil
+        fa-pen                  -> fa-pencil
+        fa-triangle-exclamation -> fa-exclamation-triangle
+        fa-file-excel           -> fa-file-excel-o
+        fa-file-pdf             -> fa-file-pdf-o
+        fa-list-check           -> fa-tasks
+        fa-clipboard-list       -> fa-clipboard
+        fa-warehouse            -> fa-cubes
+    Tambien se quitaron los prefijos FA6 "fa-solid ", "fa-regular " y
+    "fa-brands " (en FA4 basta la clase "fa"). Solo se tocaron nombres
+    de clase de iconos: NO se cambio ningun id, funcion, texto ni
+    logica.
+    Archivos corregidos:
+        PTM/Views/Shared/_Layout.cshtml      (menu lateral y topbar:
+            Dashboard, Catalogos, Asignacion Linea, Ordenes
+            Fabricacion, Ingresos, Inventario fisico de Scrap)
+        PTM/Views/Inicio/Index.cshtml
+        PTM/Views/Taras/Index.cshtml
+        PTM/Views/ProductoTerminado/Index.cshtml
+        PTM/Views/ProdTerminadoINY/Index.cshtml
+        PTM/Views/HistorialPedidas/Index.cshtml
+        PTM/Views/Molinos/ReporteMolinos.cshtml
+        PTM/Views/Codigos/Index.cshtml       (boton Guardar)
+        PTM/Views/Lineas/Index.cshtml        (boton Guardar)
+        PTM/Views/Scrap/Index.cshtml
+        PTM/Views/ScrapIny/Index.cshtml
+        PTM/Views/ReciboScrap/Index.cshtml
+        PTM/Views/Reportes/Index.cshtml
+        PTM/Scripts/HistorialPesadas/HistorialPesada.js
+        PTM/Scripts/Corrugado/HistorialPesadas/HistorialPesadaCorrugado.js
+        PTM/Scripts/Inicio/InicioJS.js       (badge Dentro/Fuera)
+        PTM/Scripts/Molinos/CatalogosMolino.js
+        PTM/Scripts/Molinos/CatalogosArticuloMolino.js
+        PTM/Scripts/Molinos/CatalogosMolinerosMolino.js
+    Verificacion: se extrajeron todas las clases fa-* de Views y
+    Scripts y se compararon contra las 786 definidas en
+    font-awesome.min.css. Ya no queda ninguna clase inexistente (los
+    unicos "falsos positivos" son utilidades como fa-2x, fa-spin,
+    fa-fw, fa-ul, que si existen).
+    Tambien se agrego cache-buster a los 3 scripts de Catalogos de
+    Molinos (CatalogosMolino.cshtml, CatalogosArticulosMolino.cshtml y
+    CatalogosMolinerosMolino.cshtml), que se cargaban sin ?v= y el
+    navegador seguia sirviendo la version vieja con fa-pen-to-square.
+    OJO: PTM/Styles/FontAwesome5.css y PTM/Content/fontawesome.min.css
+    existen pero NO los carga nadie (archivos muertos). No se tocaron.
+    OJO: PTM/Scripts/Corrugado/HistorialPesadas/HistorialPesadaCorrugado.js
+    no lo referencia ninguna vista (archivo muerto); se corrigio igual
+    por consistencia.
+
+- Historial de Pesadas / aviso "No se pudo obtener el historial de
+  pesadas" (RESUELTO 29/10/2026):
+    El SP DBADMIN.SPPDX_GetSkuPT ahora exige los parametros
+    P_CORRUGADO y P_IGNORENEWSCALE, pero
+    WebApiPtmHana/Controllers/HistorialPesadasController.cs lo llamaba
+    SIN parametros en GetAllHistorial (linea 50) y en FilterHistorical
+    (linea 235). HANA respondia 500
+    "wrong number or types of parameters in call: P_CORRUGADO is not
+    bound" y el portal solo mostraba un aviso generico.
+    Las dos llamadas ahora agregan:
+        command.Parameters.Add("P_CORRUGADO", HanaDbType.NVarChar).Value = null;
+        command.Parameters.Add("P_IGNORENEWSCALE", HanaDbType.Integer).Value = null;
+    (null = sin filtro, igual que SapPtmController cuando no recibe los
+    headers).
+    Ademas el portal ya NO oculta la causa: HistorialPedidasController
+    tiene el helper DetalleErrorApi() que saca "message"/"response" del
+    cuerpo de error de la API, y los dos else de GetAllHistoryWeight y
+    FilterHistoricalW devuelven
+    "Error ... (HTTP 500): <causa real>". HistorialPesada.js muestra ese
+    detalle con DetalleErrorHistorial() en los dos avisos (warning de
+    carga y warning del filtro), escapando el HTML.
+    Validado el 29/10/2026:
+        GET  /api/HistorialPesadas/GetAllHistorial  (planta 33 y 335) -> 200
+        GET  /api/HistorialPesadas/FilterHistorical (corte 1,
+             2026-10-01) -> 200 con datos
+        Portal /HistorialPedidas/GetAllHistoryWeight   -> status 200
+        Portal /HistorialPedidas/FilterHistoricalW     -> status 200
+        Con planta invalida (1) el portal responde
+        "Error al consultar la Web API (HTTP 500): No exíste el
+        identificador 1 de planta." en lugar del texto generico.
+    OJO al compilar/arrancar la API (no es del portal):
+        - Tiene una referencia COM, asi que "dotnet build" falla con
+          MSB4803. Compilar con el MSBuild de Visual Studio.
+        - Debe correr con el directorio de trabajo del proyecto
+          (WebApiPtmHana\), porque escribe TicketPTM/ErrorJob.txt.
+        - Si se lanza el .exe directo hay que definir
+          ASPNETCORE_URLS=https://localhost:7227; de lo contrario
+          escucha en el puerto 5000.
+
+
+
+7. PENDIENTES / SIGUIENTES VISTAS
+------------------------------------------------------------------------
+- No queda ninguna vista del menu pendiente de rediseno.
+- Codigos y Lineas las ajusto el usuario por su cuenta; no se
+  documentan en este archivo.
+- Correos (modal global) quedo documentado en las secciones 5, 6, 9 y 10.
+
+Notas:
+- Datos Maestros (Corrugado) quedo redisenado (ver seccion 4); falta la
+  revision visual del usuario.
+- Asignacion de Lineas (Corrugado) quedo redisenada el 28/10/2026
+  (ver seccion 4); falta la revision visual del usuario.
+- Ingresos (Molinos) quedo redisenado y aprobado por el usuario el
+  28/10/2026 (ver seccion 4).
+- Dashboard Molinos ya quedo redisenado (ver seccion 4); solo falta la
+  revision visual del usuario.
+- Historial de Pesadas, Dashboard (Inicio), Taras/Kg-Hora, Producto
+  Terminado INY y Dashboard Molinos ya quedaron redisenados (ver
+  seccion 4).
+- Iconos FA6 en vistas ya aprobadas: RESUELTO el 29/10/2026.
+  Inicio, Taras, Producto Terminado (PVC/INY), Historial de Pesadas,
+  el menu del layout y el resto de vistas/scripts ya usan solo nombres
+  de Font Awesome 4.7 (ver seccion 6, "Iconos FA5/FA6 en TODO el
+  portal"). Falta unicamente la revision visual del usuario.
+- PTM/Views/Reportes/Index.cshtml es una vista heredada sin enlace en el
+  menu. Comparte HistorialPedida.css y HistorialPesada.js, pero su tabla
+  usa class="table" (no tableHP), asi que pierde el estilo nuevo. Si se
+  reactiva, hay que darle el mismo tratamiento.
+- PTM/Styles/HistorialPesos.css sigue sin trackear y sin uso; la hoja
+  que carga la vista es HistorialPedida.css. Se puede borrar o dejar
+  para una limpieza posterior.
+- PTM/obj/Release/Package/PackageTmp/ contiene copias viejas del codigo.
+  NO confundirlas con el codigo fuente.
+
+
+8. ESTADO DE GIT
+------------------------------------------------------------------------
+- main queda intacto en 15752fa "Cambio de filtros de Scrap".
+- Rama del rediseno: rediseno-ui (creada el 29/10/2026).
+  Commits:
+    1e0e0a7  feat(ui): infraestructura compartida del rediseno
+    068e59a  feat(ui): rediseno de vistas y modulos
+             Molinos/Corrugado/Operador
+    (siguiente) fix: correcciones tecnicas y documentacion
+- main NO se toca hasta que el usuario apruebe la revision visual.
+  Para volver: git checkout main
+- Se commitearon las vistas de las secciones 4 y 5, las carpetas
+  completas de Scripts/Corrugado y Scripts/Molinos (reorganizacion del
+  usuario, incluida a proposito) y los modulos nuevos de Molinos,
+  Corrugado y Operador que el layout ya referencia.
+- Archivos que quedaron FUERA del commit a proposito:
+    PTM/Web.config          cadena de conexion local (DEVELOPER-FER)
+    PTM/packages.config     actualizacion EPPlus/OpenXml
+    PTM.sln                 migracion a Visual Studio 18
+    PTM/Content/bootstrap*.css y PTM/Scripts/bootstrap*.js
+                            solo ruido de fin de linea / 1 ajuste
+    PTM/plantillas/dma.xlsx binario ajeno al rediseno
+    PTM/Styles/HistorialPesos.css (sin uso)
+    PTM/Styles/Producto Termindo/ProductoTerminado Corrugado.css
+                            (sin uso)
+- OJO: el repositorio NO tiene .gitignore y hay ~1,144 archivos
+  versionados de bin/, obj/, .vs/ y packages/. Es una limpieza pendiente
+  y separada; no se toco en este checkpoint.
+
+
+9. COMO VALIDAR CADA VISTA
+------------------------------------------------------------------------
+Abrir con IIS Express en https://localhost:44390 y revisar:
+
+  Ordenes de Fabricacion  /OrdenesFabricacion/Index
+    - Carga sola. Verificar contador "N ordenes" y que el boton
+      Actualizar recarga sin recargar la pagina.
+
+  Detalles Orden de Fabricacion  /DetallesFO/Index
+    - Entrar desde Ordenes de Fabricacion con "Ver Detalles": el
+      encabezado debe mostrar Orden (num. documento), Clave (DocEntry)
+      y "N componentes".
+    - La tabla debe traer Codigo, Descripcion, Cant. base,
+      Cant. requerida, Cant. planeada, Almacen y Proceso, con header
+      #eef4fb, borde inferior azul y sin sombra.
+    - Volver regresa a /OrdenesFabricacion/Index.
+    - Actualizar recarga sin refrescar la pagina y no duplica filas.
+    - Abrir /DetallesFO/Index directo (sin contexto) muestra el aviso
+      "Sin orden seleccionada" y la tabla vacia, sin errores en consola.
+
+  Datos Maestros          /DatosMaestros/Index
+    - Carga sola. Revisar que la tabla use header claro y que
+      los botones de accion por fila se vean como botones.
+
+  Datos Maestros (Corrugado)  /DatosMaestros/DatosMaestrosCorrugado
+    - Carga sola. Header con barra azul, subtitulo y pill "N codigos"
+      (hoy 242). Sin scroll horizontal.
+    - Actualizar recarga sin refrescar la pagina y apaga el loader.
+    - Tabla con Proceso en badge azul y Actualizado en badge Si/No.
+    - La columna de fecha debe mostrar dd/mm/aaaa HH:mm.
+    - Ver detalles: abre el modal grande con la info del SKU; cierra con
+      la X y con Cerrar liberando el scroll.
+    - Agregar Codigo: abre el modal; cierra con X/Cancelar.
+    - Exportar: descarga "Datos Maestros Articulo.xlsx". OJO: getexcel
+      sobrescribe PTM/plantillas/dma.xlsx; al probar, respaldar y
+      restaurar el archivo.
+    - Actualizar SKU: abrir detalle, llenar multiplo/tara/embalaje,
+      agregar una linea (KgHora + Linea) y Guardar. Debe salir el toast
+      "SKU actualizado correctamente", guardar en SkuInfos y
+      SKUkgHrporLinea, y la tabla debe mostrar Proceso = Corrugado.
+    - El badge Actualizado debe pasar a "Si" con un cambio en cualquier
+      turno (turno 1 o turno 2).
+    - El boton "Agregar Codigo" no debe mostrarse.
+
+  Asignacion de Lineas    /AsignacionLinia/Index
+    - Revisar badges azul/gris y abrir los 3 modales (alta, edicion
+      y eliminacion) para confirmar header, footer y scroll.
+
+  Asignacion de Lineas (Corrugado)  /AsignacionLinia/AsignacionLineaCorrugado
+    - Carga sola. Revisar header, contador (lineas / asignadas /
+      disponibles) y botones Actualizar, Exportar, Agregar y Eliminar.
+    - Si no hay lineas de Corrugado en la planta, debe verse el estado
+      vacio "No hay lineas registradas".
+    - Con lineas: las tarjetas deben mostrar Linea, estado
+      Asignada/Libre, proceso, Orden, Kg x Hr y Codigo.
+    - Abrir una tarjeta: el modal debe mostrar el numero de linea, los
+      tabs Asignacion/Historial y los campos llenos (deshabilitados si
+      la linea esta asignada). Los botones Asignar/Desasignar deben
+      alternarse segun el estado.
+    - Agregar Linea / Eliminar Linea: abren y cierran con X, Cerrar y
+      clic fuera, sin dejar backdrop.
+    - Exportar descarga el Excel de lineas.
+
+  Inventario fisico de Scrap y Molinos  /Molinos/Index
+    - Carga sola. Header con barra azul, subtitulo y botones Excel,
+      PDF, Correo y Agregar acumulado (solo AdmMolinos).
+    - La tabla debe traer los datos de la planta (hoy 6 filas de scrap
+      para planta 1) y mostrar los valores en Scrap/Viruta/Molido/
+      Pulverizado/Polvo/Compuesto.
+    - Scroll horizontal solo dentro de la tarjeta, sin desbordar la
+      pagina.
+    - Excel descarga el archivo con la matriz del inventario. OJO:
+      sobrescribe PTM/plantillas/archivo.xlsx; respaldar antes.
+    - PDF genera el reporte con jsPDF (hoy ~183 KB, 3 paginas).
+    - Correo abre la lista de correos. Hoy la API no devuelve correos
+      en este ambiente, asi que muestra "Sin correos registrados".
+    - Agregar acumulado: abrir modal, elegir proceso, sub familia y
+      peso; Guardar registra en la API y recarga la tabla.
+
+  Detalle SKU             /DetallesSKU/Index
+    - Seleccionar un SKU. Revisar la cuadricula de 4 columnas y el
+      boton "Guardar cambios".
+
+  Producto Terminado      /ProductoTerminado/Index
+    - Filtro: desdeFecha = 2026-10-01, turno = PRIMERO, Buscar.
+      Deben aparecer 11 registros y los 6 KPIs con valores.
+    - Scrap: desdeFecha = 2026-10-01, corte = 1, Buscar.
+      Deben aparecer 10 registros y KG ScrapPT = 3154.500.
+    - Abrir el detalle de una linea (boton de la 1a columna) y el
+      modal de Correo; ambos deben cerrar y liberar el scroll.
+
+  Producto Terminado INY  /ProdTerminadoINY/Index
+    - Carga sola. Revisar header con barra azul, subtitulo, pill
+      "N registros", tarjeta de Filtros, 6 KPIs, tarjeta de PT y
+      tarjeta de Scrap con sus propios filtros.
+    - Filtro PT: desdeFecha = 2026-10-01, turno = PRIMERO | 1er
+      ENTREGA, Buscar. Deben salir 6 registros, los 6 KPIs con
+      valores y el contador en 6. La API tarda unos segundos: el
+      loader se apaga solo.
+    - Boton de detalle (cuadro azul 32x32 de la 1a columna): abre el
+      modal "Detalle de linea" con KPIs y la tabla por pesada. Cierra
+      con la X, con "Cerrar" y con clic fuera; libera el scroll.
+    - Scrap: desdeFecha = 2026-10-01, Al = 2026-10-28, Corte =
+      Seleccione..., Buscar. Deben salir 10 registros, contador en 10
+      y KG ScrapPT = 694.000.
+    - Corte 1/2 desactiva el campo "Al"; al volver a "Seleccione..."
+      se habilita otra vez.
+    - Correo: abre con los correos de SAP en espanol (hoy 8); la X y
+      Cancelar cierran y liberan el scroll. No dar "Enviar" si no se
+      quiere mandar el reporte.
+    - Limpiar fechas, turno en "Seleccione..." y Buscar: recarga el
+      estado inicial sin errores (hoy devuelve 0 registros).
+
+  Historial de Pesadas    /HistorialPedidas/Index
+    - Carga sola y trae las fechas de hoy. El titulo debe verse con
+      barra azul, subtitulo y dos tarjetas (Filtros y Pesadas).
+    - La API ya responde 200 (ver seccion 6, "Historial de Pesadas /
+      aviso No se pudo obtener el historial"). Si no hay pesadas del
+      dia, la tabla se ve vacia con el texto "Sin registros para
+      mostrar" y el contador en 0; eso es normal.
+    - Si la API vuelve a fallar, el aviso ahora muestra la causa real
+      (ej. "Error al consultar la Web API (HTTP 500): ...") en lugar
+      del texto generico.
+    - Para revisar el diseno sin datos: pegar en la consola
+      tablasPesadas.rows.add([...]).draw() con filas de prueba
+      (20 columnas) o esperar a que la API vuelva.
+    - Verificar:
+        * Pills "N registros" y "N seleccionados".
+        * Header de tabla #eef4fb sin sombra y scroll horizontal solo
+          en el cuerpo de la tabla (20 columnas).
+        * Badges de tipo PT (azul) / SCRPT (gris) y de estatus SAP
+          (verde Enviado, gris Sin enviar, rojo Error).
+        * Puntos de estatus de 11px y acciones de 30x30.
+        * "Seleccionar todos" no marca los registros deshabilitados.
+        * Los 4 modales (Correo, Deshabilitar, Editar, Bitacora) abren
+          y cierran con el scroll del body bloqueado.
+        * Con turno de corte y fecha vacia, Buscar solo muestra el
+          aviso y NO dispara la peticion.
+
+  Dashboard               /Inicio/Index
+    - Carga sola. El titulo debe verse con barra azul, subtitulo y
+      tres pills (Turno, Planta y hora de actualizacion).
+    - Revisar las 4 tarjetas KPI de PPVC: Volumen (kg), Sobrepeso,
+      Eficiencia y Scrap, cada una con su color de acento.
+    - Objetivos: la fila de PPVC debe caber en el ancho de la tarjeta
+      (sin desbordar ni scroll horizontal) y el boton Guardar quedar
+      alineado. Si un campo se deja vacio, Guardar solo muestra el
+      aviso "Datos incompletos" y no guarda.
+    - Los inputs aceptan solo numeros con hasta 3 decimales
+      (3.5555 se recorta a 3.555).
+    - Badge "Dentro del objetivo" (verde) o "Fuera del objetivo"
+      (rojo) en Sobrepeso y Scrap. Sin produccion no se muestra.
+    - Con todo en cero debe verse el aviso "Sin produccion registrada
+      para el turno" y el contador de lineas en 0.
+    - Carrusel: se conserva igual que antes. Verificar las 4 graficas
+      de PPVC, que las flechas avanzan, la scrollbar y el autoplay de
+      5 s. Las graficas ahora usan titulos azules, tooltips en espanol
+      y sin credito de Highcharts.
+    - Boton Actualizar: recarga los datos sin refrescar la pagina; el
+      loader se apaga al terminar y la pill cambia de hora.
+    - El auto-refresh corre cada 5 minutos y solo con la pestana
+      visible.
+    - Planta 1 oculta todo el bloque de INY; planta 2 lo muestra.
+    - OJO: hoy GetAllPtPvc y GetDataGraph devuelven 0 filas para el
+      turno 1, por eso los KPIs en 0.00 son el dato real. Para revisar
+      el diseno con datos, en la consola se pueden asignar valores de
+      prueba a los arreglos (PPVCLINEAS, PPVCVOLUMEN, etc.) y llamar
+      CrearGraficos(); actualizarResumen().
+
+  Taras y Kg/Hora         /Taras/Index
+    - Carga sola. Titulo con barra azul, subtitulo y pill
+      "Formato .xlsx / .xls".
+    - Dos tarjetas (Taras y Kg/Hora) con header #eef4fb y su pill
+      "N registros" en 0.
+    - Elegir un Excel en cualquiera de las dos: el nombre del archivo
+      debe aparecer junto al boton "Seleccionar archivo".
+    - Cargar datos: la tabla se llena con la previsualizacion, la tara
+      se muestra con 3 decimales, el pill sube y DataTables queda en
+      espanol ("Mostrar N registros", "Sin registros para mostrar").
+    - Confirmar actualizacion sin archivo: solo aparece el aviso
+      "No se encontraron datos" y NO se dispara la peticion.
+    - Cargar el Excel de Taras y presionar Confirmar en la tarjeta de
+      Kg/Hora (o al reves): debe avisar que falta el archivo de esa
+      seccion, ya no envia los datos equivocados.
+    - Confirmar con un archivo cargado: toast verde, tablas vacias,
+      inputs limpios y contadores en 0.
+    - Si el archivo no es valido o el endpoint falla: toast de error,
+      el loader se apaga y las tablas quedan vacias.
+
+  Dashboard Molinos       /Molinos/DashboardMolinos
+    - Carga sola. Titulo "DASHBOARD MOLINOS" con barra azul, subtitulo,
+      pills de Turno y Fecha (dd/mm/aaaa), boton Actualizar y el switch
+      "Vista molinos" encendido.
+    - 2 KPIs en tarjetas: Volumen equipo molienda (kg) y Kg/Hora.
+    - OJO: hoy DatosDashboard devuelve 0 filas para el turno 1, asi que
+      los KPIs muestran "--" y sale el aviso amarillo "Sin informacion
+      para el turno actual". Es el dato real, no un fallo del diseno.
+      Para revisar las graficas con datos, pegar en la consola:
+        MolinoLINEAS = ['M1','M2','M3','M4'];
+        MolinoVOLUMEN = [12500.5, 8300, 0, 15200.75];
+        KgHoraObjetivoMolino = [1200, 1100, 1000, 1300];
+        KgHoraRealMolino = [1150, 980, 0, 1280];
+        document.getElementById('molEmpty').classList.add('is-hidden');
+        document.getElementById('volumenMolinos').innerText = '36,001.25';
+        document.getElementById('KgHoraMolino').innerText = '1,050.40';
+        CrearGraficos();
+    - Grafica 1: barras azules de volumen por molino.
+      Grafica 2: spline con objetivo (gris) y real (verde).
+    - Flechas, scrollbar y autoplay de 5 s del carrusel deben seguir
+      igual que antes; el mouse encima pausa el autoplay.
+    - Boton Actualizar: recarga sin refrescar la pagina, no duplica
+      puntos ni graficas y apaga el loader.
+    - El switch apagado guarda VistaMolinosActiva = 0 y regresa a
+      /Inicio/Index (no probar si no se quiere cambiar de vista).
+    - Sin scroll horizontal y sin errores en consola.
+
+  Ingresos                /Molinos/Ingresos
+    - Carga sola. Titulo "INGRESO DE SCRAP" con barra azul, subtitulo y
+      pill "Formato .xlsx / .xls".
+    - 3 tarjetas: Ingreso de scrap, Filtros e Historial de ingresos.
+    - Elegir el Excel de prueba (PTM/plantillas/IngresosScrapEjemplo.xlsx):
+      el nombre debe aparecer junto a "Seleccionar archivo".
+    - Cargar datos: llega la previsualizacion (7 columnas), el contador
+      de la tarjeta sube y el nombre del archivo se limpia.
+    - Confirmar ingresos sin previsualizacion: solo muestra el aviso
+      "EXCEL NO CARGADO" y NO dispara la peticion.
+    - Filtros: con Fecha inicial vacia, Buscar solo muestra el aviso y
+      NO dispara la peticion. Con turno 1/2 se desactiva Fecha final.
+    - Historial: header #eef4fb, contador "N registros", tabla vacia con
+      "Sin registros para mostrar" y boton Agregar en la cabecera.
+    - Modales Agregar y Editar: abren con header degradado, cierran con
+      la X, con Cancelar y con clic en el fondo, liberando el scroll.
+    - Ya probado con el Excel de ejemplo: la previsualizacion muestra las
+      3 filas, el contador queda en 3, el nombre del archivo se limpia al
+      terminar y no hay errores en consola. La exportacion a Excel
+      (ReporteIngresosScrap.xlsx) tambien descarga correctamente.
+    - Confirmar ingresos ya funciona (se creo el table type y el SP en
+      PtmNwScale2): toast de exito, la previsualizacion se limpia y el
+      historial se recarga. Se insertaron 3 registros de prueba
+      (SCR-001/002/003; dos de planta 1 y uno de planta 2).
+    - OJO con el turno: al recargar la pagina se consulta el turno actual
+      (1 o 2). Los registros de las 17:26 caen fuera del turno 1, por eso
+      para verlos hay que elegir "Seleccionar..." (turno 3) y Buscar.
+    - Historial con los registros de prueba: 2 filas de planta 1, columna
+      Planta en 1, sin warning de DataTables. El modal Editar abre con los
+      datos del registro y cierra liberando el scroll.
+
+  Correos (modal global, menu lateral)
+    - Abrir "Correos" desde el menu: el modal debe salir centrado, con
+      header azul, subtitulo y dos tabs (Asignacion / Correos).
+    - Cambiar de tab: la activa se ve blanca con texto azul y el fondo
+      del body NO debe scrollear mientras el modal esta abierto.
+    - Asignacion: "Asignar" con el campo vacio o con un correo sin
+      formato (ej. "correo-malo") solo muestra el aviso, sin peticion.
+    - Tab Correos: la tabla debe estar en espanol ("Mostrar N registros",
+      "Sin correos registrados"), con header #eef4fb y contador de
+      correos. Si la lista del servidor no esta disponible, sale el aviso
+      "Sin correos para mostrar" en lugar de un error tecnico.
+    - Eliminar un correo: boton de 30x30, aviso de exito con toast y la
+      lista se recarga.
+    - Cerrar con la X, con "Cerrar" y con clic fuera del modal: siempre
+      se libera el scroll del body.
+    - La lista vive en C:\Paradox\ListaCorreos1.txt (planta 1) y
+      ListaCorreos2.txt (planta 2). Si el archivo no existe o esta
+      vacio, la pestana sale vacia con el aviso correspondiente.
+      Ver la seccion 10.
+
+  En todas:
+    - Consola del navegador sin errores.
+    - Sin scroll horizontal en la tabla (excepto Historial de Pesadas,
+      donde el scroll vive dentro del cuerpo de la tabla).
+    - Los textos de DataTables en espanol.
+
+
+10. AMBIENTE DE PRUEBA
+------------------------------------------------------------------------
+- Usuario de prueba con rol asignado (necesario para que el layout
+  no falle). Las credenciales no se documentan en este archivo.
+- Algunos endpoints devuelven 0 filas segun la fecha:
+    GetAllPtPvc -> 0 filas para plantas 1 y 2 (hoy).
+    GetAllPtIny -> 0 filas para plantas 1 y 2 (hoy).
+    Molinos/DatosDashboard -> dashboardData vacio hoy (turno 1).
+    FiltrarProductoTerminado -> 11-14 filas con rango de fechas.
+- Lineas (Corrugado): originalmente no habia filas con Proceso =
+  Corrugado. Para validar la vista se crearon 4 lineas de prueba el
+  28/10/2026 (Ids 71-74, planta 1, NumLinea 1-4, sin asignar y KgXHr 0).
+  Si se eliminan, la vista vuelve al estado vacio "No hay lineas
+  registradas".
+  Para validar Producto Terminado se uso:
+    desdeFecha = 2026-10-01, turno = PRIMERO, corte = 1.
+  Para validar Producto Terminado INY se uso:
+    PT: desdeFecha = 2026-10-01, turno = PRIMERO | 1er ENTREGA
+        -> 6 registros.
+    Scrap: desdeFecha = 2026-10-01, Al = 2026-10-28,
+           corte = Seleccione... -> 10 registros, KG ScrapPT 694.000.
+  La API de filtrado tarda unos segundos en responder; el loader se
+  apaga solo al llegar la respuesta.
+- Molinos/GetAllScrap (API) devuelve 6 filas de scrap para planta 1 con
+  el turno actual. La vista muestra "-" en las celdas sin existencia.
+- Prueba de Agregar acumulado (29/10/2026): se registro 1 kg PVC/IPS en
+  planta 1 (id 12) y se elimino despues de validar. Salio el toast
+  "Ingreso Correcto" y la columna Acumulado mostro 1.
+- El Excel de esta vista sobrescribe PTM/plantillas/archivo.xlsx. Al
+  probarlo se respaldo y se restauro el archivo (SHA256
+  9B03785ADB5D4019D046E6AE2AE000732B36DA213AAB7A99AF1CE483BFF6F3AC).
+- Web API / Historial de Pesadas: RESUELTO el 29/10/2026.
+  GetAllHistorial y FilterHistorical fallaban con 500 porque el SP
+  SPPDX_GetSkuPT exige P_CORRUGADO y P_IGNORENEWSCALE y la API lo
+  llamaba sin parametros. Se agregaron los dos parametros con null
+  (ver seccion 6). Probado: ambas rutas responden 200 y el portal
+  tambien. La tabla puede verse vacia solo si no hay pesadas del dia.
+  Prueba en el navegador (29/10/2026): FECHA = 01/10/2026, turno
+  PRIMERO | 1er ENTREGA -> 47 registros, pill en 47, 10 filas en la
+  primera pagina, badges PT / Sin Enviar, consola sin errores y sin
+  avisos.
+- Web API / GuardarDatosExcelIngresosEnBD:
+    RESUELTO. Faltaba el SP en PtmNwScale2. Se crearon:
+      dbo.TvpdxMolinoIngresos        (table type, Planta como NVARCHAR)
+      dbo.Sppdx_GuardarDatosMolinoIngresos  (insert desde el TVP)
+    Prueba desde el portal: 3 registros insertados (Id 19, 20 y 21),
+    pesos 1234.500 / 88.250 / 15.750 y plantas 1 / 1 / 2.
+    Resuelto: el modelo MolinosRegistrosIngresos del API ya incluye
+    Planta y la respuesta del historial la devuelve (probado:
+    "planta": 1). El portal ademas usa la planta de la sesion como
+    respaldo si el campo falta.
+- La API de correos guarda la lista en archivos de texto:
+    C:\Paradox\ListaCorreos1.txt   (planta 1)
+    C:\Paradox\ListaCorreos2.txt   (planta 2)
+  Si esos archivos no existen, GET /api/Email/GetMailTxt responde 500
+  ("Could not find file 'C:\Paradox\ListaCorreos1.txt'") y el portal
+  muestra la lista vacia. Para crear los archivos vacios:
+    New-Item -ItemType File -Path C:\Paradox\ListaCorreos1.txt
+    New-Item -ItemType File -Path C:\Paradox\ListaCorreos2.txt
+  Con la lista vacia la API responde 500 "No hay correos en el archivo
+  txt" y el modal muestra "Sin correos para mostrar"; al asignar el
+  primer correo la lista empieza a llenarse.
+  En la maquina de pruebas ya estan colocados (planta 1: 6 correos,
+  planta 2: 10 correos). Se probo el ciclo completo (listar, asignar
+  prueba.rediseno@ptmexico.com y eliminarlo) y el archivo quedo
+  identico al original (mismo SHA256).
+- EPPlus 8 (portal MVC, NO la Web API):
+    PTM.csproj referencia EPPlus 8.7.2. La propiedad obsoleta
+    ExcelPackage.LicenseContext = LicenseContext.NonCommercial ya no
+    aplica y el constructor lanzaba: "Please use the static
+    'ExcelPackage.License' property to set the required license
+    information from EPPlus 8 and later".
+    ESTADO: corregido. Los tres controladores usan ahora
+      ExcelPackage.License.SetNonCommercialPersonal("IrvingPDX140102");
+    (Molinos 798/859, DatosMaestros 168/254, Operador 681/742).
+    Validado despues de recompilar:
+      - /Molinos/ProcesarExcel con IngresosScrapEjemplo.xlsx: 3 filas
+        en la previsualizacion de la vista (contador en 3).
+      - /Molinos/GenerarExcel: descarga ReporteIngresosScrap.xlsx.
+      - /DatosMaestros/getexcel (boton Excel de la vista): descarga
+        "Datos Maestros Articulo.xlsx".
+      - /DatosMaestros/getexcelCorrugados: responde R = 1 con base64.
+      - /Operador/GenerarExcel: responde 200 con un xlsx de 4,459 bytes.
+      - /Operador/ProcesarExcel con la plantilla: responde 3 filas.
+    Nota: getexcel y getexcelCorrugados sobrescriben
+    PTM/plantillas/dma.xlsx en cada exportacion. Al probarlos se respaldo
+    y se restauro el archivo (mismo SHA256).
+    La plantilla de ingresos tiene las columnas exactas: Codigo, Tipo,
+    Familia, Peso, Fecha de registro (dd/MM/aaaa), Origen y Planta. La
+    plantilla vieja PTM/plantillas/archivo.xlsx es del concentrado de
+    inventarios, no de ingresos.
+- Prueba de actualizacion Corrugado (28/10/2026):
+    SKU 5EPP0000047, planta 1: Proceso = Corrugado, tara 1.5, fleje 10,
+    costales 5, tarima 2 y linea 1 / 100 kg/hora.
+    Primera prueba: SkuInfos Id 718 y SKUkgHrporLinea Id 1208 (se
+    eliminaron despues de validar).
+    Prueba final visible: SkuInfos Id 719 y SKUkgHrporLinea Id 1209;
+    la tabla muestra Actualizado = Si, fecha 28/10/2026 y usuario
+    DEVELOPER NEWSCALE.
+    El API se recompilo para aceptar Proceso (ProductTerminadoController,
+    ISkuInfo/SkuInfoService, IGenericRepoSkuInfo/SkuInfoRepositorie).
+    El badge "Actualizado" ya considera turno 1 y turno 2.
+
+========================================================================

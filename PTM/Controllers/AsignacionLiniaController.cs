@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
-using OfficeOpenXml.Style;
+using Newtonsoft.Json.Linq;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using PTM.LogsGlobales;
 using PTM.Models;
 using System;
 using System.Collections.Generic;
@@ -18,7 +20,9 @@ namespace PTM.Controllers
     {
         // GET: AsignacionLinia
         private readonly string webapi = ConfigurationManager.AppSettings["WebApiURL"];
-        public async Task<ActionResult> Index()
+
+        //---------VISTAS---------//
+        public async Task<ActionResult> Index() //Asignacion de líneas pvc-iny
         {
             try
             {
@@ -35,16 +39,46 @@ namespace PTM.Controllers
                     }
                     else
                     {
-                        return Redirect("http://129.80.97.150:9097/");
+                        return RedirectToAction("Index", "Login");  //si el usuario ya no es valido (la sesion expiro), retornamos al login
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return Redirect("http://129.80.97.150:9097/");
+                LogGlobal.LogError(ex.Message); // Registramos el error en el log global
+                return RedirectToAction("Index", "Login"); //si existe algun error, retornamos al login
             }
         }
+
+        public async Task<ActionResult> AsignacionLineaCorrugado() //Asignacion de líneas corrugado
+        {
+            try
+            {
+                using (HttpClient http = new HttpClient())
+                {
+                    HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"{webapi}/api/Account/ValidateToken");
+                    request.Headers.Add("userId", Session["UserId"].ToString());
+
+                    HttpResponseMessage response = await http.SendAsync(request);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return View("AsignacionLineaCorrugado");
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Login");  //si el usuario ya no es valido (la sesion expiro), retornamos al login
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogGlobal.LogError(ex.Message); // Registramos el error en el log global
+                return RedirectToAction("Index", "Login"); //si existe algun error, retornamos al login
+            }
+        }
+
+
+        //------------MÉTODOS------------//
 
         [HttpGet]
         public async Task<ActionResult> GetAllSkuInfo()
@@ -84,7 +118,6 @@ namespace PTM.Controllers
                 using(HttpClient http = new HttpClient())
                 {
                     HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"{webapi}/api/Linias/AsignSkuToLinie");
-                    //HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "https://localhost:7227/api/Linias/AsignSkuToLinie");
                     request.Headers.Add("sku", idSku);
                     request.Headers.Add("linea", linea);
                     request.Headers.Add("turno", turno);
@@ -130,7 +163,6 @@ namespace PTM.Controllers
                     http.DefaultRequestHeaders.Add("planta", planta);
 
                     HttpResponseMessage response = await http.GetAsync($"{webapi}/api/Linias/GetBitacoraLinie");
-                    //HttpResponseMessage response = await http.GetAsync($"https://localhost:7227/api/Linias/GetBitacoraLinie");
                     
 
                     if (response.IsSuccessStatusCode)
@@ -190,7 +222,6 @@ namespace PTM.Controllers
                 using (HttpClient http = new HttpClient())
                 {
                     HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"{webapi}/api/Linias/UnassignLinieAndTicket");
-                    //HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, $"https://localhost:7227/api/Linias/UnassignLinieAndTicket");
                     request.Headers.Add("idLinea", linea);
                     request.Headers.Add("userId", "a");
                     request.Headers.Add("planta", planta);
@@ -338,7 +369,6 @@ namespace PTM.Controllers
                     http.DefaultRequestHeaders.Add("itemcode", itemcode);
                     http.DefaultRequestHeaders.Add("series", series);
                     var response = await http.GetAsync($"{webapi}/api/Sap/GetDocEntrys");
-                    //var response = await http.GetAsync($"https://localhost:7227/api/Sap/GetDocEntrys");
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -361,6 +391,7 @@ namespace PTM.Controllers
             }
         }
 
+        //Genera el excel de "asignacion de lineas"
         [HttpPost]
         public async Task<ActionResult> generarexcel(string matrizdatos)
         {
@@ -369,8 +400,7 @@ namespace PTM.Controllers
                 string rutaVirtual = "~/plantillas/dma.xlsx";
                 string rutaFisica = Server.MapPath(rutaVirtual);
                 string editedBase64String = "";
-                // Asignación correcta para versiones EPPlus 8 y superiores
-                ExcelPackage.License.SetNonCommercialPersonal("IrvingMPDX140102");
+                OfficeOpenXml.ExcelPackage.License.SetNonCommercialPersonal("IrvingPDX140102");
                 // Cargar el archivo de Excel desde la cadena Base64
 
                 // Verificar si el archivo existe en la ruta especificada
@@ -439,6 +469,92 @@ namespace PTM.Controllers
 
                 byte[] fileBytes = System.IO.File.ReadAllBytes(rutaFisica);
                 editedBase64String = Convert.ToBase64String(fileBytes);
+
+                return Json(new { data = editedBase64String, R = 1 }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                var response = new { status = 500, response = ex.Message, R = 0 };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        //Genera el excel de "asignacion de lineas" para "Corrugados"
+        [HttpPost]
+        public async Task<ActionResult> generarexcelCorrugados(string matrizdatos)
+        {
+            try
+            {
+                string rutaVirtual = "~/plantillas/dma.xlsx";
+                string rutaFisica = Server.MapPath(rutaVirtual);
+
+                // Borra el archivo si ya existe
+                if (System.IO.File.Exists(rutaFisica))
+                {
+                    System.IO.File.Delete(rutaFisica);
+                }
+
+                OfficeOpenXml.ExcelPackage.License.SetNonCommercialPersonal("IrvingPDX140102");
+                FileInfo archivoExcel = new FileInfo(rutaFisica);
+
+                using (ExcelPackage paquete = new ExcelPackage(archivoExcel))
+                {
+                    // Agrega una nueva hoja de trabajo
+                    ExcelWorksheet ws = paquete.Workbook.Worksheets.Add("Lineas");
+
+                    string[] cabecera1 = { "Linea", "Proceso", "Codigo", "KgXHr", "Orden Fabricación" };
+
+                    // Encabezados
+                    for (int i = 0; i < cabecera1.Length; i++)
+                    {
+                        ws.Cells[1, i + 1].Value = cabecera1[i];
+                    }
+
+                    // Estilos de encabezado
+                    ExcelRange range = ws.Cells["A1:E1"];
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(19, 92, 133));
+                    range.Style.Font.Color.SetColor(System.Drawing.Color.White);
+                    range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    range.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                    range.AutoFitColumns();
+                    ws.Row(1).Height = 25;
+
+                    // Convertimos la matriz genérica desde el JSON con JArray
+                    JArray matrizJson = JArray.Parse(matrizdatos);
+                    for (int i = 0; i < matrizJson.Count; i++)
+                    {
+                        JArray fila = matrizJson[i] as JArray;
+                        if (fila != null)
+                        {
+                            for (int j = 0; j < fila.Count; j++)
+                            {
+                                var valorActual = fila[j];
+
+                                string cadenaValor = "";
+                                if (valorActual == null || valorActual.Type == JTokenType.Null)
+                                    cadenaValor = "";
+                                else if (valorActual.Type == JTokenType.Object)
+                                    cadenaValor = ""; // Si es un objeto vacío, deja en blanco
+                                else
+                                    cadenaValor = valorActual.ToString();
+
+                                ws.Cells[i + 2, j + 1].Value = cadenaValor;
+                                ws.Cells[i + 2, j + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                                ws.Cells[i + 2, j + 1].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                            }
+                        }
+                    }
+
+                    // Ajuste automático de columnas
+                    ws.Cells[ws.Dimension.Address].AutoFitColumns();
+
+                    paquete.Save();
+                }
+
+                // Convertir archivo a base64 para enviar al cliente
+                byte[] fileBytes = System.IO.File.ReadAllBytes(rutaFisica);
+                string editedBase64String = Convert.ToBase64String(fileBytes);
 
                 return Json(new { data = editedBase64String, R = 1 }, JsonRequestBehavior.AllowGet);
             }

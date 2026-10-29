@@ -20,6 +20,31 @@ namespace PTM.Controllers
     {
         // GET: HistorialPedidas
         string IpWebApi = ConfigurationManager.AppSettings["WebApiURL"];
+
+        /// <summary>
+        /// Extrae la causa real del cuerpo de error de la Web API, que puede venir
+        /// como {"message":"..."}, {"response":"..."} o como texto plano.
+        /// </summary>
+        private string DetalleErrorApi(string cuerpo)
+        {
+            if (string.IsNullOrWhiteSpace(cuerpo))
+                return "La Web API no devolvio detalle del error.";
+
+            try
+            {
+                var json = Newtonsoft.Json.Linq.JObject.Parse(cuerpo);
+                var detalle = (string)(json["message"] ?? json["response"] ?? json["Message"] ?? json["Response"]);
+                if (!string.IsNullOrWhiteSpace(detalle))
+                    return detalle;
+            }
+            catch (Exception)
+            {
+                //No era JSON: se devuelve el texto tal cual
+            }
+
+            return cuerpo;
+        }
+
         public async Task<ActionResult> Index()
         {
             try
@@ -69,7 +94,12 @@ namespace PTM.Controllers
                     }
                     else
                     {
-                        var objectResponse = new { status = 500, data = "Error en traer los datos" };
+                        var errorBody = await response.Content.ReadAsStringAsync();
+                        var objectResponse = new
+                        {
+                            status = 500,
+                            data = $"Error al consultar la Web API (HTTP {(int)response.StatusCode}): {DetalleErrorApi(errorBody)}"
+                        };
                         var result = Json(objectResponse, JsonRequestBehavior.AllowGet);
                         return result;
                     }
@@ -430,7 +460,12 @@ namespace PTM.Controllers
                     }
                     else
                     {
-                        var objectResponse = new { status = 500, data = "Error al filtrar los registros de historial de pesadas" };
+                        var errorBody = await response.Content.ReadAsStringAsync();
+                        var objectResponse = new
+                        {
+                            status = 500,
+                            data = $"Error al filtrar los registros de historial de pesadas (HTTP {(int)response.StatusCode}): {DetalleErrorApi(errorBody)}"
+                        };
                         var result = Json(objectResponse, JsonRequestBehavior.AllowGet);
                         return result;
                     }
