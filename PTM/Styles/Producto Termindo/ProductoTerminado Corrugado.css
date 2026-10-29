@@ -1,0 +1,203 @@
+﻿body {
+    background-color: #8080801c
+}
+
+/*Columna de scrap en producto terminado*/
+.scrap-head {
+    color: #be5f5f
+}
+
+/* titulos en las tablas */
+thead {
+    box-shadow: 0 1px 9px 1px rgba(0, 0, 0, 0.28);
+}
+
+    thead tr {
+        box-shadow: 0 4px 2px -3px rgba(0,0,0,0.5);
+        vertical-align: middle
+    }
+
+th {
+    border: solid 1px #80808017;
+    text-align: center !important;
+    font-size: 15px;
+    text-align: center;
+    font-size: 15px;
+    background-color: white !important;
+    color: #075DA5;
+}
+
+/*Fuente para la informacion de las tablas*/
+td {
+    font-size: 11px;
+}
+
+/*interlineado para PVC*/
+#tableProductoPVC tr:nth-child(odd) {
+    background-color: #d1fcff73 !important;
+}
+
+#tableProductoPVC tr {
+    box-shadow: inset 0 5px 8px -7px rgba(0,0,0,0.5) !important;
+}
+
+/*interlineado para INY*/
+#tableProductoINY tr:nth-child(odd) {
+    background-color: #d1fcff73 !important;
+}
+
+#tableProductoINY tr {
+    box-shadow: inset 0 5px 8px -7px rgba(0,0,0,0.5) !important;
+}
+
+/*Modal detalles de linea*/
+/*Titulo del Detalle de linea*/
+#lineaModal {
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.modal-header {
+    color: white;
+    background-color: #595959;
+    font-size: 20px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    border-top-left-radius: 4px;
+}
+
+#tableHeadInfo {
+    text-align: center;
+    font-size: 15px;
+    box-shadow: 0 1px 9px 1px rgba(0, 0, 0, 0.28);
+    background-color: #075DA5;
+    color: white;
+}
+
+    #tableHeadInfo th {
+        border: solid 1px #ffffff47;
+    }
+
+#tableBodyDetalle tr {
+    box-shadow: inset 0 5px 8px -7px rgba(0,0,0,0.5);
+}
+
+#LineasNumeros {
+    color: #075DA5;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.modaldetailsCss {
+    width: 50rem;
+    border-block-width: 7px;
+}
+
+/*Boton de detalles de linea*/
+.detailLineatableBTN{
+    cursor: pointer;
+}
+
+/*-----------------------*/
+/*Filtros*/
+/*Contenedor de los filtros*/
+.containerFilters {
+    background-color: #f4f6f9;
+    border-radius: 12px;
+    box-shadow: 0 5px 14px rgba(0,0,0,0.08);
+    padding: 16px 20px;
+    max-width: 62rem;
+    margin-top: 1rem;
+}
+
+/* Contenedor horizontal para filtros e icono */
+.filters-and-icon {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Filtros a la izquierda */
+#FiltrosDiv {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+}
+
+/* Cada grupo label+input en columna */
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+/* La parte de fecha es una fila interna */
+.fecha-range {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.fecha-al {
+    font-weight: normal;
+    padding: 0 4px;
+}
+
+/* Ajuste tamaños inputs y rango fecha */
+.fecha-range > input,
+.filter-group > input {
+    box-sizing: border-box;
+}
+
+/* Icono búsqueda */
+.iconSearch {
+    font-size: 27px;
+    cursor: pointer;
+    user-select: none;
+    color: #333;
+    background-color: #d2eaff;
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid;
+    margin-top: 6px;
+}
+
+    .iconSearch:hover {
+        background-color: #bdd3e6;
+    }
+
+/*----------------------*/
+/*Totales (kpis)*/
+.Totales {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.TotalTitle {
+    display: inline-flex;
+    align-items: center;
+    color: #075da5;
+    font-weight: bold;
+    background-color: #e0f0ff; /* Fondo  */
+    padding: 4px 8px; /* Padding para que el fondo no quede tan pegado */
+    border-radius: 7px; /* bordes redondeados */
+    white-space: nowrap;
+}
+
+.TotalResult {
+    color: black;
+    margin-left: 4px; /* Un espacio entre el texto del label y el span */
+}
+
+/* Botones de generar excel, pdf y envio de correo */
+.BtnGenerateDocument {
+    /*color: #016E38;*/
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .BtnGenerateDocument:hover {
+        background-color: #ccd3d9;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }

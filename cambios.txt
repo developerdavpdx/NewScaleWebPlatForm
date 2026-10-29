@@ -827,22 +827,29 @@ Notas:
              Molinos/Corrugado/Operador
     22f1682  fix: correcciones tecnicas, iconos FA 4.7 y
              documentacion
+    + chore(build): completar snapshot ejecutable de la rama
 - main NO se toca hasta que el usuario apruebe la revision visual.
   Para volver: git checkout main
 - Se commitearon las vistas de las secciones 4 y 5, las carpetas
   completas de Scripts/Corrugado y Scripts/Molinos (reorganizacion del
   usuario, incluida a proposito) y los modulos nuevos de Molinos,
   Corrugado y Operador que el layout ya referencia.
-- Archivos que quedaron FUERA del commit a proposito:
-    PTM/Web.config          cadena de conexion local (DEVELOPER-FER)
-    PTM/packages.config     actualizacion EPPlus/OpenXml
-    PTM.sln                 migracion a Visual Studio 18
-    PTM/Content/bootstrap*.css y PTM/Scripts/bootstrap*.js
-                            solo ruido de fin de linea / 1 ajuste
-    PTM/plantillas/dma.xlsx binario ajeno al rediseno
-    PTM/Styles/HistorialPesos.css (sin uso)
-    PTM/Styles/Producto Termindo/ProductoTerminado Corrugado.css
-                            (sin uso)
+- Snapshot ejecutable: tambien se agregaron packages.config (EPPlus
+  8.7.2, OpenXml 3.5.1, etc.), Web.config (binding redirects nuevos),
+  PTM.sln, Content/bootstrap.css y plantillas/dma.xlsx para que la rama
+  compile igual que el equipo.
+- Las carpetas de packages/ NO se versionan (482 MB sin trackear).
+  NuGet las restaura al compilar usando packages.config. Las versiones
+  viejas que ya estaban trackeadas se dejan como estan.
+- OJO con Web.config: en la rama quedo la cadena de conexion del
+  servidor (SAP-PLASTIC-INT). En la maquina local se sigue usando
+  DEVELOPER-FER, pero ese cambio queda sin commitear a proposito.
+- Archivos que quedan fuera a proposito:
+    .vs/                        cache del IDE
+    bin/ y obj/                 no se actualizaron (se regeneran al compilar)
+    packages/                   se restauran con NuGet
+    PTM/Scripts/bootstrap*.js   solo cambio de fin de linea
+    PTM/Content/bootstrap-*.css solo cambio de fin de linea
 - OJO: el repositorio NO tiene .gitignore y hay ~1,144 archivos
   versionados de bin/, obj/, .vs/ y packages/. Es una limpieza pendiente
   y separada; no se toco en este checkpoint.
