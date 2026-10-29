@@ -1,15 +1,51 @@
 const loader = document.getElementById('loaderDiv')
 let tableOFabricacion;
+let cargandoOrdenes = false;
+
 $(document).ready(function () {
     loader.style.display = 'flex'
     tableOFabricacion = $('#tablaOrdenesFabricacion').DataTable({
         ordering: false,
-        responsive: true
+        responsive: true,
+        pageLength: 10,
+        autoWidth: false,
+        columnDefs: [
+            { targets: 3, className: 'text-start' }
+        ],
+        language: {
+            lengthMenu: 'Mostrar _MENU_ registros',
+            search: 'Buscar:',
+            info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+            infoEmpty: 'Sin registros',
+            infoFiltered: '(filtrado de _MAX_ registros)',
+            zeroRecords: 'No se encontraron resultados',
+            emptyTable: 'Sin datos disponibles',
+            paginate: {
+                first: 'Primero',
+                previous: 'Anterior',
+                next: 'Siguiente',
+                last: 'Último'
+            }
+        }
     })
+
+    // Mantiene el contador sincronizado con los registros cargados
+    tableOFabricacion.on('draw', function () {
+        const contador = document.getElementById('ofCount')
+        if (contador) {
+            contador.textContent = tableOFabricacion.rows().count()
+        }
+    })
+
     PeticionApiSKU()
 })
 
 function PeticionApiSKU() {
+    if (cargandoOrdenes) {
+        return
+    }
+    cargandoOrdenes = true
+
     let data = {
         "planta": localStorage.getItem("planta")
     }
@@ -23,45 +59,52 @@ function PeticionApiSKU() {
         return response.ok ? response.json() : Promise.reject(response)
     }).then((jsonString) => {
         if (jsonString.status == 200) {
-            console.log(jsonString)
             let Rows = []
             var json = JSON.parse(jsonString.data)
             json = JSON.parse(json.data)
-            console.log(json)
-            for (x = 0; x < json.length; x++) {
-                Rows.push([json[x].NUMERODOCUMENTO, json[x].DOCENTRY, json[x].ITEMCODE, json[x].NOMBRE, `<button class="btn btn-info btn-details" onclick="verDetallesFO('${json[x].DOCENTRY}')">Ver Detalles</button>`])
+            for (let x = 0; x < json.length; x++) {
+                Rows.push([json[x].NUMERODOCUMENTO, json[x].DOCENTRY, json[x].ITEMCODE, json[x].NOMBRE, `<button class="btn btn-outline-info btn-details" onclick="verDetallesFO('${json[x].DOCENTRY}', '${json[x].NUMERODOCUMENTO}', '${json[x].ITEMCODE}')">Ver Detalles</button>`])
             }
 
             tableOFabricacion.rows.add(Rows).draw();
-
-            //let skus = jsonString.data.productoTerminados
-            //console.log(skus)
-            //for (x = 0; x < skus.length; x++) {
-            //    console.log(skus[x].updateDate)
-            //    let dateList = ConvertDate(skus[x].updateDate)
-            //    Rows.push([skus[x].skuInfo.itemCode, skus[x].skuInfo.itemName, `${dateList.fecha} ${dateList.hora}`, `<button class="btn btn-info btn-details" onclick="verDetallesSKU('${skus[x].id}')">Ver Detalles</button>`])
-            //}
-            //console.log(Rows)
-            //tableOFabricacion.rows.add(Rows).draw();
-
-            loader.style.display = 'none'
-        } else {
-            loader.style.display = 'none'
         }
     }).catch((error) => {
         console.log(error);
         iziToast.error({
             position: "topRight",
             title: `Ha surgido un error`,
-            message: `<p>Favor de verificar la conexi�n con el servidor</p>`,
+            message: `<p>Favor de verificar la conexión con el servidor</p>`,
         })
-
+    }).finally(() => {
+        cargandoOrdenes = false
         loader.style.display = 'none'
     })
 }
 
-function verDetallesFO(DocEntry) {
+function recargarOrdenes() {
+    if (cargandoOrdenes) {
+        return
+    }
+    loader.style.display = 'flex'
+    tableOFabricacion.clear().draw()
+    PeticionApiSKU()
+}
+
+function verDetallesFO(DocEntry, NumeroDocumento, ItemCode) {
     localStorage.setItem("docEntry", DocEntry)
+
+    // Contexto de la orden para el encabezado de DetallesFO
+    if (NumeroDocumento) {
+        localStorage.setItem("dfoNumero", NumeroDocumento)
+    } else {
+        localStorage.removeItem("dfoNumero")
+    }
+    if (ItemCode) {
+        localStorage.setItem("dfoItem", ItemCode)
+    } else {
+        localStorage.removeItem("dfoItem")
+    }
+
     window.location.href = "../DetallesFO/Index"
 }
 

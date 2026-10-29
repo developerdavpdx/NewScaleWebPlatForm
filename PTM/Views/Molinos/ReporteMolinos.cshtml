@@ -1,0 +1,295 @@
+﻿@using System.Text;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Styles/MOLINOS/ReporteMolinos/ReporteMolinos.css" rel="stylesheet" />
+
+<br />
+
+<!-- Content -->
+<!-- TABLA Concentrado-->
+<div class="container-fluid">
+    <div class="contentContainer">
+        <div class="containerTitle p-4">
+            <br />
+            <div class="totalDesglose">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>REPORTES DE MOLINOS</h2>
+                    </div>
+                    <div class="row d-flex align-items-center" style="justify-content: center; margin-top: 1rem;">
+                        <div class="col-8 d-flex align-items-center justify-content-between">
+                            <!-- Primer campo de fecha -->
+                            <div class="col-3 form-group d-flex flex-column">
+                                <label>Fecha</label>
+                                <input class="form-filter" type="date" id="FechaInicioReprMolinoConcentrado" />
+                            </div>
+
+                            <!-- Texto "Al" centrado -->
+                            <div class="d-flex align-items-center justify-content-center" style="padding-top:1rem;">
+                                <label style="margin: 0;">al</label>
+                            </div>
+
+                            <!-- Segundo campo de fecha -->
+                            <div class="col-3 form-group d-flex flex-column" style="padding-top: 2rem;">
+                                <input class="form-filter" type="date" id="FechafinReprMolinoConcentrado" />
+                            </div>
+
+                            <!-- Campo de Turno -->
+                            <div class="col-2 form-group d-flex flex-column">
+                                <label>Turno</label>
+                                <select id="InputturnoMolinosConcentrado" class="form-filter" style="width: 92%;">
+                                    <option value="4" selected>Seleccionar...</option>
+                                    <option value="1">Corte 1 (De 5:45am a 17:44pm)</option>
+                                    <option value="2">Corte 2 (De 17:45pm a 5:44am)</option>
+                                    <option value="3">REPORTE DE SCRAP POR DIA</option>
+                                </select>
+                            </div>
+
+                            <!-- Botón buscar -->
+                            <div class="col-1 d-flex align-items-center justify-content-center" id="searchConcentrado">
+                                <i id="SearcReporteMolinosConcentrado" class="fa fa-search" aria-hidden="true" style="font-size: 30px; cursor: pointer;"></i>
+                            </div>
+
+                            <!-- Campo de search Numero de molino -->
+                            <div class="col-3 form-group d-flex flex-column" id="DivCampoSearchTablaConcentrado">
+                                <div id="InputTurnoSearchMolinoConcentrado">
+                                    @* Aqui va el search de la tabla *@
+                                </div>
+                            </div>
+                            <!-- Campos de excel y pdf -->
+                            <div class="p-3" style="width:auto;">
+                                <i class="fa fa-table m-1 fa-2x t-b" id="DescargarExcelConcentrado" aria-hidden="true" style="color: #016E38"></i>
+                                <i class="fa fa-file-pdf-o m-1 fa-2x" id="DescargarPDFConcentrado" style="color: #ad0b00"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body scrollateral">
+                        <!-- Tabla de reportes Molinos -->
+                        <table id="TablaReportesMolinoConcentrado">
+                            <thead>
+                                <tr>
+                                    <th>Molino #</th>
+                                    <th>Molino</th>
+                                    <th>Objetivo de Prod.</th>
+                                    <th>Código</th>
+                                    <th>Descripción</th>
+                                    <th>Peso</th>
+                                    <th>Horas programadas</th>
+                                    <th>Horas de paro</th>
+                                    <th>Horas Reales</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center totalBodyScrap" id="TableReporMolConcentrado">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- TABLA HISTORIAL-->
+<div class="container-fluid">
+    <div class="contentContainer">
+        <div class="containerTitle p-4">
+            <br />
+            <div class="totalDesglose">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>REPORTES DE MOLINOS (HISTORIAL)</h2>
+                    </div>
+                    <div class="row d-flex align-items-center" style="justify-content: center; margin-top: 1rem;">
+                        <div class="col-8 d-flex align-items-center justify-content-between">
+                            <!-- Primer campo de fecha -->
+                            <div class="col-3 form-group d-flex flex-column">
+                                <label for="FechaInicioReprMolino">Fecha</label>
+                                <input class="form-filter" type="date" id="FechaInicioReprMolinoHistori" />
+                            </div>
+
+                            <!-- Texto "Al" centrado -->
+                            <div class="d-flex align-items-center justify-content-center" style="padding-top:1rem;">
+                                <label for="FechafinReprMolino" style="margin: 0;">al</label>
+                            </div>
+
+                            <!-- Segundo campo de fecha -->
+                            <div class="col-3 form-group d-flex flex-column" style="padding-top: 2rem;">
+                                <input class="form-filter" type="date" id="FechafinReprMolinoHistori" />
+                            </div>
+
+                            <!-- Campo de Turno -->
+                            <div class="col-2 form-group d-flex flex-column">
+                                <label for="InputturnoMolinosHistori">Turno</label>
+                                <select id="InputturnoMolinosHistori" class="form-filter" style="width: 92%;">
+                                    <option value="4" selected>Seleccionar...</option>
+                                    <option value="1">Corte 1 (De 5:45am a 17:44pm)</option>
+                                    <option value="2">Corte 2 (De 17:45pm a 5:44am)</option>
+                                    <option value="3">REPORTE DE SCRAP POR DIA</option>
+                                </select>
+                            </div>
+
+                            <!-- Botón buscar -->
+                            <div class="col-1 d-flex align-items-center justify-content-center" id="searchHistori">
+                                <i id="SearcReporteMolinosHistori" class="fa fa-search" aria-hidden="true" style="font-size: 30px; cursor: pointer;"></i>
+                            </div>
+
+                            <!-- Campo de search Numero de molino -->
+                            <div class="col-3 form-group d-flex flex-column" id="DivCampoSearchTablaHistorial">
+                                <div id="InputTurnoSearchMolinoHistori">
+                                    @* Aqui va el search de la tabla *@
+                                </div>
+                            </div>
+                            <!-- Campos de excel y pdf -->
+                            <div class="p-3" style="width:auto;">
+                                <i class="fa fa-table m-1 fa-2x t-b" id="DescargarExcelHistorial" aria-hidden="true" style="color: #016E38"></i>
+                                <i class="fa fa-file-pdf-o m-1 fa-2x" id="DescargarPDFHistorial" style="color: #ad0b00"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body scrollateral">
+                        <!-- Tabla de reportes Molinos (Historial)-->
+                        <table id="TablaReportesMolinoHisotri" class="totalTotalScrap">
+                            <thead>
+                                <tr>
+                                    <th>Molino #</th>
+                                    <th>Molino</th>
+                                    <th>Fecha</th>
+                                    <th>Operador</th>
+                                    <th>Objetivo de Prod.</th>
+                                    <th>Código</th>
+                                    <th>Descripción</th>
+                                    <th>Peso</th>
+                                    <th>Horas programadas</th>
+                                    <th>Horas de paro</th>
+                                    <th>Coment. y Edit.</th>
+                                    <th>Folio</th>
+                                    <th>Borrar</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center totalBodyScrap" id="TableReporMolHistori">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* MODAL DE COMENTARIOS y EDICION (Histori)*@
+<div class="modal fade" id="ModalComentarios">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 36rem;">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title">Comentarios del registro: </h4> <h4 class="modal-title" id="FolioEditModalComentsHistori"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <label class="TitulosModalComents">Mótivos de paro en producción</label>
+                        <textarea id="InputComentregisterModalComentsHistori" class="form-control ContentModalComents" disabled></textarea>
+                    </div>
+                    <div class="col-6">
+                        <label class="TitulosModalComents" style="width:89%;">Comentarios de paro en producción</label>
+                        <textarea id="InputComentProduccionEditModalComentsHistori" class="form-control ContentModalComents" style="width:89%;" disabled>
+                        </textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label class="TitulosModalComents">Horas de Paro</label>
+                        <input id="InputHorasParoModalComentsHistori" class="form-control ContentModalComents" />
+                        <label class="TitulosModalComents">Péso</label>
+                        <input id="InputPesoModalComentHistori" class="form-control ContentModalComents" />
+                    </div>
+
+                    <div class="col-6">
+                        <label class="TitulosModalComents">Comentarios de ediciones</label>
+                        <textarea id="InputComentEditModalComentsHistori" class="form-control ContentModalComents" disabled>
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button id="ActualizarHorasParoModalComentHistori" type="button" class="btn btn-success">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* MODAL DE ACTUALIZAR (Histori) *@
+<div class="modal fade" id="ModalUpdateHorasParo">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 36rem;">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title">Motivo de la Edición: </h4> <h4 class="modal-title" id="FolioEditModalComentsHistori"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label class="TitulosModalComents">Ingresa el motivo de la edicion</label>
+                        <textarea id="InputHorasParoModalUpdateHorasParoHistori" class="form-control ContentModalComents" style="width: 89%"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button id="ActualizarHorasParoModalUpdateHorasParoHistori" type="button" class="btn btn-info">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* MODAL DE COMENTARIOS DEL REGISTRO DESACTIVADO *@
+<div class="modal fade" id="ModalComentsRegistroDesactivado">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 36rem;">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title">Registro Desactivado: </h4> <h4 class="modal-title" id="FolioEditModalComentsDesactivado"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label class="TitulosModalComents">Comentarios</label>
+                        <textarea id="InputComentRegistroDesactivado" class="form-control ContentModalComents" disabled>
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* MODAL DE AÑADIR MOTIVO DE BORRAR EL REGISTRO *@
+<div class="modal fade" id="ModalDesactivarRegistro">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 36rem;">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title">Motivo para borrar el registro: </h4> <h4 class="modal-title" id="FolioModalComentsHistoriBorrar"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label class="TitulosModalComents">Ingresa el motivo</label>
+                        <textarea id="InputComentarioBorrarRegistroHistori" class="form-control ContentModalComents" style="width: 89%"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button id="DesactivarRegistroHistori" type="button" class="btn btn-info">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/MOLINOS/ReporteMolinos.js"></script>

@@ -1,0 +1,407 @@
+/* ══════════════════════════════════════════════════════════════
+   Detalle SKU
+   Hoja de estilos de la vista. Todo el bloque de página está
+   scopeado bajo .sku-page y el del modal bajo .sku-modal.
+   ══════════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════════
+   Página
+   ══════════════════════════════════════════════════════════════ */
+.sku-page {
+    --sku-primary: #0058A1;
+    --sku-primary-dark: #004a8a;
+    --sku-primary-soft: #eef4fb;
+    --sku-border: #dbe3ec;
+    --sku-border-soft: #edf0f3;
+    --sku-text: #343a40;
+    --sku-muted: #6b7a8c;
+    --sku-radius: 12px;
+
+    padding: 1.5rem 1.5rem 2rem;
+    font-family: 'Nunito', sans-serif;
+}
+
+/* ── Encabezado ─────────────────────────────────────────────── */
+.sku-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .85rem;
+    margin-bottom: 1.25rem;
+}
+
+.sku-title {
+    margin: 0;
+    padding-left: .85rem;
+    border-left: 5px solid var(--sku-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--sku-primary);
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    line-height: 1.2;
+}
+
+.sku-subtitle {
+    margin: .35rem 0 0 .95rem;
+    font-size: .85rem;
+    color: var(--sku-muted);
+}
+
+.sku-tools {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+/* Pill con el código del SKU */
+.sku-code {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .45rem .9rem;
+    border-radius: 999px;
+    background-color: var(--sku-primary-soft);
+    color: var(--sku-primary);
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    white-space: nowrap;
+}
+
+    .sku-code i {
+        font-size: .85rem;
+    }
+
+/* Botones del encabezado */
+.sku-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    height: 38px;
+    padding: .45rem 1.15rem;
+    border-radius: 8px;
+    font-size: .82rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color .2s, color .2s, border-color .2s, box-shadow .2s;
+}
+
+.sku-btn-primary {
+    background-color: var(--sku-primary);
+    border: 1px solid var(--sku-primary);
+    color: #fff;
+}
+
+    .sku-btn-primary:hover,
+    .sku-btn-primary:focus {
+        background-color: var(--sku-primary-dark);
+        border-color: var(--sku-primary-dark);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 88, 161, .3);
+    }
+
+.sku-btn-outline {
+    background-color: #fff;
+    border: 1px solid var(--sku-primary);
+    color: var(--sku-primary);
+}
+
+    .sku-btn-outline:hover,
+    .sku-btn-outline:focus {
+        background-color: var(--sku-primary);
+        color: #fff;
+    }
+
+.sku-btn-ghost {
+    background-color: #fff;
+    border: 1px solid var(--sku-border);
+    color: var(--sku-muted);
+}
+
+    .sku-btn-ghost:hover,
+    .sku-btn-ghost:focus {
+        background-color: #f3f6fa;
+        border-color: #c6d3e2;
+        color: var(--sku-text);
+    }
+
+/* ── Tarjetas de sección ────────────────────────────────────── */
+.sku-card {
+    background: #fff;
+    border: none;
+    border-radius: var(--sku-radius);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+    margin-bottom: 1.1rem;
+    overflow: hidden;
+}
+
+.sku-card-header {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background-color: var(--sku-primary-soft);
+    border-bottom: 1px solid #dbe7f4;
+    padding: .8rem 1.35rem;
+}
+
+    .sku-card-header h5 {
+        margin: 0;
+        font-size: .82rem;
+        font-weight: 700;
+        color: var(--sku-primary);
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+    .sku-card-header i {
+        color: var(--sku-primary);
+        font-size: .95rem;
+    }
+
+.sku-card-body {
+    padding: 1.35rem 1.5rem 1.15rem;
+}
+
+/* ── Campos ─────────────────────────────────────────────────── */
+.sku-label {
+    display: block;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--sku-muted);
+    margin-bottom: .35rem;
+}
+
+.sku-input,
+.sku-select {
+    display: block;
+    width: 100%;
+    height: 38px;
+    padding: .4rem .75rem;
+    border: 1px solid var(--sku-border);
+    border-radius: 8px;
+    background-color: #fff;
+    color: var(--sku-text);
+    font-size: .9rem;
+    font-weight: 500;
+    transition: border-color .2s, box-shadow .2s, background-color .2s;
+}
+
+    .sku-input:focus,
+    .sku-select:focus {
+        outline: none;
+        border-color: var(--sku-primary);
+        box-shadow: 0 0 0 .15rem rgba(0, 88, 161, .18);
+    }
+
+    /* Campos de solo lectura: se leen como dato, no como caja deshabilitada */
+    .sku-input:disabled,
+    .sku-input[readonly] {
+        background-color: #f7fafd;
+        border-color: #e6eef7;
+        color: var(--sku-text);
+        font-weight: 600;
+        opacity: 1;
+        cursor: default;
+    }
+
+    .sku-input::placeholder {
+        color: #a7b3c1;
+        font-weight: 400;
+    }
+
+/* Prefijo/sufijo de unidades (kg) */
+.sku-unit {
+    position: relative;
+}
+
+    .sku-unit .sku-input {
+        padding-right: 2.4rem;
+    }
+
+.sku-unit-suffix {
+    position: absolute;
+    top: 50%;
+    right: .75rem;
+    transform: translateY(-50%);
+    font-size: .75rem;
+    font-weight: 600;
+    color: #8a94a0;
+    pointer-events: none;
+}
+
+/* Múltiplo: input + X + select */
+.sku-multiplo {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+    .sku-multiplo .sku-multiplo-qty {
+        flex: 0 0 35%;
+    }
+
+    .sku-multiplo .sku-multiplo-x {
+        margin: 0;
+        font-weight: 700;
+        color: var(--sku-primary);
+    }
+
+    .sku-multiplo .sku-select {
+        flex: 1 1 auto;
+    }
+
+/* ── Sub-panel de materiales ────────────────────────────────── */
+.sku-subpanel {
+    margin-top: 1.35rem;
+    padding: 1.1rem 1.15rem 1.15rem;
+    border: 1px solid #e6eef7;
+    border-radius: 10px;
+    background-color: #f9fbfd;
+}
+
+.sku-subpanel-title {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    margin-bottom: .85rem;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--sku-primary);
+}
+
+    .sku-subpanel-title i {
+        font-size: .85rem;
+    }
+
+/* ── Detalles de línea ──────────────────────────────────────── */
+.sku-line-heads {
+    margin-bottom: .35rem;
+}
+
+.sku-col-title {
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--sku-muted);
+}
+
+.sku-cell-label {
+    display: block;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--sku-muted);
+    margin-bottom: .25rem;
+}
+
+/* Estado vacío de líneas */
+.sku-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .35rem;
+    padding: 2rem 1rem;
+    border: 1px dashed #dbe3ec;
+    border-radius: 10px;
+    background-color: #f9fbfd;
+    color: var(--sku-muted);
+    text-align: center;
+}
+
+    .sku-empty i {
+        font-size: 1.6rem;
+        color: #b6c2cf;
+    }
+
+    .sku-empty p {
+        margin: 0;
+        font-size: .85rem;
+    }
+
+#divDetailsLine > .col-3 {
+    margin-bottom: .35rem;
+}
+
+/* Eficiencia y planta se leen como dato */
+.sku-page .EficienciaClass:disabled {
+    background-color: var(--sku-primary-soft);
+    border-color: #dbe7f4;
+    color: var(--sku-primary);
+    font-weight: 700;
+}
+
+.sku-page .PlantaClass:disabled {
+    background-color: #f7fafd;
+    border-color: #e6eef7;
+    color: var(--sku-muted);
+    font-weight: 600;
+}
+
+/* Separador entre filas de líneas (solo escritorio) */
+@media (min-width: 768px) {
+    #divDetailsLine > .col-3 {
+        padding-top: .9rem;
+        border-top: 1px solid var(--sku-border-soft);
+    }
+
+        #divDetailsLine > .col-3:nth-child(-n+4) {
+            padding-top: 0;
+            border-top: none;
+        }
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 767px) {
+    .sku-page {
+        padding: 1rem;
+    }
+
+    .sku-card-body {
+        padding: 1.1rem 1rem .9rem;
+    }
+
+    .sku-tools {
+        width: 100%;
+    }
+
+    #divDetailsLine > .col-3 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .sku-line-heads {
+        display: none !important;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Modal (complementos de Styles/Modales.css)
+   ══════════════════════════════════════════════════════════════ */
+#ModalAgregarDatosDeLinea {
+    background-color: rgba(0, 0, 0, .45);
+}
+
+.sku-modal .modal-body-custom {
+    padding-bottom: 1.5rem;
+}
+
+.sku-modal .sku-modal-note {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    margin-bottom: 1.1rem;
+    font-size: .8rem;
+    color: var(--sku-muted);
+}

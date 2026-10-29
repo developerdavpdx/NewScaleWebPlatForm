@@ -1,0 +1,459 @@
+﻿/* ==================================================================
+   Dashboard molinos
+   Todo el bloque esta scopeado bajo .mol-page para no filtrar
+   reglas al resto de las vistas.
+   ================================================================== */
+
+.mol-page {
+    --mol-primary: #0058A1;
+    --mol-primary-dark: #004a8a;
+    --mol-primary-soft: #eef4fb;
+    --mol-border: #dbe3ec;
+    --mol-border-soft: #edf0f3;
+    --mol-text: #22303f;
+    --mol-muted: #6b7a8c;
+    --mol-radius: 12px;
+    --mol-green: #2e7d32;
+    --mol-green-soft: #eaf6e8;
+    --mol-red: #b4433f;
+    --mol-red-soft: #fdecec;
+    --mol-amber: #b26a00;
+    --mol-amber-soft: #fff4e0;
+
+    padding: 1.5rem 1.5rem 2rem;
+    font-family: 'Nunito', sans-serif;
+    color: var(--mol-text);
+}
+
+/* ── Encabezado ─────────────────────────────────────────────── */
+.mol-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .85rem;
+    margin-bottom: 1.25rem;
+}
+
+.mol-title {
+    margin: 0;
+    padding-left: .85rem;
+    border-left: 5px solid var(--mol-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--mol-primary);
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    line-height: 1.2;
+}
+
+.mol-subtitle {
+    margin: .35rem 0 0 .95rem;
+    font-size: .85rem;
+    color: var(--mol-muted);
+}
+
+.mol-tools {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+/* ── Pills ──────────────────────────────────────────────────── */
+.mol-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .45rem .9rem;
+    border-radius: 999px;
+    background-color: var(--mol-primary-soft);
+    color: var(--mol-primary);
+    font-size: .8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+    .mol-pill b {
+        font-size: .95rem;
+        font-weight: 700;
+    }
+
+    .mol-pill i {
+        font-size: .8rem;
+    }
+
+.mol-pill-muted {
+    background-color: #f3f6fa;
+    color: var(--mol-muted);
+}
+
+/* ── Botones ────────────────────────────────────────────────── */
+.mol-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    height: 38px;
+    padding: .45rem 1.05rem;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: .82rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color .2s, color .2s, border-color .2s, box-shadow .2s;
+}
+
+    .mol-btn i {
+        font-size: .9rem;
+    }
+
+.mol-btn-outline {
+    background-color: #fff;
+    border: 1px solid var(--mol-border);
+    color: var(--mol-primary);
+}
+
+    .mol-btn-outline:hover,
+    .mol-btn-outline:focus {
+        background-color: var(--mol-primary);
+        border-color: var(--mol-primary);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 88, 161, .3);
+    }
+
+/* ── Switch de cambio de vista ──────────────────────────────── */
+/* OCULTO TEMPORALMENTE (a peticion): para reactivarlo, borrar la
+   regla ".mol-page #DivSwitch" del final de este archivo. */
+#DivSwitch {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    height: 38px;
+    padding: .3rem .8rem;
+    border: 1px solid var(--mol-border);
+    border-radius: 999px;
+    background-color: #fff;
+}
+
+.mol-switch-label {
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--mol-muted);
+    white-space: nowrap;
+}
+
+.mol-page .switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 26px;
+    margin: 0;
+}
+
+    .mol-page .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+.mol-page .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #c8d3df;
+    transition: .3s;
+    border-radius: 999px;
+}
+
+    .mol-page .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 3px;
+        bottom: 3px;
+        background-color: #fff;
+        transition: .3s;
+        border-radius: 50%;
+        box-shadow: 0 1px 3px rgba(15, 35, 60, .25);
+    }
+
+.mol-page .switch input:checked + .slider {
+    background-color: var(--mol-primary);
+}
+
+.mol-page .switch input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+.mol-page .switch input:focus-visible + .slider {
+    box-shadow: 0 0 0 .15rem rgba(0, 88, 161, .25);
+}
+
+/* ── KPIs ───────────────────────────────────────────────────── */
+.mol-kpis {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.1rem;
+}
+
+.mol-kpi {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+    padding: 1rem 1.1rem;
+    background-color: #fff;
+    border-radius: var(--mol-radius);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+    border-top: 3px solid transparent;
+    min-width: 0;
+}
+
+.mol-kpi-volumen {
+    border-top-color: var(--mol-primary);
+}
+
+.mol-kpi-kghora {
+    border-top-color: var(--mol-amber);
+}
+
+.mol-kpi-icon {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    font-size: 1.05rem;
+}
+
+.mol-kpi-volumen .mol-kpi-icon {
+    background-color: var(--mol-primary-soft);
+    color: var(--mol-primary);
+}
+
+.mol-kpi-kghora .mol-kpi-icon {
+    background-color: var(--mol-amber-soft);
+    color: var(--mol-amber);
+}
+
+.mol-kpi-body {
+    display: flex;
+    flex-direction: column;
+    gap: .15rem;
+    min-width: 0;
+}
+
+.mol-kpi-label {
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--mol-muted);
+    white-space: nowrap;
+}
+
+.mol-kpi-value {
+    display: flex;
+    align-items: baseline;
+    gap: .25rem;
+    font-size: 1.55rem;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--mol-text);
+}
+
+    .mol-kpi-value small {
+        font-size: .72rem;
+        font-weight: 600;
+        color: var(--mol-muted);
+    }
+
+/* ── Estado vacio ───────────────────────────────────────────── */
+.mol-empty {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .8rem 1.1rem;
+    margin-bottom: 1rem;
+    border-radius: 10px;
+    background-color: var(--mol-amber-soft);
+    border: 1px solid #f3e0bd;
+    color: #7a4d00;
+    font-size: .82rem;
+    font-weight: 600;
+}
+
+    .mol-empty i {
+        font-size: .95rem;
+    }
+
+.mol-page .is-hidden {
+    display: none !important;
+}
+
+/* ── Tarjeta del carrusel ───────────────────────────────────── */
+.mol-chart-card {
+    background-color: #fff;
+    border-radius: var(--mol-radius);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+    overflow: hidden;
+    margin-bottom: .5rem;
+}
+
+.mol-chart-head {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+    background-color: var(--mol-primary-soft);
+    border-bottom: 1px solid #dbe7f4;
+    padding: .8rem 1.35rem;
+}
+
+    .mol-chart-head > i {
+        color: var(--mol-primary);
+        font-size: .95rem;
+    }
+
+    .mol-chart-head h5 {
+        margin: 0;
+        font-size: .82rem;
+        font-weight: 700;
+        color: var(--mol-primary);
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+.mol-chart-hint {
+    margin-left: auto;
+    font-size: .78rem;
+    color: var(--mol-muted);
+}
+
+/* ── Carrusel (se conserva el comportamiento original) ──────── */
+.mol-page .swiper {
+    width: 100%;
+    height: 560px;
+}
+
+.mol-page .swiper-slide {
+    padding: 0 .75rem;
+    background-color: #fff;
+}
+
+.mol-page .highcharts-figure {
+    margin: 0;
+    height: 100%;
+}
+
+.mol-page .mol-chart {
+    height: 510px;
+}
+
+/* Flechas del carrusel */
+.mol-page .swiper-button-prev,
+.mol-page .swiper-button-next {
+    width: 36px;
+    height: 36px;
+    margin-top: -18px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid var(--mol-border);
+    color: var(--mol-primary);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .14);
+    transition: background-color .2s, color .2s, border-color .2s;
+}
+
+    .mol-page .swiper-button-prev:hover,
+    .mol-page .swiper-button-next:hover {
+        background-color: var(--mol-primary);
+        border-color: var(--mol-primary);
+        color: #fff;
+    }
+
+    .mol-page .swiper-button-prev::after,
+    .mol-page .swiper-button-next::after {
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+/* Scrollbar del carrusel */
+.mol-page .swiper-scrollbar {
+    height: 6px;
+    border-radius: 999px;
+    background-color: #e6eef7;
+    left: .75rem;
+    right: .75rem;
+    width: auto;
+    bottom: 6px;
+}
+
+.mol-page .swiper-scrollbar-drag {
+    border-radius: 999px;
+    background-color: #c3d4e6;
+}
+
+/* Tipografia de Highcharts */
+.mol-page .highcharts-container text,
+.mol-page .highcharts-container {
+    font-family: 'Nunito', sans-serif !important;
+}
+
+.mol-page .highcharts-credits {
+    display: none !important;
+}
+
+/* ── Switch de cambio de vista OCULTO (temporal) ────────────── */
+/* A peticion: el switch "Vista molinos" no se muestra por ahora.
+   El markup y el JS se conservan; para reactivarlo solo hay que
+   borrar este bloque. */
+.mol-page #DivSwitch {
+    display: none !important;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 767px) {
+    .mol-page {
+        padding: 1rem;
+    }
+
+    .mol-tools {
+        width: 100%;
+    }
+
+    .mol-chart-hint {
+        display: none;
+    }
+
+    .mol-page .swiper {
+        height: 460px;
+    }
+
+    .mol-page .mol-chart {
+        height: 410px;
+    }
+
+    .mol-page .swiper-button-prev,
+    .mol-page .swiper-button-next {
+        display: none;
+    }
+}
+
+@media (max-width: 575px) {
+    .mol-kpis {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .mol-kpi-label {
+        white-space: normal;
+    }
+}

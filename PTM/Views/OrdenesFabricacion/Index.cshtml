@@ -1,53 +1,43 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Ordenes de Fabricación";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-    .titleHeader {
-        background-color: #075DA5;
-        color: white;
-        font-size: 22px;
-        text-align: center;
-        height: 50px;
-        font-weight: bolder;
-    }
+<link href="~/Styles/OrdenesFabricacion.css?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Styles/OrdenesFabricacion.css")).Ticks" rel="stylesheet" />
 
-    .containerTable {
-        background-color: white;
-    }
+<div class="of-page">
 
-    tbody tr {
-        text-align: center
-    }
+    <div class="of-header">
+        <div>
+            <h2 class="of-title">Órdenes de fabricación</h2>
+            <p class="of-subtitle">Consulta las órdenes activas y accede al detalle de cada una.</p>
+        </div>
+        <div class="of-tools">
+            <span class="of-count"><b id="ofCount">0</b> órdenes</span>
+            <button type="button" class="of-refresh" onclick="recargarOrdenes()">
+                <i class="fa fa-rotate-right" aria-hidden="true"></i>
+                Actualizar
+            </button>
+        </div>
+    </div>
 
-    .btn-details {
-        width: 120px
-    }
-</style>
-
-<div class="container titleHeader mt-4">
-    <h2 style="padding-top: 7px;">ORDENES DE FABRICACIÓN</h2>
-</div>
-
-<br />
-
-<div class="container containerTable p-4">
-    <table id="tablaOrdenesFabricacion" class="table-striped">
-        <thead>
-            <tr>
-                <th>Num. Documento</th>
-                <th>Clave</th>
-                <th>Código</th>
-                <th style="width: 33% !important;">Descripción</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody id="bodyTableOF">
-        </tbody>
-    </table>
+    <div class="of-card">
+        <table id="tablaOrdenesFabricacion" class="table of-table">
+            <thead>
+                <tr>
+                    <th>Num. Documento</th>
+                    <th>Clave</th>
+                    <th>Código</th>
+                    <th style="width: 33% !important;">Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="bodyTableOF">
+            </tbody>
+        </table>
+    </div>
 </div>
 
 @*<script src="~/Scripts/EmailTXT/EmailTXT.js"></script>*@
-<script src="~/Scripts/OrdenesFabricacion/OrdenesFabricacion.js"></script>
+<script src="~/Scripts/OrdenesFabricacion/OrdenesFabricacion.js?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Scripts/OrdenesFabricacion/OrdenesFabricacion.js")).Ticks"></script>

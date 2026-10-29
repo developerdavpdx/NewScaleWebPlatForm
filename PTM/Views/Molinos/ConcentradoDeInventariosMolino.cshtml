@@ -1,0 +1,123 @@
+﻿@using System.Text;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Styles/MOLINOS/ConcentradoDeInventarios/ConcentradoDeInventarios.css" rel="stylesheet" />
+
+<br />
+
+<!--CONTENT TABLAS -->
+<!-- Tabla CONCENTRADO DE INVENTAROS -->
+<div class="contentContainer">
+    <div class="containerTitle p-4">
+        <br />
+        <div class="container" style="min-width:100%">
+            <div class="card-header">
+                <h2>CONCENTRADO DE INVENTAROS</h2>
+            </div>
+            <br />
+
+            <div class="row">
+                <!-- Primera tabla INVENTARIO INICIAL (reducida) -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h5 class="TituloDinMenor">INVENTARIO INICIAL</h5>
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table id="TableInvInicial" class="TableInvInicial table table-striped">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>Código</th>
+                                        <th>PPVC (KG)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="RowsConcentradoInv">
+                                    <!-- Filas dinámicas -->
+                                </tbody>
+                            </table>
+                            <br />
+                            <button class="btn btn-info" id="BtnUpdateConcentradoInv">Actualizar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Segunda tabla ENTRADAS SCRAP(ampliada) -->
+                <div class="col-md-4 center-table">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h5 class="TituloDinMenor">ENTRADAS SCRAP</h5>
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table id="TableEntradasScrap" class="TableEntradasScrap table table-striped">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>Código</th>
+                                        <th>PPVC (KG)</th>
+                                        <th>Embarques</th>
+                                        <th>Planta</th>
+                                        <th>PNC</th>
+                                        <th>CALIDAD</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="RowsDetallesInv">
+                                    <!-- Filas dinámicas -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tercera tabla PRODUCCIÓN MOLINOS (reducida) -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h5 class="TituloDinMenor">PRODUCCIÓN MOLINOS</h5>
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table id="TableProduccionMolinos" class="TableProdMol table table-striped">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>Código</th>
+                                        <th>Cantidad (KG)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="RowsResumenInv">
+                                    <!-- Filas dinámicas -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <!-- cuarta tabla INVENTARIO TEÓRICO -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h5 class="TituloDinMenor">INVENTARIO TEÓRICO</h5>
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table id="TableInventarioTeoricoMolinos" class="TableProdMol table table-striped">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="RowTotal">
+                                    <!-- Filas dinámicas -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/MOLINOS/ConcentradoDeInventariosMolino.js"></script>

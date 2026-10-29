@@ -1,0 +1,214 @@
+﻿/*Seccion de botones (lineas)*/
+#buttonSection .btn {
+    width: 49%;
+    padding: 2%;
+    margin-bottom: 5px;
+    height: 10rem;
+}
+
+/*Lineas asignadas*/
+.btnAsignada {
+    width: 49%;
+    padding: 2%;
+    margin-bottom: 5px;
+    background-color: #80808099;
+    color: white;
+    pointer-events: none; /*desactivamos los eventos de cursor*/
+}
+
+/*Lineas Des-asignadas*/
+.btnDesasignada {
+    width: 49%;
+    padding: 2%;
+    margin-bottom: 5px;
+    background-color: #2596be;
+    color: white;
+    pointer-events: none; /*desactivamos los eventos de cursor*/
+}
+
+/*Div principal para "atado incompleto" y Bascula seleccionada*/
+#DivAtadoBascula {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* dos columnas iguales */
+    gap: 10px; /* espacio entre columnas */
+}
+
+/* Div de atado incompleto*/
+#LabelAtadoIncompleteDiv {
+    display: inline-block;
+    background-color: #e3f0ff;
+    padding: 8px 14px;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    text-align: left;
+    width: max-content;
+}
+/*Ocultamos el check real (genera errores visuales al hacer click)*/
+#atadoIncompleto {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+/*"check" personalizado*/
+#LabelAtadoIncompleteDiv label {
+    position: relative;
+    padding-left: 35px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: bold;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+    /* Caja del checkbox personalizada */
+    #LabelAtadoIncompleteDiv label::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 24px;
+        width: 24px;
+        border-radius: 6px;
+        border: 2px solid #007bff;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+    /* Efecto hover en la caja */
+    #LabelAtadoIncompleteDiv label:hover::before {
+        border-color: #0056b3;
+        box-shadow: 0 0 6px #007bff88;
+    }
+/* Marca de check */
+#atadoIncompleto:checked + label::after {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 44%;
+    transform: translateY(-50%) rotate(45deg);
+    width: 8px;
+    height: 14px;
+    border: solid #007bff;
+    border-width: 0 3px 3px 0;
+    transition: border-color 0.3s;
+}
+/* Cambiar fondo de la caja al estar marcado */
+#atadoIncompleto:checked + label::before {
+    border-color: #007bff;
+    box-shadow: 0 0 8px #007bffaa;
+}
+
+/* Div de select de bascula*/
+#DivSelect_bascula {
+    display: flex;
+    align-items: center;
+    justify-self: end;
+    padding-right: 1rem;
+    gap: 0.75rem; /* espacio entre label y select */
+}
+
+    #DivSelect_bascula label {
+        font-weight: bold;
+    }
+
+/* SELECT de bascula */
+#basculaSelect {
+    min-width: 200px;
+}
+
+/* Modal de BajosPesos*/
+/*Icono*/
+#IconBajoPesoDiv {
+    background-color: orange !important;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%; /*fondo redondo */
+    margin-bottom: 10px; /* espacio entre icono y título */
+}
+
+#IconBajoPeso {
+    font-size: 58px;
+    position: relative;
+    left: 3%;
+    color: white;
+}
+
+/* Título */
+#TitleBajoPeso {
+    color: orange !important;
+    font-size: 23px;
+    font-weight: bolder;
+    margin: 0;
+    text-align: center;
+    width: 100%;
+}
+
+/* Modal de SobrePesos*/
+/*Icono*/
+#IconSobrePesoDiv {
+    background-color: red !important;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%; /*fondo redondo */
+    margin-bottom: 10px; /* espacio entre icono y título */
+}
+
+#IconSobrePeso {
+    font-size: 58px;
+    position: relative;
+    left: 3%;
+    color: white;
+}
+
+/*Titulo*/
+#TitleSobrePeso {
+    color: red !important;
+    font-size: 23px;
+    font-weight: bolder;
+    margin: 0;
+    text-align: center;
+    width: 100%;
+}
+
+/*Generales para los 2 modals*/
+
+.modalhead {
+    border-bottom: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*Mensajes*/
+#DescripcionBajoPeso, #DescripcionSobrePeso {
+    padding: 1rem !important;
+}
+
+
+/*Footer de los modal de sobrepeso y bajo peso*/
+.footModalAlert {
+    border-top: none;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/*Botones de cerrar modal (sobrepeso y bajo peso)*/
+.btnCerrarModalAlertPeso {
+    width: 45%;
+    border: solid grey 1px;
+    background-color: #80808026;
+}
+
+    .btnCerrarModalAlertPeso:hover {
+        width: 45%;
+        border: solid grey 1px;
+        background-color: #80808026;
+    }

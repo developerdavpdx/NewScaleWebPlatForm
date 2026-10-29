@@ -1,0 +1,215 @@
+﻿@using System.Text;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Styles/MOLINOS/CatalogosMolino/CatalogosMolino.css" rel="stylesheet" />
+
+<br />
+
+<!-- Content -->
+<div class="container-fluid">
+    <div class="contentContainer">
+        <div class="containerTitle p-4">
+            <div class="card-header">
+                <h2>MOLINOS</h2>
+            </div>
+            <br />
+            <div class="totalDesglose">
+                <button class="btn btn-success" id="BtnAgregaMolino">Agregar</button>
+                <button class="btn btn-danger" id="BtnEliminarMolino">Eliminar</button>
+                <button class="btn btn-info" id="BtnModalMotivosDeParo">Motivos de Paro</button>
+            </div>
+            <br />
+            <div class="card">
+                <!-- Aqui generamos los botones (los molinos que existen) -->
+                <div class="buttonSection" id="buttonSectionMolinos">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Datos Objetivos -->
+<div class="modal fade" id="ActualizarObjetivosMolinoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title" id="myModalLabel">Datos del Molino <b id="MolinoTituloModal"></b></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <label>Horas por turno</label>
+                        <input id="inputHorasTurnoObjetivoMolino" class="form-control" />
+                    </div>
+                    <div class="col-6">
+                        <label>Eficiencia Objetivo (Kg/Hora)</label>
+                        <input id="inputEficienciaMolino" class="form-control" style="width: 92%;" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label>Objetivo de Producción</label>
+                        <input id="inputObjetivoProdMolino" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-bs-dismiss="modal">Cerrar</button>
+                <button id="BtnActualizarObjetivosModal" type="button" class="btn btn-success">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Agregar Molino -->
+<div class="modal fade" id="agregarMolinoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg" id="agregarMolinoModalint">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title" id="myModalLabel">Agregar Molino</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-3">
+                        <label>Equipo #</label>
+                        <input id="inputNumMolino" class="form-control" disabled />
+                    </div>
+                    <div class="col-3">
+                        <label class="text-nowrap">Objetivo Prod.</label>
+                        <input id="inputObjetivoProd" class="form-control" />
+                    </div>
+                    <div class="col-6">
+                        <label>Nombre</label>
+                        <input id="selectInputNombreMolino" class="form-control" style="width: 92%;">
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-4">
+                        <label>Horas por Turno</label>
+                        <input id="inputHorasTurnoMolino" class="form-control" />
+                    </div>
+                    <div class="col-4">
+                        <label>Proceso</label>
+                        <select id="selectInputProcessMolino" class="form-control">
+                            <option value="Molino" selected>Molino</option>
+                            <option value="Pulverizador">Pulverizador</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label>Eficiencia objetivo (Kg/Hr)</label>
+                        <input id="inputEficienciaObjMolino" class="form-control" style="width: 92%;" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-bs-dismiss="modal">Cerrar</button>
+                <button id="AgregarMolinoNuevo" type="button" class="btn btn-success">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Molino -->
+<div class="modal fade" id="EliminarMolinoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title">Eliminar Molino</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <label>Eliminar Molino número:</label>
+                        <input id="inputNumMolinoBorrar" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-bs-dismiss="modal">Cerrar</button>
+                <button id="BtnBorrarMolino" type="button" class="btn btn-success">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Motivos de Paro -->
+<div class="modal fade" id="MotivosPAroModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title">Motivos de paro</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row d-flex card-body" style="margin-top: 1rem; margin-right: 0rem">
+                    <table id="TablaMotivosParo">
+                        <thead>
+                            <tr>
+                                <th>Motivos de Paro</th>
+                                <th>Editar</th>
+                                <th>Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center totalBodyScrap" id="TableMotivosParoRows">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" id="AgregegarMotivoDeParo" class="btn btn-success">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar Motivo de Paro -->
+<div class="modal fade" id="AddMotivosPAroModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title">Agregar motivo de paro</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div>
+                        <label>Motivo de paro:</label>
+                        <input id="inputMotivoDeParo" class="form-control" style="width: 94%" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" id="AgregegarMotivoDeParoBtnFinal" class="btn btn-success">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Motivo de Paro -->
+<div class="modal fade" id="UpdateMotivosPAroModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title">Editar motivo de paro</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div>
+                        <label>Motivo de paro:</label>
+                        <input id="inputMotivoDeParoEdit" class="form-control" style="width: 94%" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button type="button" id="ActualizarMotivoPAroBtn" class="btn btn-success">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/MOLINOS/CatalogosMolino.js?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Scripts/MOLINOS/CatalogosMolino.js")).Ticks"></script>

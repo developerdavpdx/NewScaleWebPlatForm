@@ -1,0 +1,350 @@
+/* ══════════════════════════════════════════════════════════════
+   Detalles de Orden de Fabricación
+   Mismo lenguaje visual que OrdenesFabricacion.css.
+   Todo está scopeado bajo .dfo-page para no afectar otras vistas.
+   ══════════════════════════════════════════════════════════════ */
+
+.dfo-page {
+    --dfo-primary: #0058A1;
+    --dfo-primary-dark: #004a8a;
+    --dfo-primary-soft: #eef4fb;
+    --dfo-accent: #51B5E1;
+    --dfo-border: #e3e6f0;
+    --dfo-border-soft: #edf0f3;
+    --dfo-text: #343a40;
+    --dfo-muted: #6b7a8c;
+    --dfo-radius: 12px;
+
+    padding: 1.5rem 1.5rem 2rem;
+    font-family: 'Nunito', sans-serif;
+}
+
+/* ── Encabezado ─────────────────────────────────────────────── */
+.dfo-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .85rem;
+    margin-bottom: 1.25rem;
+}
+
+.dfo-title {
+    margin: 0;
+    padding-left: .85rem;
+    border-left: 5px solid var(--dfo-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dfo-primary);
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    line-height: 1.2;
+}
+
+.dfo-subtitle {
+    margin: .35rem 0 0 .95rem;
+    font-size: .85rem;
+    color: var(--dfo-muted);
+}
+
+.dfo-tools {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-wrap: wrap;
+}
+
+/* Pills de contexto (orden, clave, componentes) */
+.dfo-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .45rem .9rem;
+    border-radius: 999px;
+    background-color: var(--dfo-primary-soft);
+    color: var(--dfo-primary);
+    font-size: .82rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+    .dfo-pill i {
+        font-size: .8rem;
+        opacity: .85;
+    }
+
+    .dfo-pill b {
+        font-size: .95rem;
+    }
+
+    .dfo-pill.is-hidden {
+        display: none !important;
+    }
+
+/* ── Botones ────────────────────────────────────────────────── */
+.dfo-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    height: 38px;
+    padding: .45rem 1.1rem;
+    border-radius: 8px;
+    font-size: .82rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color .2s, color .2s, box-shadow .2s;
+}
+
+    .dfo-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 .15rem rgba(0, 88, 161, .25);
+    }
+
+.dfo-btn-outline {
+    border: 1px solid var(--dfo-primary);
+    background-color: #fff;
+    color: var(--dfo-primary);
+}
+
+    .dfo-btn-outline:hover {
+        background-color: var(--dfo-primary);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 88, 161, .3);
+    }
+
+.dfo-btn-primary {
+    border: 1px solid var(--dfo-primary);
+    background-color: var(--dfo-primary);
+    color: #fff;
+}
+
+    .dfo-btn-primary:hover {
+        background-color: var(--dfo-primary-dark);
+        border-color: var(--dfo-primary-dark);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 88, 161, .35);
+    }
+
+/* ── Tarjeta ────────────────────────────────────────────────── */
+.dfo-card {
+    background: #fff;
+    border-radius: var(--dfo-radius);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+    padding: 1.5rem;
+}
+
+.dfo-card-header {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    margin: -1.5rem -1.5rem 1.25rem;
+    padding: .85rem 1.5rem;
+    background-color: var(--dfo-primary-soft);
+    border-radius: var(--dfo-radius) var(--dfo-radius) 0 0;
+    border-bottom: 1px solid var(--dfo-border);
+}
+
+    .dfo-card-header i {
+        color: var(--dfo-primary);
+        font-size: .95rem;
+    }
+
+    .dfo-card-header h5 {
+        margin: 0;
+        font-size: .85rem;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        color: var(--dfo-primary);
+    }
+
+.dfo-card-hint {
+    margin-left: auto;
+    font-size: .78rem;
+    color: var(--dfo-muted);
+    white-space: nowrap;
+}
+
+/* ── Controles de DataTables ────────────────────────────────── */
+.dfo-card .dataTables_wrapper .dataTables_length,
+.dfo-card .dataTables_wrapper .dataTables_filter {
+    margin-bottom: 1rem;
+    font-size: .9rem;
+    color: #4a5568;
+}
+
+    .dfo-card .dataTables_wrapper .dataTables_length select,
+    .dfo-card .dataTables_wrapper .dataTables_filter input {
+        height: 38px;
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        padding: .25rem .6rem;
+        margin-left: .4rem;
+        outline: none;
+        background-color: #fff;
+        color: var(--dfo-text);
+    }
+
+    .dfo-card .dataTables_wrapper .dataTables_filter input {
+        min-width: 220px;
+    }
+
+        .dfo-card .dataTables_wrapper .dataTables_length select:focus,
+        .dfo-card .dataTables_wrapper .dataTables_filter input:focus {
+            border-color: var(--dfo-primary);
+            box-shadow: 0 0 0 .15rem rgba(0, 88, 161, .2);
+        }
+
+.dfo-card .dataTables_wrapper .dataTables_info,
+.dfo-card .dataTables_wrapper .dataTables_paginate {
+    margin-top: 1rem;
+    font-size: .9rem;
+    color: #4a5568;
+}
+
+    .dfo-card .dataTables_wrapper .dataTables_paginate .paginate_button {
+        border-radius: 6px !important;
+        border: 1px solid transparent;
+        padding: .35rem .7rem !important;
+        color: var(--dfo-primary) !important;
+    }
+
+        .dfo-card .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: var(--dfo-primary-soft) !important;
+            border-color: var(--dfo-primary-soft) !important;
+            color: var(--dfo-primary) !important;
+        }
+
+        .dfo-card .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+        .dfo-card .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            background: var(--dfo-primary) !important;
+            border-color: var(--dfo-primary) !important;
+            color: #fff !important;
+            font-weight: 700;
+        }
+
+        .dfo-card .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+        .dfo-card .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+            color: #b6c2cf !important;
+            background: transparent !important;
+            border-color: transparent !important;
+            cursor: default;
+        }
+
+/* ── Tabla ──────────────────────────────────────────────────── */
+.dfo-table {
+    width: 100% !important;
+    margin-bottom: 0;
+    border-collapse: collapse !important;
+    border-spacing: 0;
+}
+
+    /* DataTables agrega un borde oscuro cuando la tabla no tiene footer */
+    .dfo-page .dfo-table.no-footer {
+        border-bottom: none;
+    }
+
+    /* Neutraliza las reglas globales de Styles/Flje.css */
+    .dfo-page .dfo-table thead,
+    .dfo-page .dfo-table thead tr {
+        box-shadow: none !important;
+    }
+
+    .dfo-page .dfo-table thead th {
+        background-color: var(--dfo-primary-soft) !important;
+        color: var(--dfo-primary) !important;
+        font-size: .82rem;
+        font-weight: 700;
+        text-align: center;
+        vertical-align: middle;
+        padding: .85rem .75rem;
+        border: none;
+        border-bottom: 2px solid var(--dfo-primary) !important;
+        box-shadow: none !important;
+        white-space: nowrap;
+    }
+
+    .dfo-page .dfo-table thead th.text-start {
+        text-align: left !important;
+    }
+
+    .dfo-page .dfo-table tbody td {
+        text-align: center;
+        vertical-align: middle;
+        padding: .7rem .75rem;
+        font-size: .9rem;
+        color: var(--dfo-text);
+        border-top: 1px solid var(--dfo-border-soft);
+        border-bottom: none;
+        box-shadow: none;
+    }
+
+        .dfo-page .dfo-table tbody td.text-start {
+            text-align: left;
+        }
+
+    .dfo-page .dfo-table tbody tr:hover > * {
+        background-color: #f3f8fd;
+        box-shadow: none;
+    }
+
+    /* Código y almacén nunca se parten */
+    .dfo-page .dfo-table tbody td:nth-child(1),
+    .dfo-page .dfo-table tbody td:nth-child(6) {
+        white-space: nowrap;
+    }
+
+/* ── Código de artículo ─────────────────────────────────────── */
+.dfo-page .dfo-code {
+    font-weight: 700;
+    color: var(--dfo-primary);
+    letter-spacing: .02em;
+}
+
+/* ── Badges ─────────────────────────────────────────────────── */
+.dfo-page .dfo-badge {
+    display: inline-block;
+    padding: .22rem .65rem;
+    border-radius: 999px;
+    font-size: .76rem;
+    font-weight: 700;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.dfo-page .dfo-badge-proceso {
+    background-color: #e8f1fb;
+    color: var(--dfo-primary);
+}
+
+.dfo-page .dfo-badge-almacen {
+    background-color: #f1f3f5;
+    color: #5c6670;
+    font-weight: 600;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 767px) {
+    .dfo-page {
+        padding: 1rem;
+    }
+
+    .dfo-card {
+        padding: 1rem;
+    }
+
+        .dfo-card-header {
+            margin: -1rem -1rem 1rem;
+            padding: .75rem 1rem;
+        }
+
+        .dfo-card-hint {
+            display: none;
+        }
+
+        .dfo-card .dataTables_wrapper .dataTables_filter input {
+            min-width: 0;
+            width: 100%;
+        }
+}

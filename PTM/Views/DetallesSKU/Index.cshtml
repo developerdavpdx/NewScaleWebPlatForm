@@ -1,208 +1,190 @@
-﻿
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Detalle SKU";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-    .titleHeader {
-        background-color: #075DA5;
-        color: white;
-        font-size: 22px;
-        text-align: center;
-        height: 50px;
-        font-weight: bolder;
-    }
+<link href="~/Styles/DetallesSku.css?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Styles/DetallesSku.css")).Ticks" rel="stylesheet" />
+<link href="~/Styles/Modales.css" rel="stylesheet" />
 
-    .containerTable {
-        background-color: white;
-    }
+<div class="container-fluid sku-page">
 
-    tbody tr {
-        text-align: center
-    }
-
-    .btn-details {
-        width: 100%
-    }
-
-    .headerContainerGeneral, .headerContainerEmbalaje {
-        background-color: #075DA5;
-        text-align: center;
-        color: white
-    }
-
-    .sectionMultiplo {
-        display: flex;
-        flex-direction: row;
-    }
-
-    .col-4 .form-control {
-        text-align: center
-    }
-
-    .ContentModal {
-        width: 97%;
-        padding-bottom: 15px;
-        padding-top: 10px;
-    }
-
-    .FormControlTexts {
-        font-size: 15px;
-    }
-</style>
-
-<div class="container">
-    <h2>Detalle SKU</h2>
-</div>
-
-
-<div class="card">
-    <div class="card-header headerContainerGeneral">
-        <h5>GENERAL</h5>
-    </div>
-    <div class="modal-body ContentModal">
-        <div class="row" style="font-size: 15px; font-weight: bolder;">
-            <div class="col-4">
-                SKU
-                <div>
-                    <input class="form-control FormControlTexts" id="skuCode" disabled />
-                </div>
-            </div>
-            <div class="col-4">
-                Nombre
-                <div>
-                    <input class="form-control FormControlTexts" id="ItemName" disabled />
-                </div>
-            </div>
-            <div class="col-4">
-                Categoría
-                <div>
-                    <input class="form-control FormControlTexts" id="CategorySKU" disabled />
-                </div>
-            </div>
+    <div class="sku-header">
+        <div>
+            <h2 class="sku-title">Detalle SKU</h2>
+            <p class="sku-subtitle"><span id="skuHeaderName">Cargando información del artículo…</span></p>
         </div>
-        <div class="row mt-4" style="font-size: 15px; font-weight: bolder;">
-            <div class="col-4">
-                Línea
-                <div>
-                    <input class="form-control FormControlTexts" id="Linie" disabled />
+        <div class="sku-tools">
+            <span class="sku-code">
+                <i class="bi bi-upc-scan" aria-hidden="true"></i>
+                <span id="skuHeaderCode">—</span>
+            </span>
+            <button type="button" class="sku-btn sku-btn-ghost" onclick="history.back()">
+                <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                Volver
+            </button>
+            @if (Session["Rol"].ToString() == "Administrador")
+            {
+                <button type="button" class="sku-btn sku-btn-outline" id="MostrarModalAgregarDatosDeLinea">
+                    <i class="bi bi-plus-circle" aria-hidden="true"></i>
+                    Agregar Línea
+                </button>
+                <button type="button" class="sku-btn sku-btn-primary ActualizarSKU">
+                    <i class="bi bi-check2-circle" aria-hidden="true"></i>
+                    Guardar cambios
+                </button>
+            }
+        </div>
+    </div>
+
+    @* ================= GENERAL ================= *@
+    <div class="sku-card">
+        <div class="sku-card-header">
+            <i class="bi bi-info-circle" aria-hidden="true"></i>
+            <h5>General</h5>
+        </div>
+        <div class="sku-card-body">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label class="sku-label" for="ItemName">Nombre</label>
+                    <input class="sku-input" id="ItemName" disabled />
                 </div>
-            </div>
-            <div class="col-4">
-                Peso Mínimo
-                <div>
-                    <input class="form-control FormControlTexts" id="minWeight" disabled />
+                <div class="col-md-4">
+                    <label class="sku-label" for="skuCode">SKU</label>
+                    <input class="sku-input" id="skuCode" disabled />
                 </div>
-            </div>
-            <div class="col-4">
-                Peso Máximo
-                <div>
-                    <input class="form-control FormControlTexts" id="maxWeight" disabled />
+                <div class="col-md-4">
+                    <label class="sku-label" for="CategorySKU">Categoría</label>
+                    <input class="sku-input" id="CategorySKU" disabled />
+                </div>
+                <div class="col-md-4">
+                    <label class="sku-label" for="minWeight">Peso mínimo (kg)</label>
+                    <input class="sku-input" id="minWeight" disabled />
+                </div>
+                <div class="col-md-4">
+                    <label class="sku-label" for="maxWeight">Peso máximo (kg)</label>
+                    <input class="sku-input" id="maxWeight" disabled />
                 </div>
             </div>
         </div>
     </div>
-    <div class="card-header headerContainerEmbalaje">
-        <h5>MATERIAL EMBALAJE</h5>
-    </div>
-    <div class="modal-body ContentModal">
-        <div class="row" style="font-size: 15px; font-weight: bolder;">
-            <div class="col-lg-6">
-                Múltiplo
-                <div style="display: flex; align-items: center">
-                    <input type="number" class="form-control FormControlTexts" id="inputMultiplo" style="width:35% !important" required />
-                    <label style="font-size: 15px; margin-right: 10px; margin-left:10px;">X</label>
-                    <select class="form-control FormControlTexts" style="width:100% !important" id="selectMulti">
-                        <option value="0" selected>Seleccione...</option>
-                        <option value="Tarima" data-multiplo="Tarima" id="tarima">Tarima</option>
-                        <option value="Atado" data-multiplo="Atado" id="atado">Atado</option>
-                    </select>
+
+    @* ================= MATERIAL EMBALAJE ================= *@
+    <div class="sku-card">
+        <div class="sku-card-header">
+            <i class="bi bi-box-seam" aria-hidden="true"></i>
+            <h5>Material embalaje</h5>
+        </div>
+        <div class="sku-card-body">
+            <div class="row g-3">
+                <div class="col-lg-6">
+                    <label class="sku-label" for="inputMultiplo">Múltiplo</label>
+                    <div class="sku-multiplo">
+                        <input type="number" class="sku-input sku-multiplo-qty" id="inputMultiplo" min="0" step="any" required />
+                        <span class="sku-multiplo-x" aria-hidden="true">X</span>
+                        <select class="sku-select" id="selectMulti">
+                            <option value="0" selected>Seleccione...</option>
+                            <option value="Tarima" data-multiplo="Tarima" id="tarima">Tarima</option>
+                            <option value="Atado" data-multiplo="Atado" id="atado">Atado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <label class="sku-label" for="inputVariable">Variable (tara kg)</label>
+                    <div class="sku-unit">
+                        <input type="number" class="sku-input" id="inputVariable" placeholder="Tarimas madera" step="any" />
+                        <span class="sku-unit-suffix">kg</span>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-6">
-                Variable (Tara KG)
-                <div>
-                    <input class="form-control FormControlTexts" type="number" id="inputVariable" style="width:100% !important" placeholder="Tarimas Madera" />
+
+            @* Material de embalaje, lo llenamos desde el script *@
+            <div class="sku-subpanel">
+                <div class="sku-subpanel-title">
+                    <i class="bi bi-layers" aria-hidden="true"></i>
+                    Cantidades por material
                 </div>
+                <div class="row g-3" id="divMatEmb"></div>
             </div>
-
-        </div>
-        <br />
-        @* Material de embalaje, lo llenamos desde el script *@
-        <div class="row" style="font-size: 15px; font-weight: bolder;" id="divMatEmb">
-
         </div>
     </div>
 
-    @* detalles en linea *@
-    <div class="card-header headerContainerEmbalaje">
-        <h5>DETALLES DE LINEA</h5>
-
-    </div>
-    <div class="modal-body ContentModal">
-
-        <div class="row" style="font-size: 15px; font-weight: bolder;">
+    @* ================= DETALLES DE LINEA ================= *@
+    <div class="sku-card">
+        <div class="sku-card-header">
+            <i class="bi bi-diagram-3" aria-hidden="true"></i>
+            <h5>Detalles de línea</h5>
+        </div>
+        <div class="sku-card-body">
             @* titulos *@
-            <div class="col-3">
-                Kg x Hora
-            </div>
-            <div class="col-3">
-                Último % De Eficiencia
-            </div>
-            <div class="col-3">
-                Línea(s)
-            </div>
-            <div class="col-3">
-                Planta
+            <div class="row g-3 sku-line-heads d-none d-md-flex">
+                <div class="col-3 sku-col-title">Kg x Hora</div>
+                <div class="col-3 sku-col-title">Último % de eficiencia</div>
+                <div class="col-3 sku-col-title">Línea(s)</div>
+                <div class="col-3 sku-col-title">Planta</div>
             </div>
             @* contenido, se genera desde el script *@
-            <div class="row" style="font-size: 15px; font-weight: bolder;" id="divDetailsLine">
-
-            </div>
+            <div class="row g-3" id="divDetailsLine"></div>
         </div>
     </div>
-    @if (Session["Rol"].ToString() == "Administrador")
-    {
 
-        <div class="mt-4">
-            <button class="btn btn-info" id="MostrarModalAgregarDatosDeLinea">Agregar Línea</button>
-            <button class="btn btn-info ActualizarSKU" style="float: right;">Actualizar</button>
-        </div>
-    }
 </div>
 
 @* Start Modal de agregar datos de Linea *@
-<div class="modal fade" id="ModalAgregarDatosDeLinea" style="margin-top: 15rem;">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content modal-lg">
-            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
-                <h4 class="modal-title" id="myModalLabel">Agregar datos de línea</h4>
+<div class="modal fade sku-modal" id="ModalAgregarDatosDeLinea" tabindex="-1" role="dialog" aria-labelledby="agregarDatosLineaLabel">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header-custom">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-wrap">
+                        <i class="bi bi-plus-circle"></i>
+                    </div>
+                    <div>
+                        <div class="modal-title-custom" id="agregarDatosLineaLabel">Agregar datos de línea</div>
+                        <div class="modal-subtitle-custom">Registrar kg por hora y línea para este SKU</div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-custom" onclick="LimpiarYCerrarModal()" aria-label="Cerrar">
+                    <i class="bi bi-x-lg"></i>
+                </button>
             </div>
-            <div class="modal-body" style="width:113%">
-                <div class="row">
-                    <div class="col-5">
-                        <label>Códgio</label>
-                        <input id="codigoNew" class="form-control" />
+
+            <div class="modal-body-custom">
+                <div class="sku-modal-note">
+                    <i class="bi bi-info-circle"></i>
+                    El código corresponde al SKU que estás consultando.
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label-custom" for="codigoNew">Código</label>
+                        <input id="codigoNew" class="form-control-custom" readonly />
                     </div>
-                    <div class="col-5">
-                        <label>KgHora</label>
-                        <input id="KgHoraNew" class="form-control" />
+                    <div class="col-md-4">
+                        <label class="form-label-custom" for="KgHoraNew">Kg x Hora</label>
+                        <input id="KgHoraNew" class="form-control-custom" inputmode="decimal" />
                     </div>
-                    <div class="col-5">
-                        <label>Línea</label>
-                        <input id="LineaNew" class="form-control" />
+                    <div class="col-md-4">
+                        <label class="form-label-custom" for="LineaNew">Línea</label>
+                        <input id="LineaNew" class="form-control-custom" inputmode="numeric" />
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" id="cerrarModalAddLinea">Cerrar</button>
-                <button type="button" class="btn btn-info" id="AddDatosLineaNew">Agregar</button>
+
+            <div class="modal-footer-custom">
+                <button type="button" class="btn-modal-cancelar" data-dismiss="modal" id="cerrarModalAddLinea">
+                    <i class="bi bi-x-lg"></i>
+                    Cancelar
+                </button>
+                <button type="button" class="btn-modal-guardar" id="AddDatosLineaNew">
+                    <i class="bi bi-check-circle"></i>
+                    Agregar
+                </button>
             </div>
+
         </div>
     </div>
 </div>
 @* End Modal *@
 
-<script src="~/Scripts/DetallesSku/DetallesSkuJS.js"></script>
+<script src="~/Scripts/DetallesSku/DetallesSkuJS.js?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Scripts/DetallesSku/DetallesSkuJS.js")).Ticks"></script>
 @*<script src="~/Scripts/EmailTXT/EmailTXT.js"></script>*@

@@ -14,7 +14,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PTM</RootNamespace>
     <AssemblyName>PTM</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
@@ -26,6 +26,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TypeScriptToolsVersion>4.3</TypeScriptToolsVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,26 +47,26 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DocumentFormat.OpenXml, Version=3.4.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocumentFormat.OpenXml.3.4.1\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    <Reference Include="DocumentFormat.OpenXml, Version=3.5.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.3.5.1\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
-    <Reference Include="DocumentFormat.OpenXml.Framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocumentFormat.OpenXml.Framework.3.4.1\lib\net46\DocumentFormat.OpenXml.Framework.dll</HintPath>
+    <Reference Include="DocumentFormat.OpenXml.Framework, Version=3.5.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.Framework.3.5.1\lib\net46\DocumentFormat.OpenXml.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="EPPlus, Version=8.4.2.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\EPPlus.8.4.2\lib\net462\EPPlus.dll</HintPath>
+    <Reference Include="EPPlus, Version=8.7.2.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.8.7.2\lib\net462\EPPlus.dll</HintPath>
     </Reference>
-    <Reference Include="EPPlus.Interfaces, Version=8.4.0.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
-      <HintPath>..\packages\EPPlus.Interfaces.8.4.0\lib\net462\EPPlus.Interfaces.dll</HintPath>
+    <Reference Include="EPPlus.Interfaces, Version=8.6.2.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.Interfaces.8.6.2\lib\net462\EPPlus.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="EPPlus.System.Drawing, Version=8.4.0.0, Culture=neutral, PublicKeyToken=2308d35469c9bac0, processorArchitecture=MSIL">
-      <HintPath>..\packages\EPPlus.System.Drawing.8.4.0\lib\net462\EPPlus.System.Drawing.dll</HintPath>
+    <Reference Include="EPPlus.System.Drawing, Version=8.6.2.0, Culture=neutral, PublicKeyToken=2308d35469c9bac0, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.System.Drawing.8.6.2\lib\net462\EPPlus.System.Drawing.dll</HintPath>
     </Reference>
     <Reference Include="FluentScheduler, Version=5.5.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentScheduler.5.5.1\lib\netstandard2.0\FluentScheduler.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Bcl.Cryptography, Version=10.0.0.3, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Bcl.Cryptography.10.0.3\lib\net462\Microsoft.Bcl.Cryptography.dll</HintPath>
+    <Reference Include="Microsoft.Bcl.Cryptography, Version=10.0.0.13, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Bcl.Cryptography.10.0.13\lib\net462\Microsoft.Bcl.Cryptography.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=4.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.4.1.0\lib\net472\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
@@ -98,17 +99,18 @@
       <HintPath>..\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Formats.Asn1, Version=10.0.0.3, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Formats.Asn1.10.0.3\lib\net462\System.Formats.Asn1.dll</HintPath>
+    <Reference Include="System.Formats.Asn1, Version=10.0.0.13, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Formats.Asn1.10.0.13\lib\net462\System.Formats.Asn1.dll</HintPath>
     </Reference>
     <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.IO.Packaging, Version=10.0.0.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.IO.Packaging.10.0.3\lib\net462\System.IO.Packaging.dll</HintPath>
+    <Reference Include="System.IO.Packaging, Version=10.0.0.13, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Packaging.10.0.13\lib\net462\System.IO.Packaging.dll</HintPath>
     </Reference>
     <Reference Include="System.Memory, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.6.3\lib\net462\System.Memory.dll</HintPath>
@@ -124,8 +126,8 @@
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.2\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Security" />
-    <Reference Include="System.Security.Cryptography.Xml, Version=10.0.0.3, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Xml.10.0.3\lib\net462\System.Security.Cryptography.Xml.dll</HintPath>
+    <Reference Include="System.Security.Cryptography.Xml, Version=10.0.0.13, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Xml.10.0.13\lib\net462\System.Security.Cryptography.Xml.dll</HintPath>
     </Reference>
     <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.4.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -136,8 +138,7 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
@@ -162,9 +163,7 @@
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
@@ -178,6 +177,7 @@
     <Reference Include="System.Web.Optimization">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -195,6 +195,7 @@
     <Compile Include="Controllers\AnillosController.cs" />
     <Compile Include="Controllers\AsignacionLiniaController.cs" />
     <Compile Include="Controllers\CodigosController.cs" />
+    <Compile Include="Controllers\CorrugadosController.cs" />
     <Compile Include="Controllers\DatosMaestrosController.cs" />
     <Compile Include="Controllers\DetalleLineaController.cs" />
     <Compile Include="Controllers\DetallesFOController.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="Controllers\InyeccionesController.cs" />
     <Compile Include="Controllers\LineasController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\OperadorController.cs" />
     <Compile Include="Controllers\OrdenesFabricacionController.cs" />
     <Compile Include="Controllers\PesajeMolinosController.cs" />
     <Compile Include="Controllers\PesajePtController.cs" />
@@ -222,6 +224,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="GlobalsFunctions\LogHelper.cs" />
     <Compile Include="Models\BitacoraAsignLinie.cs" />
     <Compile Include="Models\LoginResponse.cs" />
     <Compile Include="Models\ProductoTerminado.cs" />
@@ -320,7 +323,11 @@
     <Content Include="Content\IziToast\src\css\style.styl" />
     <Content Include="Content\IziToast\src\css\themes.styl" />
     <Content Include="Content\IziToast\src\css\toast.styl" />
+    <Content Include="Images\Icons\Eficiencia.png" />
+    <Content Include="Images\Icons\peso.png" />
+    <Content Include="Images\Icons\Scale.png" />
     <Content Include="plantillas\archivo.xlsx" />
+    <Content Include="plantillas\IngresosScrapEjemplo.xlsx" />
     <Content Include="plantillas\ProductoTerminadoINY.xlsx" />
     <Content Include="plantillas\reciboscrap.xlsx" />
     <Content Include="Images\imgtest.jpg" />
@@ -338,15 +345,44 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Corrugado\AsignacionLineas\AsignacionLineasCorrugado.js" />
+    <Content Include="Scripts\Corrugado\DatoasMaestros\BCKUP\DatosMaestrosCorrugado.js" />
+    <Content Include="Scripts\Corrugado\DatoasMaestros\DatosMaestrosCorrugado.js" />
+    <Content Include="Scripts\Corrugado\HistorialPesadas\HistorialPesadaCorrugado.js" />
+    <Content Include="Scripts\Corrugado\OrdenesFabricacion\OrdenesFabricacionCorrugado.js" />
+    <Content Include="Scripts\Corrugado\ProductoTerminado Corrugado\ProductoTerminadoCorrugado.js" />
     <Content Include="Scripts\datatables.js" />
     <Content Include="Scripts\datatables.min.js" />
     <Content Include="Scripts\DatosMaestros\DatosMaestroJS.js" />
     <Content Include="Scripts\DetalleLinea\DetalleLinea.js" />
+    <Content Include="Scripts\DetallesFO\DetallesFO.js" />
     <Content Include="Scripts\DetallesSku\DetallesSkuJS.js" />
     <Content Include="Scripts\EnvioScrapJS\EnvioScrapJS.js" />
     <Content Include="Scripts\FormulasPTM.js" />
     <Content Include="Scripts\HistorialPesadas\HistorialPesada.js" />
     <Content Include="Scripts\Inicio\InicioJS.js" />
+    <Content Include="Content\bootstrap.rtl.min.css.map" />
+    <Content Include="Content\bootstrap.rtl.css.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-utilities.rtl.min.css.map" />
+    <Content Include="Content\bootstrap-utilities.rtl.css.map" />
+    <Content Include="Content\bootstrap-utilities.min.css.map" />
+    <Content Include="Content\bootstrap-utilities.css.map" />
+    <Content Include="Content\bootstrap-reboot.rtl.min.css.map" />
+    <Content Include="Content\bootstrap-reboot.rtl.css.map" />
+    <Content Include="Content\bootstrap-reboot.min.css.map" />
+    <Content Include="Content\bootstrap-reboot.css.map" />
+    <Content Include="Content\bootstrap-grid.rtl.min.css.map" />
+    <Content Include="Content\bootstrap-grid.rtl.css.map" />
+    <Content Include="Content\bootstrap-grid.min.css.map" />
+    <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="Scripts\bootstrap.min.js.map" />
+    <Content Include="Scripts\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap.esm.min.js.map" />
+    <Content Include="Scripts\bootstrap.esm.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
     <None Include="Scripts\jquery-3.7.1.intellisense.js" />
     <Content Include="Scripts\Inicio\newFile.js" />
     <Content Include="Scripts\jquery-3.7.1.js" />
@@ -361,8 +397,19 @@
     <Content Include="Scripts\LayOutScripts\LayOutScript.js" />
     <Content Include="Scripts\LoginScripts\LoginJS.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\MolinosJs.js" />
+    <Content Include="Scripts\Molinos\MolinosJs.js" />
+    <Content Include="Scripts\Molinos\CatalogosArticuloMolino.js" />
+    <Content Include="Scripts\Molinos\CatalogosMolinerosMolino.js" />
+    <Content Include="Scripts\Molinos\CatalogosMolino.js" />
+    <Content Include="Scripts\Molinos\ConcentradoDeInventariosMolino.js" />
+    <Content Include="Scripts\Molinos\DashboardMolinos.js" />
+    <Content Include="Scripts\Molinos\Ingresos.js" />
+    <Content Include="Scripts\Molinos\ReporteMolinos.js" />
     <Content Include="Scripts\newFile.js" />
+    <Content Include="Scripts\Operadores\Corrugado\Dashboard\DashboardCorrugados.js" />
+    <Content Include="Scripts\Operadores\Corrugado\EnvioScrap\EnvioScrapCorrugados.js" />
+    <Content Include="Scripts\Operadores\Corrugado\PesajePT\PesajePTCorrugados.js" />
+    <Content Include="Scripts\Operadores\Corrugado\Reimpresion\ReimpresionCorrugados.js" />
     <Content Include="Scripts\OrdenesFabricacion\OrdenesFabricacion.js" />
     <Content Include="Scripts\PesajeMolinosJS\PesajeMolinosJS.js" />
     <Content Include="Scripts\PesajePtJS\PesajePtScripts.js" />
@@ -371,17 +418,39 @@
     <Content Include="Scripts\ReciboScrapJS\ReciboScrapJS.js" />
     <Content Include="Scripts\EmailTXT\EmailTXT.js" />
     <Content Include="Scripts\Taras\Taras.js" />
+    <Content Include="Scripts\ValidationScript.js" />
     <Content Include="Shedule\ReportEmail.html" />
     <Content Include="Styles\Anillo.css" />
+    <Content Include="Styles\AsignacionLinia.css" />
     <Content Include="Styles\Codigos.css" />
+    <Content Include="Styles\CorreosModal.css" />
+    <Content Include="Styles\DatosMaestros.css" />
     <Content Include="Styles\DetalleLinea.css" />
+    <Content Include="Styles\DetallesFO.css" />
+    <Content Include="Styles\DetallesSku.css" />
     <Content Include="Styles\EnvioScrap\EnvioScrapStyle.css" />
     <Content Include="Styles\Flje.css" />
     <Content Include="Styles\FontAwesome5.css" />
     <Content Include="Styles\HistorialPedida.css" />
+    <Content Include="Styles\HistorialPesos.css" />
     <Content Include="Styles\Inicio.css" />
     <Content Include="Styles\Lineas.css" />
     <Content Include="Styles\LoginCSS\LoginStyless.css" />
+    <Content Include="Styles\Modales.css" />
+    <Content Include="Styles\Molinos\CatalogosArticulos\CatalogosArticulosMolino.css" />
+    <Content Include="Styles\Molinos\CatalogosMolineros\CatalogosMolinerosMolino.css" />
+    <Content Include="Styles\Molinos\CatalogosMolino\CatalogosMolino.css" />
+    <Content Include="Styles\Molinos\ConcentradoDeInventarios\ConcentradoDeInventarios.css" />
+    <Content Include="Styles\Molinos\DashboardMolinos.css" />
+    <Content Include="Styles\Molinos\Ingresos\Ingresos.css" />
+    <Content Include="Styles\Molinos\InventarioScrapMolinos\InventarioScrapMolinos.css" />
+    <Content Include="Styles\Molinos\ReporteMolinos\ReporteMolinos.css" />
+    <Content Include="Styles\NavbarEnhancements.css" />
+    <Content Include="Styles\Operador\Corrugado\Dashboard\DashboardOperadorCorrugado.css" />
+    <Content Include="Styles\Operador\Corrugado\EnvioScrap\EnvioScrapOperadorCorrugado.css" />
+    <Content Include="Styles\Operador\Corrugado\PesajePT\PesajePTOperadorCorrugado.css" />
+    <Content Include="Styles\Operador\Corrugado\Reimpresion\ReimpresionOperadorCorrugado.css" />
+    <Content Include="Styles\OrdenesFabricacion.css" />
     <Content Include="Styles\PesajeMolino\PesajeMolinoStyles.css" />
     <Content Include="Styles\PesajePt\PesajePtStyles.css" />
     <Content Include="Styles\ProductoTerminado.css" />
@@ -433,35 +502,26 @@
     <Content Include="Views\PesajeMolinos\Index.cshtml" />
     <Content Include="Views\ReciboScrap\Index.cshtml" />
     <Content Include="Views\EnvioScrap\Index.cshtml" />
+    <Content Include="Views\Molinos\DashboardMolinos.cshtml" />
+    <Content Include="Views\Molinos\Ingresos.cshtml" />
+    <Content Include="Views\Molinos\CatalogosArticulosMolino.cshtml" />
+    <Content Include="Views\Molinos\CatalogosMolinerosMolino.cshtml" />
+    <Content Include="Views\Molinos\CatalogosMolino.cshtml" />
+    <Content Include="Views\Molinos\ConcentradoDeInventariosMolino.cshtml" />
+    <Content Include="Views\Molinos\ReporteMolinos.cshtml" />
+    <Content Include="Views\Operador\DashboardCorrugados.cshtml" />
+    <Content Include="Views\Operador\EnvioScrapCorrugados.cshtml" />
+    <Content Include="Views\Operador\PesajePTCorrugados.cshtml" />
+    <Content Include="Views\Operador\ReimpresionesCorrugados.cshtml" />
+    <Content Include="Views\DatosMaestros\DatosMaestrosCorrugado.cshtml" />
+    <Content Include="Views\AsignacionLinia\AsignacionLineaCorrugado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap.rtl.min.css.map" />
-    <Content Include="Content\bootstrap.rtl.css.map" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-utilities.rtl.min.css.map" />
-    <Content Include="Content\bootstrap-utilities.rtl.css.map" />
-    <Content Include="Content\bootstrap-utilities.min.css.map" />
-    <Content Include="Content\bootstrap-utilities.css.map" />
-    <Content Include="Content\bootstrap-reboot.rtl.min.css.map" />
-    <Content Include="Content\bootstrap-reboot.rtl.css.map" />
-    <Content Include="Content\bootstrap-reboot.min.css.map" />
-    <Content Include="Content\bootstrap-reboot.css.map" />
-    <Content Include="Content\bootstrap-grid.rtl.min.css.map" />
-    <Content Include="Content\bootstrap-grid.rtl.css.map" />
-    <Content Include="Content\bootstrap-grid.min.css.map" />
-    <Content Include="Content\bootstrap-grid.css.map" />
     <None Include="packages.config" />
-    <Content Include="Scripts\bootstrap.min.js.map" />
-    <Content Include="Scripts\bootstrap.js.map" />
-    <Content Include="Scripts\bootstrap.esm.min.js.map" />
-    <Content Include="Scripts\bootstrap.esm.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.1.min.map" />
   </ItemGroup>

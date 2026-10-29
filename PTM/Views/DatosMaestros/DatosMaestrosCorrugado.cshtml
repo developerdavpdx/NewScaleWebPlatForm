@@ -1,0 +1,316 @@
+﻿
+@{
+    ViewBag.Title = "Datos maestros del artículo (corrugado)";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--Cargamos los estilos correspondientes-->
+<link href="~/Styles/DatosMaestros.css?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Styles/DatosMaestros.css")).Ticks" rel="stylesheet" />
+<link href="~/Styles/Modales.css?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Styles/Modales.css")).Ticks" rel="stylesheet" />
+
+<div class="dm-page dmc-page">
+
+    <div class="dm-header">
+        <div>
+            <h2 class="dm-title">Datos maestros del artículo (corrugado)</h2>
+            <p class="dm-subtitle">Administra los códigos corrugados, su proceso, tara y última actualización.</p>
+        </div>
+        <div class="dm-tools">
+            <span class="dm-count"><b id="dmcCount">0</b> códigos</span>
+            <button type="button" class="dm-refresh" onclick="recargarDatosMaestrosCorrugado()">
+                <i class="fa fa-rotate-right" aria-hidden="true"></i>
+                Actualizar
+            </button>
+            <button type="button" id="btnExportExcel" class="dm-excel dmc-export" title="Exportar a Excel" aria-label="Exportar a Excel">
+                <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                <span>Exportar</span>
+            </button>
+            @* Oculto por regla de negocio: los codigos de corrugado vienen de HANA Cloud,
+               no se deben dar de alta manualmente desde el portal. *@
+            <button type="button" class="btn dm-add" data-toggle="modal" data-target="#updateCode" style="display: none;">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                Agregar Código
+            </button>
+        </div>
+    </div>
+
+    <div class="dm-card">
+        <table id="DatosMaestros" class="table dm-table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th class="text-start">Descripción</th>
+                    <th>Proceso</th>
+                    <th>Actualizado</th>
+                    <th>Fecha de última actualización</th>
+                    <th>Usuario</th>
+                    <th>Tara (Kg)</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="bodyTableSKU">
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="modal fade" id="updateCode" tabindex="-1" data-bs-backdrop="static">
+
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- HEADER -->
+            <div class="modal-header-custom">
+
+                <div class="d-flex align-items-center gap-3">
+
+                    <div class="modal-icon-wrap">
+                        <i class="bi bi-plus-circle"></i>
+                    </div>
+
+                    <div>
+                        <div class="modal-title-custom">Agregar Código</div>
+                        <div class="modal-subtitle-custom">
+                            Registrar nuevo código en el sistema
+                        </div>
+                    </div>
+
+                </div>
+
+                <button class="btn-close-custom" data-dismiss="modal">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+
+            </div>
+
+            <!-- BODY -->
+            <div class="modal-body-custom">
+
+                <div class="row g-3">
+
+                    <div class="col-12">
+
+                        <label class="form-label-custom">
+                            <i class="bi bi-upc"></i> Código
+                        </label>
+
+                        <input class="form-control-custom" id="updateCodeInp" placeholder="Ingrese el código..." />
+
+                    </div>
+
+                    <!-- 🔥 NUEVO: PROCESO -->
+                    <div class="col-12">
+                        <label class="form-label-custom">
+                            <i class="bi bi-diagram-3"></i> Proceso
+                        </label>
+
+                        <select id="Proceso" class="form-control-custom">
+                            <option value="Corrugado">Corrugado</option>
+                        </select>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="modal-footer-custom">
+
+                <button class="btn-modal-cancelar" data-dismiss="modal">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </button>
+
+                <button id="BtnAddCode" class="btn-modal-guardar">
+                    <i class="bi bi-check-circle"></i>
+                    Agregar
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="modalDetalleSKU" tabindex="-1" data-bs-keyboard="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-90 modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- ───── HEADER ───── -->
+            <div class="modal-header-custom">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-wrap">
+                        <i class="bi bi-box"></i>
+                    </div>
+                    <div>
+                        <div class="modal-title-custom">Detalle SKU</div>
+                        <div class="modal-subtitle-custom">Configuración y datos maestros del artículo</div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-close-custom" data-dismiss="modal">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+
+            <!-- ───── BODY ───── -->
+            <div class="modal-body-custom" id="detalleSkuContainer">
+
+                <!-- GENERAL -->
+                <div class="mb-3">
+                    <h6 class="mb-3 pb-2 border-bottom" style="color: var(--modal-primary); font-weight:700;">
+                        <i class="bi bi-info-circle-fill me-2"></i>Información General
+                    </h6>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-4">
+                            <label class="form-label-custom">
+                                <i class="bi bi-upc"></i> SKU
+                            </label>
+                            <input class="form-control-custom" id="skuCode" disabled />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label-custom">
+                                <i class="bi bi-tag"></i> Nombre
+                            </label>
+                            <input class="form-control-custom" id="ItemName" disabled />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label-custom">
+                                <i class="bi bi-diagram-3"></i> Categoría
+                            </label>
+                            <input class="form-control-custom" id="CategorySKU" disabled />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label-custom">
+                                <i class="bi bi-gear"></i> Proceso
+                            </label>
+                            <select class="form-select-custom" id="ProcesoSku" disabled>
+                                <option value="Corrugado">CORRUGADO</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label-custom">
+                                <i class="bi bi-speedometer2"></i> Peso Mínimo
+                            </label>
+                            <input class="form-control-custom" id="minWeight" disabled />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label-custom">
+                                <i class="bi bi-speedometer"></i> Peso Máximo
+                            </label>
+                            <input class="form-control-custom" id="maxWeight" disabled />
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <hr class="divider-custom">
+
+
+                <!-- MATERIAL EMBALAJE -->
+                <div class="mb-3">
+                    <h6 class="mb-3 pb-2 border-bottom" style="color: var(--modal-primary); font-weight:700;">
+                        <i class="bi bi-box-seam me-2"></i>Material Embalaje
+                    </h6>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <label class="form-label-custom">
+                                <i class="bi bi-layers"></i> Múltiplo
+                            </label>
+
+                            <div class="d-flex gap-2">
+                                <input type="number" class="form-control-custom" id="inputMultiplo" />
+                                <span style="display:flex;align-items:center">X</span>
+                                <select class="form-select-custom" id="selectMulti">
+                                    <option value="0">Seleccione...</option>
+                                    <option value="Tarima">Tarima</option>
+                                    <option value="Atado">Atado</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6">
+                            <label class="form-label-custom">
+                                <i class="bi bi-weight"></i> Tara KG
+                            </label>
+
+                            <input class="form-control-custom" id="inputVariable" />
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-3" id="divMatEmb"></div>
+
+                </div>
+
+
+                <hr class="divider-custom">
+
+
+                <!-- DETALLES LINEA -->
+                <div class="mb-3">
+
+                    <h6 class="mb-3 pb-2 border-bottom" style="color: var(--modal-primary); font-weight:700;">
+                        <i class="bi bi-diagram-2-fill me-2"></i>Detalles de Línea
+                    </h6>
+
+                    <div class="row g-3 fw-bold text-center">
+
+                        <div class="col-md-3">Kg x Hora</div>
+                        <div class="col-md-3">% Eficiencia</div>
+                        <div class="col-md-3">Línea</div>
+                        <div class="col-md-3">Planta</div>
+
+                    </div>
+
+                    <div class="row mt-2" id="divDetailsLine"></div>
+
+                    <button id="btnAgregarLinea" class="btn-modal-guardar mt-3">
+                        <i class="bi bi-plus-circle"></i> Agregar Línea
+                    </button>
+                </div>
+
+
+            </div>
+
+
+            <!-- ───── FOOTER ───── -->
+
+            <div class="modal-footer-custom">
+
+                <button class="btn-modal-cancelar" data-dismiss="modal">
+                    <i class="bi bi-x-circle"></i>
+                    Cerrar
+                </button>
+
+                @if (Session["Rol"].ToString() == "Administrador" || Session["Rol"].ToString() == "AdmMolinos")
+                {
+                    <button id="btnActualizarItem" class="btn-modal-guardar ActualizarSKU">
+                        <i class="bi bi-save"></i>
+                        Guardar Cambios
+                    </button>
+                }
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/Corrugado/DatoasMaestros/DatosMaestrosCorrugado.js?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Scripts/Corrugado/DatoasMaestros/DatosMaestrosCorrugado.js")).Ticks"></script>
+@*<script src="~/Scripts/EmailTXT/EmailTXT.js"></script>*@

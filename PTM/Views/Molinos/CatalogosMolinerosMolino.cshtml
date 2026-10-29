@@ -1,0 +1,142 @@
+﻿@using System.Text;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Styles/MOLINOS/CatalogosMolineros/CatalogosMolinerosMolino.css" rel="stylesheet" />
+
+<br />
+
+<!-- Content -->
+<div class="container-fluid">
+    <div class="contentContainer">
+        <div class="containerTitle p-4">
+            <div class="totalDesglose">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>OPERADORES DE MOLINO</h2>
+                    </div>
+                    <div class="card-body">
+                        <!-- Contenedor Flex para los botones y el campo de búsqueda -->
+                        <div class="d-flex mb-3">
+                            <!-- Botones -->
+                            <div>
+                                <button id="AddMolineroUser" class="btn btn-success">Agregar</button>
+                                <button id="RemoveMolineroUser" class="btn btn-danger">Eliminar</button>
+                            </div>
+                            <!-- Contenedor para el Search de DataTables -->
+                            <div id="datatable-search-container" style="text-align: right;">
+                            </div>
+                        </div>
+
+                        <!-- Tabla -->
+                        <table class="text-center table-striped" id="TablaMolinerios" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th>Código de usuario</th>
+                                    <th>Nombre</th>
+                                    <th>Fecha de cracion</th>
+                                    <th>Activo</th>
+                                    <th>Editar</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center totalBodyScrap" id="TableMolineros">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar Molinero -->
+<div class="modal fade" id="agregarMolineroModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="width: max-content">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title" id="myModalLabel">Agregar Operador</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <label>Nombre</label>
+                        <input id="inputNombreMolinero" class="form-control" />
+                    </div>
+                    <div class="col-6">
+                        <label>Código de usuario</label>
+                        <input id="inputCodeMolinero" class="form-control" style="width: 90%" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button id="AgregarMolinerobtnfinish" type="button" class="btn btn-success">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Molinero -->
+<div class="modal fade" id="EliminarMolineroModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="padding-left: 7rem">
+        <div class="modal-content" style="width: 20rem">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title" id="myModalLabel">Eliminar Operador</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label>Código de usuario</label>
+                        <input id="inputCodigoRemoveMolinero" class="form-control" style="width: 90%" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button id="EliminarMolinerobtnfinish" type="button" class="btn btn-success">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Molinero -->
+<div class="modal fade" id="EditMolineroModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="padding-left: 7rem">
+        <div class="modal-content" style="width: 86%">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title" id="myModalLabel">Editar Operador</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-7">
+                        <label>Código de usuario</label>
+                        <input id="inputCodeEditMolinero" class="form-control" />
+                    </div>
+                    <div class="col-5">
+                        <label>Activo</label>
+                        <select id="inputActivoMolinero" class="form-control" style="width: 70%;">
+                            <option value="SI">Si</option>
+                            <option value="NO">No</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label>Nombre</label>
+                        <input id="inputNombreEditMolinero" class="form-control"  style="width: 89%;"/>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button id="EditMolinerobtnfinish" type="button" class="btn btn-success">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/MOLINOS/CatalogosMolinerosMolino.js?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Scripts/MOLINOS/CatalogosMolinerosMolino.js")).Ticks"></script>

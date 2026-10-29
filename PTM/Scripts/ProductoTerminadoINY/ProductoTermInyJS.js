@@ -7,28 +7,71 @@ let tableInyScrap;
 let filtroDefault = 0;
 let LineaTablaDetalle = 0;
 
+//Textos en espanol para todas las tablas de la vista
+const idiomaTabla = {
+    lengthMenu: 'Mostrar _MENU_ registros',
+    search: 'Buscar:',
+    info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+    infoEmpty: 'Sin registros',
+    infoFiltered: '(filtrado de _MAX_ registros)',
+    zeroRecords: 'No se encontraron resultados',
+    emptyTable: 'Sin registros para mostrar',
+    paginate: {
+        first: 'Primero',
+        previous: 'Anterior',
+        next: 'Siguiente',
+        last: 'Último'
+    }
+}
+
 $(document).ready(() => {
     loader.style.display = 'flex'
     localStorage.planta == '335' ? planta = '2' : planta = '1'
 
     tableInyProdTerm = $('#finishProdTableIny').DataTable({
         ordering: false,
-        responsive: true
+        responsive: true,
+        language: idiomaTabla,
+        pageLength: 10,
+        autoWidth: false,
+        drawCallback: function () {
+            const contador = document.getElementById('ptInyCount')
+            if (contador) contador.textContent = this.api().rows().count()
+        }
     });
 
     tableDetailsLinea = $('#tableDetalladaLinea').DataTable({
         ordering: false,
-        responsive: true
+        responsive: true,
+        language: idiomaTabla,
+        lengthChange: false,
+        searching: false
     });
 
     tableInyScrap = $('#finishScrapTableIny').DataTable({
         ordering: false,
-        responsive: true
+        responsive: true,
+        language: idiomaTabla,
+        pageLength: 10,
+        autoWidth: false,
+        drawCallback: function () {
+            const contador = document.getElementById('ptInyScrapCount')
+            if (contador) contador.textContent = this.api().rows().count()
+        }
     });
 
     tableCorreo = $("#tablaCorreo").DataTable({
         ordering: false,
-        responsive: true
+        responsive: true,
+        language: idiomaTabla,
+        lengthChange: false,
+        searching: false
+    })
+
+    // Las tablas de los modales viven ocultas al inicializarse:
+    // al abrirlos hay que recalcular los anchos.
+    $(document).on('shown.bs.modal', '#CorreoModal', function () {
+        tableCorreo.columns.adjust()
     })
 
     //let a = 1
@@ -102,7 +145,7 @@ function GetAllPtINY() {
                 let scrapInyFormatted = parseFloat(productotermIny[x].scrapPt).toFixed(2);
 
                 // Creamos el ícono/botón con el valor id_Linea
-                let BtnDetails = `<i class="bi bi-file-earmark-text fa-2x" value = "${productotermIny[x].id_Linea}" value2 = "${productotermIny[x].codigo}" id="btnDetails"></i>`;
+                let BtnDetails = `<button type="button" class="pt-row-btn" id="btnDetails" value="${productotermIny[x].id_Linea}" value2="${productotermIny[x].codigo}" title="Ver detalle por línea"><i class="bi bi-file-earmark-text"></i></button>`;
 
                 rows.push([
                     BtnDetails,
@@ -130,19 +173,20 @@ function GetAllPtINY() {
                 sumScrapPtKg += productotermIny[x].scrapTotal
             }
 
-            //calculamos el sobrepeso total
-            sumSobrePeso = ((sumTotal / PesoEstandarNFormula) - 1);
+            //calculamos el sobrepeso total (evitamos NaN cuando no hay registros)
+            sumSobrePeso = PesoEstandarNFormula > 0 ? ((sumTotal / PesoEstandarNFormula) - 1) : 0;
             //calculamos la eficiencia total
-            sumEficiencia = sumTotal / kgpProductoTotal;
+            sumEficiencia = kgpProductoTotal > 0 ? (sumTotal / kgpProductoTotal) : 0;
 
             $("#sumTotal").text(sumTotal.toFixed(3));
             $("#sumEstandar").text(sumEstandar.toFixed(3));
             $("#sumSobrePeso").text((sumSobrePeso * 100).toFixed(3));
             $("#sumEficiencia").text((sumEficiencia * 100).toFixed(3));
             $("#sumScrapPtKg").text(sumScrapPtKg.toFixed(3));
-            sumScrapPt = (sumScrapPtKg / (sumScrapPtKg + sumTotal));
+            sumScrapPt = (sumScrapPtKg + sumTotal) > 0 ? (sumScrapPtKg / (sumScrapPtKg + sumTotal)) : 0;
             $("#sumScrapPt").text(((sumScrapPt * 100)).toFixed(2));//scrap en % [multiplicamos ]
 
+            tableInyProdTerm.clear();
             tableInyProdTerm.rows.add(rows).draw();
 
             let nodesEfic = tableInyProdTerm.columns(8).nodes()
@@ -661,7 +705,7 @@ function verLineaIny(linea, codigo) {
     let proceso = "INY"
 
     //limpiamos la tabla de posibles datos pasados
-    tableDetailsLinea.clear().draw
+    tableDetailsLinea.clear();
 
     document.getElementById("lineaModal").innerText = linea
     document.getElementById("lineaTitleModal").innerText = linea
@@ -740,10 +784,10 @@ function verLineaIny(linea, codigo) {
 
             }
 
-            //calculamos el sobrepeso
-            SobrepesoLinea = ((PesoNUltimoLinea / PesoEstandarNFormulaLinea) - 1);
+            //calculamos el sobrepeso (evitamos NaN cuando no hay registros)
+            SobrepesoLinea = PesoEstandarNFormulaLinea > 0 ? ((PesoNUltimoLinea / PesoEstandarNFormulaLinea) - 1) : 0;
             //calculamos la eficiencia
-            EficienciaLinea = (PesoNUltimoLinea / kgPproductoLinea);
+            EficienciaLinea = kgPproductoLinea > 0 ? (PesoNUltimoLinea / kgPproductoLinea) : 0;
             //calculamos el scrap en %
             //ScrapPorcentLinea = (KGScraptLinea / (KGScraptLinea + PesoNTotalLinea));
 
@@ -875,8 +919,8 @@ function emailreporte() {
         var startX = 10;
         var startY = 53;
 
-        var nodesRowsTable = tablePvcProdTerm.rows().data()
-        var nodesColumnsTable = tablePvcProdTerm.columns().nodes()
+        var nodesRowsTable = tableInyProdTerm.rows().data()
+        var nodesColumnsTable = tableInyProdTerm.columns().nodes()
 
         for (x = 0; x < nodesRowsTable.length; x++) {
             let linea = nodesColumnsTable[0][x].innerText
@@ -885,7 +929,7 @@ function emailreporte() {
 
         doc.autoTable({
             head: [['Línea', 'Código', '# Tubos', 'P. Neto Total', 'P. Unit. Estándar', '% Eficiencia', 'KG Scrap Pt', '% Scrap PT']],
-            body: tablePvcProdTerm.rows().data().toArray(),
+            body: tableInyProdTerm.rows().data().toArray(),
             // Establecer el color de fondo del encabezado
             headStyles: {
                 fillColor: [rgb1[0], rgb1[1], rgb1[2]]
@@ -1073,9 +1117,9 @@ function filtradoHistorialPesadas() {
         "corte": corte
     };
 
-    if (document.getElementById("desdeFechaIny").value == '' && document.getElementById("aFecha").value == '' &&
-        turnoValue == "0" && document.getElementById("codigo").value == '' && document.getElementById("linea").value == '') {
-        tablePvcProdTerm.clear().draw()
+    if (document.getElementById("desdeFechaIny").value == '' && document.getElementById("aFechaIny").value == '' &&
+        corte == "0" && document.getElementById("codigo").value == '' && document.getElementById("linea").value == '') {
+        tableInyProdTerm.clear().draw()
         GetAllPtINY()
         return
     }
@@ -1121,7 +1165,7 @@ function filtradoHistorialPesadas() {
                 let scrapInyFormatted = parseFloat(productotermIny[x].scrapPt).toFixed(2);
 
                 // Creamos el ícono/botón con el valor id_Linea
-                let BtnDetails = `<i class="bi bi-file-earmark-text fa-2x" value = "${productotermIny[x].id_Linea}" value2 = "${productotermIny[x].codigo}" id="btnDetails"></i>`;
+                let BtnDetails = `<button type="button" class="pt-row-btn" id="btnDetails" value="${productotermIny[x].id_Linea}" value2="${productotermIny[x].codigo}" title="Ver detalle por línea"><i class="bi bi-file-earmark-text"></i></button>`;
 
                 rows.push([
                     BtnDetails,
@@ -1147,17 +1191,17 @@ function filtradoHistorialPesadas() {
                 sumScrapPtKg += productotermIny[x].scrapTotal
             }
 
-            //calculamos el sobrepeso total
-            sumSobrePeso = ((sumTotal / PesoEstandarNFormula) - 1);
+            //calculamos el sobrepeso (evitamos NaN cuando no hay registros)
+            sumSobrePeso = PesoEstandarNFormula > 0 ? ((sumTotal / PesoEstandarNFormula) - 1) : 0;
             //calculamos la eficiencia total
-            sumEficiencia = sumTotal / kgpProductoTotal;
+            sumEficiencia = kgpProductoTotal > 0 ? (sumTotal / kgpProductoTotal) : 0;
 
             $("#sumTotal").text(sumTotal.toFixed(3));
             $("#sumEstandar").text(sumEstandar.toFixed(3));
             $("#sumSobrePeso").text((sumSobrePeso * 100).toFixed(3));
             $("#sumEficiencia").text((sumEficiencia * 100).toFixed(3));
             $("#sumScrapPtKg").text(sumScrapPtKg.toFixed(3));
-            sumScrapPt = (sumScrapPtKg / (sumScrapPtKg + sumTotal))
+            sumScrapPt = (sumScrapPtKg + sumTotal) > 0 ? (sumScrapPtKg / (sumScrapPtKg + sumTotal)) : 0;
             $("#sumScrapPt").text(((sumScrapPt * 100)).toFixed(2));//scrap en % [multiplicamos para forzar conversion a numero]
 
             //dibujar la tabla
@@ -1316,10 +1360,11 @@ $(document).on("click", "#btnDetails", function () {
     // Mostrar el modal
     $('#dataInyModal').addClass('show');
     $('#dataInyModal').css('display', 'block');
+    tableDetailsLinea.columns.adjust();
 });
 
 //cerramos el modal details
-$(document).on("click", "#cerrarModalDetails", function () {
+$(document).on("click", "#cerrarModalDetails, .pt-close-detalle", function () {
     $('#dataInyModal').removeClass('show');
     $('#dataInyModal').css('display', 'none');
 });

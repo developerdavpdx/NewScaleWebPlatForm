@@ -1,88 +1,113 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Datos maestros del artículo";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-    .titleHeader {
-        background-color: #075DA5;
-        color: white;
-        font-size: 22px;
-        text-align: center;
-        height: 50px;
-        font-weight: bolder;
-    }
+<link href="~/Styles/DatosMaestros.css" rel="stylesheet" />
+<link href="~/Styles/Modales.css" rel="stylesheet" />
 
-    .containerTable {
-        background-color: white;
-    }
-    tbody tr {
-        text-align: center
-    }
+<div class="dm-page">
 
-    .btn-details {
-        width: 120px
-    }
-
-    .modal-header {
-        color: white;
-        background-color: #595959;
-        font-size: 20px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        border-top-left-radius: 5px;
-    }
-</style>
-
-<div class="container titleHeader mt-4">
-    <h2 style="padding-top: 7px;">DATOS MAESTROS DEL ARTÍCULO</h2>
-</div>
-
-
-<div class="d-flex justify-content-end">
-    <div class="card-i p-3" style="width:auto;">
-        <i onclick="generarexcelDm();" class="fa fa-table m-1 fa-2x t-b" aria-hidden="true" style="color: #016E38"></i>
-        <button class="btn" style="background-color: #00986c; color: white; margin-bottom: 24px;" data-toggle="modal" data-target="#updateCode">Agregar Código</button>
+    <div class="dm-header">
+        <div>
+            <h2 class="dm-title">Datos maestros del artículo</h2>
+            <p class="dm-subtitle">Administra los códigos de artículo, su tara y su última actualización.</p>
+        </div>
+        <div class="dm-tools">
+            <span class="dm-count"><b id="dmCount">0</b> códigos</span>
+            <button type="button" class="dm-refresh" onclick="recargarDatosMaestros()">
+                <i class="fa fa-rotate-right" aria-hidden="true"></i>
+                Actualizar
+            </button>
+            <button type="button" class="dm-excel" onclick="generarexcelDm();" title="Exportar a Excel">
+                <i class="fa fa-table" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn dm-add" data-toggle="modal" data-target="#updateCode">
+                Agregar Código
+            </button>
+        </div>
     </div>
-    
-</div>
 
-
-<div class="container containerTable p-4">
-    <table id="DatosMaestros" class="table-striped">
-        <thead>
-            <tr>
-                <th>Código</th>
-                <th style="width: 33% !important;">Descripción</th>
-                <th>Actualizado</th>
-                <th>Fecha de última actualización</th>
-                <th>Usuario</th>
-                <th>Tara (Kg)</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody id="bodyTableSKU">
-            
-        </tbody>
-    </table>
+    <div class="dm-card">
+        <table id="DatosMaestros" class="table dm-table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th style="width: 33% !important;">Descripción</th>
+                    <th>Actualizado</th>
+                    <th>Fecha de última actualización</th>
+                    <th>Usuario</th>
+                    <th>Tara (Kg)</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="bodyTableSKU">
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div class="modal fade" id="updateCode" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Agregar Código</h4>
+
+            <!-- HEADER -->
+            <div class="modal-header-custom">
+
+                <div class="d-flex align-items-center gap-3">
+
+                    <div class="modal-icon-wrap">
+                        <i class="bi bi-plus-circle"></i>
+                    </div>
+
+                    <div>
+                        <div class="modal-title-custom" id="myModalLabel">Agregar Código</div>
+                        <div class="modal-subtitle-custom">Registrar nuevo código en el sistema</div>
+                    </div>
+
+                </div>
+
+                <button type="button" class="btn-close-custom" data-dismiss="modal" aria-label="Cerrar">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+
             </div>
-            <div class="modal-body">
-                <label style="font-size: 1.4rem !important">Ingrese el código que desee agregar dentro del sistema.</label>
-                <input class="form-control" id="updateCodeInp" />
+
+            <!-- BODY -->
+            <div class="modal-body-custom">
+
+                <div class="row g-3">
+
+                    <div class="col-12">
+
+                        <label class="form-label-custom" for="updateCodeInp">
+                            <i class="bi bi-upc"></i> Código
+                        </label>
+
+                        <input class="form-control-custom" id="updateCodeInp" placeholder="Ingrese el código..." />
+
+                    </div>
+
+                </div>
+
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-danger" data-dismiss="modal" id="CerrarModal">Cerrar</button>
-                <button class="btn btn-primary" onclick="ActualizarItemCode()">Agregar</button>
+
+            <!-- FOOTER -->
+            <div class="modal-footer-custom">
+
+                <button type="button" class="btn-modal-cancelar" data-dismiss="modal" id="CerrarModal">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </button>
+
+                <button type="button" class="btn-modal-guardar" onclick="ActualizarItemCode()">
+                    <i class="bi bi-check-circle"></i>
+                    Agregar
+                </button>
+
             </div>
+
         </div>
     </div>
 </div>

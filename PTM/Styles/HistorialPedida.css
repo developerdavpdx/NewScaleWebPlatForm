@@ -1,186 +1,886 @@
-﻿body {
-    background-color: #8080801c
+﻿/* ══════════════════════════════════════════════════════════════
+   Historial de Pesadas
+   Todo el bloque esta scopeado bajo .hp-page para no filtrar
+   reglas globales al resto de vistas.
+   La tabla usa la clase .tableHP (la comparte con la vista
+   heredada Reportes, que no esta enlazada en el menu).
+   ══════════════════════════════════════════════════════════════ */
+
+/* Bloqueo de scroll del fondo mientras hay un modal abierto */
+body.modal-open {
+    overflow: hidden;
 }
 
-.trBodyPesadas td {
-    vertical-align: middle;
+.hp-page {
+    --hp-primary: #0058A1;
+    --hp-primary-dark: #004a8a;
+    --hp-primary-soft: #eef4fb;
+    --hp-border: #dbe3ec;
+    --hp-border-soft: #edf0f3;
+    --hp-text: #343a40;
+    --hp-muted: #6b7a8c;
+    --hp-radius: 12px;
+    --hp-green: #2e7d32;
+    --hp-green-soft: #eaf6e8;
+    --hp-red: #b4433f;
+    --hp-red-soft: #fdecec;
+    --hp-amber: #b26a00;
+    --hp-amber-soft: #fff4e0;
+
+    padding: 1.5rem 1.5rem 2rem;
+    font-family: 'Nunito', sans-serif;
 }
 
-.titleHeader {
-    text-align: center;
-    background-color: #075DA5;
-    color: white;
-    font-size: 22px;
-    height: 50px;
-    font-weight: bolder;
-}
-
-thead {
-    box-shadow: 0 1px 9px 1px rgba(0, 0, 0, 0.28) !important;
-}
-
-th {
-    background-color: white !important;
-    text-align: center !important;
-    font-size: 15px !important;
-    text-align: center;
-    /*box-shadow: 0 4px 2px -3px rgba(0,0,0,0.5);*/
-    border: solid 1px #80808017 !important;
-}
-
-td {
-    vertical-align: middle !important;
-    font-size: 11px !important;
-    border: none !important
-}
-
-tbody tr {
-    box-shadow: inset 0 5px 8px -7px rgba(0,0,0,0.5);
-    border: solid 1px #80808017;
-}
-
-    tbody tr:nth-child(odd) {
-        background-color: #8080801c !important
-    }
-
-.card-i {
-    background-color: white;
-}
-
-#PesadasTable {
-    width: 100%;
-    background-color: #FFFFFF;
-    color: #075DA5;
-}
-
-    #PesadasTable td, #PesadasTable th {
-        border-width: 1px;
-        border-color: #A6A6A6;
-        border-style: solid;
-    }
-
-.modal-header {
-    background-color: #2E83C4;
-    color: white;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-}
-
-.trBodyPesadas {
-    text-align: center;
-    color: black;
-    font-size: 11px
-}
-
-.statusTd {
-    color: forestgreen;
-    font-weight: bolder
-}
-
-.containerHP {
-    max-width: 100%;
-    overflow-x: auto;
-    white-space: nowrap
-}
-
-.circleYellow {
-    height: 25px;
-    width: 25px;
-    background-color: #F7D547;
-    border-radius: 50%;
-    display: inline-block;
-    box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.75)
-}
-
-.circleRed {
-    height: 25px;
-    width: 25px;
-    background-color: #e00000;
-    border-radius: 50%;
-    display: inline-block;
-    box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.75)
-}
-
-.circleGreen {
-    height: 25px;
-    width: 25px;
-    background-color: #2ca880;
-    border-radius: 50%;
-    display: inline-block;
-    box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.75)
-}
-
-.circleWhite {
-    height: 25px;
-    width: 25px;
-    background-color: white;
-    border-radius: 50%;
-    display: inline-block;
-    box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.75)
-}
-
-
-.formulario {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 10px;
-}
-
-    .formulario label {
-        display: block;
-        font-size: 1.4rem !important;
-    }
-
-    .formulario button,
-    .formulario input,
-    .formulario textarea {
-        width: 100%;
-        /*border: 1px solid red;*/
-    }
-
-    .formulario textarea {
-        resize: none;
-    }
-
-.full {
-    grid-column: 1 / 3;
-}
-
-.iconSearch {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px; /* Ajusta el tamaño del icono de búsqueda */
-    margin-top: 15px; /* Alinea verticalmente el icono de búsqueda */
-    cursor: pointer;
-}
-
-.containerFilters {
-    background-color: white;
+/* ── Encabezado ─────────────────────────────────────────────── */
+.hp-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap; /* Esto es útil si no cabe en pantallas pequeñas */
+    flex-wrap: wrap;
+    gap: .85rem;
+    margin-bottom: 1.25rem;
 }
 
-    /*.containerFilters .row {
-        width: 100%;*/ /* Para asegurar que los elementos internos se alineen correctamente */
-    /*}*/
+.hp-title {
+    margin: 0;
+    padding-left: .85rem;
+    border-left: 5px solid var(--hp-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--hp-primary);
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    line-height: 1.2;
+}
 
-    .containerFilters label {
-        font-size: 14px; /* Reduce el tamaño de las etiquetas */
-        margin-bottom: 5px; /* Añade un margen pequeño debajo de las etiquetas */
+.hp-subtitle {
+    margin: .35rem 0 0 .95rem;
+    font-size: .85rem;
+    color: var(--hp-muted);
+}
+
+.hp-tools {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+/* ── Pills ──────────────────────────────────────────────────── */
+.hp-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .45rem .9rem;
+    border-radius: 999px;
+    background-color: var(--hp-primary-soft);
+    color: var(--hp-primary);
+    font-size: .8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+    .hp-pill b {
+        font-size: .95rem;
+        font-weight: 700;
     }
 
-    .containerFilters .form-control {
-        width: 100%; /* Asegura que los inputs ocupen todo el ancho disponible */
-        height: 30px; /* Ajusta la altura de los inputs */
-        font-size: 14px; /* Reduce el tamaño del texto dentro de los inputs */
+.hp-pill-muted {
+    background-color: #f3f6fa;
+    color: var(--hp-muted);
+}
+
+/* ── Botones ────────────────────────────────────────────────── */
+.hp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    height: 38px;
+    padding: .45rem 1.05rem;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: .82rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color .2s, color .2s, border-color .2s, box-shadow .2s;
+}
+
+    .hp-btn i {
+        font-size: .9rem;
     }
 
-    /* Opcionalmente, ajusta los márgenes entre los campos */
-    .containerFilters .col-5,
-    .containerFilters .col-2,
-    .containerFilters .col-1 {
-        padding-right: 5px; /* Añade un pequeño espacio entre los inputs */
+    .hp-btn:disabled {
+        opacity: .65;
+        cursor: not-allowed;
+        transform: none;
     }
+
+.hp-btn-primary {
+    background-color: var(--hp-primary);
+    border: 1px solid var(--hp-primary);
+    color: #fff;
+}
+
+    .hp-btn-primary:hover:not(:disabled),
+    .hp-btn-primary:focus:not(:disabled) {
+        background-color: var(--hp-primary-dark);
+        border-color: var(--hp-primary-dark);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 88, 161, .3);
+    }
+
+.hp-btn-outline {
+    background-color: #fff;
+    border: 1px solid var(--hp-primary);
+    color: var(--hp-primary);
+}
+
+    .hp-btn-outline:hover:not(:disabled),
+    .hp-btn-outline:focus:not(:disabled) {
+        background-color: var(--hp-primary);
+        color: #fff;
+    }
+
+.hp-btn-ghost {
+    background-color: #fff;
+    border: 1px solid var(--hp-border);
+    color: var(--hp-muted);
+}
+
+    .hp-btn-ghost:hover:not(:disabled),
+    .hp-btn-ghost:focus:not(:disabled) {
+        background-color: #f3f6fa;
+        border-color: #c6d3e2;
+        color: var(--hp-text);
+    }
+
+.hp-btn-sm {
+    height: 32px;
+    padding: .3rem .8rem;
+    font-size: .78rem;
+}
+
+.hp-btn-excel i {
+    color: #016E38;
+}
+
+.hp-btn-pdf i {
+    color: #ad0b00;
+}
+
+/* ── Tarjetas de seccion ────────────────────────────────────── */
+.hp-card {
+    background: #fff;
+    border: none;
+    border-radius: var(--hp-radius);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+    margin-bottom: 1.1rem;
+    overflow: hidden;
+}
+
+.hp-card-header {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+    background-color: var(--hp-primary-soft);
+    border-bottom: 1px solid #dbe7f4;
+    padding: .8rem 1.35rem;
+}
+
+    .hp-card-header > i {
+        color: var(--hp-primary);
+        font-size: .95rem;
+    }
+
+    .hp-card-header h5 {
+        margin: 0;
+        font-size: .82rem;
+        font-weight: 700;
+        color: var(--hp-primary);
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+.hp-card-note {
+    margin-left: auto;
+    font-size: .78rem;
+    color: var(--hp-muted);
+}
+
+.hp-card-tools {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+.hp-card-body {
+    padding: 1.25rem 1.35rem 1.35rem;
+}
+
+/* La tabla necesita el ancho completo para poder desplazarse */
+.hp-card-body-table {
+    padding: 1rem 1.1rem 1.1rem;
+}
+
+.hp-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .75rem;
+    padding: .85rem 1.35rem;
+    border-top: 1px solid var(--hp-border-soft);
+    background-color: #fbfcfe;
+}
+
+.hp-foot-note {
+    font-size: .78rem;
+    color: var(--hp-muted);
+}
+
+/* ── Filtros ────────────────────────────────────────────────── */
+.hp-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+.hp-field {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+}
+
+.hp-field-date {
+    flex: 0 0 160px;
+}
+
+.hp-field-turno {
+    flex: 1 1 260px;
+    min-width: 220px;
+}
+
+.hp-field-code {
+    flex: 0 0 130px;
+}
+
+.hp-field-line {
+    flex: 0 0 100px;
+}
+
+.hp-field-status {
+    flex: 0 0 150px;
+}
+
+.hp-filter-actions {
+    display: flex;
+    align-items: flex-end;
+    gap: .5rem;
+    margin-left: auto;
+}
+
+.hp-label {
+    margin: 0;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--hp-muted);
+}
+
+.hp-input,
+.hp-select {
+    width: 100%;
+    height: 38px;
+    padding: .4rem .75rem;
+    border: 1px solid var(--hp-border);
+    border-radius: 8px;
+    background-color: #fff;
+    color: var(--hp-text);
+    font-family: inherit;
+    font-size: .88rem;
+    font-weight: 500;
+    transition: border-color .2s, box-shadow .2s, background-color .2s;
+}
+
+    .hp-input:focus,
+    .hp-select:focus {
+        outline: none;
+        border-color: var(--hp-primary);
+        box-shadow: 0 0 0 .15rem rgba(0, 88, 161, .18);
+    }
+
+    .hp-input:disabled,
+    .hp-select:disabled {
+        background-color: #f7fafd;
+        border-color: #e6eef7;
+        color: var(--hp-muted);
+        opacity: 1;
+        cursor: not-allowed;
+    }
+
+/* ── Check "seleccionar todos" ──────────────────────────────── */
+.hp-check {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    margin: 0;
+    padding: .35rem .8rem;
+    border-radius: 8px;
+    border: 1px solid var(--hp-border);
+    background-color: #fff;
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--hp-text);
+    cursor: pointer;
+    user-select: none;
+    transition: border-color .2s, background-color .2s;
+}
+
+    .hp-check:hover {
+        border-color: #c6d3e2;
+        background-color: #f8fafd;
+    }
+
+    .hp-check input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        margin: 0;
+        cursor: pointer;
+        accent-color: var(--hp-primary);
+    }
+
+/* ── Controles de DataTables ────────────────────────────────── */
+.hp-page .dataTables_wrapper .dataTables_length,
+.hp-page .dataTables_wrapper .dataTables_filter {
+    margin-bottom: .9rem;
+    font-size: .85rem;
+    color: #4a5568;
+}
+
+    .hp-page .dataTables_wrapper .dataTables_length select,
+    .hp-page .dataTables_wrapper .dataTables_filter input {
+        height: 36px;
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        padding: .25rem .6rem;
+        margin-left: .4rem;
+        outline: none;
+        background-color: #fff;
+        color: var(--hp-text);
+    }
+
+    .hp-page .dataTables_wrapper .dataTables_filter input {
+        min-width: 220px;
+    }
+
+        .hp-page .dataTables_wrapper .dataTables_length select:focus,
+        .hp-page .dataTables_wrapper .dataTables_filter input:focus {
+            border-color: var(--hp-primary);
+            box-shadow: 0 0 0 .15rem rgba(0, 88, 161, .2);
+        }
+
+.hp-page .dataTables_wrapper .dataTables_info,
+.hp-page .dataTables_wrapper .dataTables_paginate {
+    margin-top: .9rem;
+    font-size: .82rem;
+    color: #4a5568;
+}
+
+    .hp-page .dataTables_wrapper .dataTables_paginate .paginate_button {
+        border-radius: 6px !important;
+        border: 1px solid transparent;
+        padding: .35rem .7rem !important;
+        color: var(--hp-primary) !important;
+    }
+
+        .hp-page .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: var(--hp-primary-soft) !important;
+            border-color: var(--hp-primary-soft) !important;
+            color: var(--hp-primary) !important;
+        }
+
+        .hp-page .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+        .hp-page .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            background: var(--hp-primary) !important;
+            border-color: var(--hp-primary) !important;
+            color: #fff !important;
+            font-weight: 700;
+        }
+
+        .hp-page .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+        .hp-page .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+            color: #b6c2cf !important;
+            background: transparent !important;
+            border-color: transparent !important;
+            cursor: default;
+        }
+
+/* ── Tabla principal ────────────────────────────────────────── */
+.hp-page .tableHP {
+    margin-bottom: 0;
+    border-collapse: collapse !important;
+    border-spacing: 0;
+    color: var(--hp-text);
+}
+
+    /* Neutraliza las reglas globales de Styles/Flje.css */
+    .hp-page .tableHP thead,
+    .hp-page .tableHP thead tr {
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    .hp-page .tableHP thead th {
+        background-color: var(--hp-primary-soft) !important;
+        color: var(--hp-primary) !important;
+        font-size: .7rem;
+        font-weight: 700;
+        text-align: center;
+        vertical-align: middle;
+        padding: .7rem .45rem;
+        border: none !important;
+        border-bottom: 2px solid var(--hp-primary) !important;
+        box-shadow: none !important;
+        line-height: 1.25;
+        white-space: normal;
+    }
+
+    .hp-page .tableHP tbody td {
+        text-align: center;
+        vertical-align: middle;
+        padding: .55rem .45rem;
+        font-size: .8rem;
+        color: var(--hp-text);
+        border: none !important;
+        border-top: 1px solid var(--hp-border-soft) !important;
+        box-shadow: none;
+        background-color: transparent;
+        white-space: nowrap;
+    }
+
+    .hp-page .tableHP tbody tr {
+        box-shadow: none;
+        border: none;
+    }
+
+    .hp-page .tableHP tbody tr:hover > * {
+        background-color: #f3f8fd;
+    }
+
+    /* Columnas de comentarios: permiten salto de linea */
+    .hp-page .tableHP tbody td.ComentarioTd,
+    .hp-page .tableHP tbody td:nth-child(18),
+    .hp-page .tableHP tbody td:nth-child(19) {
+        white-space: normal;
+        min-width: 150px;
+        max-width: 200px;
+        text-align: left;
+        font-size: .78rem;
+        color: #4a5568;
+    }
+
+    /* Anchos por columna */
+    .hp-page .tableHP thead th:nth-child(1) { width: 38px; }
+    .hp-page .tableHP thead th:nth-child(2) { width: 128px; }
+    .hp-page .tableHP thead th:nth-child(3) { width: 62px; }
+    .hp-page .tableHP thead th:nth-child(4) { width: 104px; }
+    .hp-page .tableHP thead th:nth-child(5) { width: 64px; }
+    .hp-page .tableHP thead th:nth-child(6) { width: 66px; }
+    .hp-page .tableHP thead th:nth-child(7) { width: 74px; }
+    .hp-page .tableHP thead th:nth-child(8) { width: 128px; }
+    .hp-page .tableHP thead th:nth-child(9) { width: 62px; }
+    .hp-page .tableHP thead th:nth-child(10) { width: 76px; }
+    .hp-page .tableHP thead th:nth-child(11) { width: 58px; }
+    .hp-page .tableHP thead th:nth-child(12) { width: 62px; }
+    .hp-page .tableHP thead th:nth-child(13) { width: 56px; }
+    .hp-page .tableHP thead th:nth-child(14) { width: 84px; }
+    .hp-page .tableHP thead th:nth-child(15) { width: 62px; }
+    .hp-page .tableHP thead th:nth-child(16) { width: 94px; }
+    .hp-page .tableHP thead th:nth-child(17) { width: 84px; }
+    .hp-page .tableHP thead th:nth-child(18) { width: 160px; }
+    .hp-page .tableHP thead th:nth-child(19) { width: 160px; }
+    .hp-page .tableHP thead th:nth-child(20) { width: 108px; }
+
+    /* Checkbox de la fila */
+    .hp-page .tableHP tbody td:first-child input[type="checkbox"] {
+        width: 15px;
+        height: 15px;
+        margin: 0;
+        cursor: pointer;
+        accent-color: var(--hp-primary);
+    }
+
+    .hp-page .tableHP tbody td:first-child input[type="checkbox"]:disabled {
+        cursor: not-allowed;
+        opacity: .45;
+    }
+
+    /* Scroll horizontal del cuerpo de la tabla */
+    .hp-page .dataTables_scrollBody {
+        scrollbar-width: thin;
+    }
+
+        .hp-page .dataTables_scrollBody::-webkit-scrollbar {
+            height: 10px;
+        }
+
+        .hp-page .dataTables_scrollBody::-webkit-scrollbar-track {
+            background: #f3f6fa;
+            border-radius: 8px;
+        }
+
+        .hp-page .dataTables_scrollBody::-webkit-scrollbar-thumb {
+            background: #c9d6e4;
+            border-radius: 8px;
+        }
+
+            .hp-page .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
+                background: #aebfd2;
+            }
+
+/* ── Acciones por fila ──────────────────────────────────────── */
+.hp-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .3rem;
+}
+
+    .hp-actions .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        margin: 0;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        font-size: .82rem;
+        line-height: 1;
+        box-shadow: none;
+        transition: background-color .2s, color .2s, border-color .2s, box-shadow .2s;
+    }
+
+        .hp-actions .btn:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        /* Editar */
+        .hp-actions .btn-info {
+            background-color: var(--hp-primary-soft);
+            border-color: #dbe7f4;
+            color: var(--hp-primary);
+        }
+
+            .hp-actions .btn-info:hover:not(:disabled) {
+                background-color: var(--hp-primary);
+                border-color: var(--hp-primary);
+                color: #fff;
+            }
+
+        /* Deshabilitar */
+        .hp-actions .btn-danger {
+            background-color: var(--hp-red-soft);
+            border-color: #f6dcdc;
+            color: var(--hp-red);
+        }
+
+            .hp-actions .btn-danger:hover:not(:disabled) {
+                background-color: var(--hp-red);
+                border-color: var(--hp-red);
+                color: #fff;
+            }
+
+        /* Bitacora */
+        .hp-actions .btn-warning {
+            background-color: var(--hp-amber-soft);
+            border-color: #f6e6c8;
+            color: var(--hp-amber);
+        }
+
+            .hp-actions .btn-warning:hover:not(:disabled) {
+                background-color: var(--hp-amber);
+                border-color: var(--hp-amber);
+                color: #fff;
+            }
+
+/* ── Punto de estatus (lo genera el JS) ─────────────────────── */
+.hp-page .circleYellow,
+.hp-page .circleGreen,
+.hp-page .circleRed,
+.hp-page .circleWhite {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, .05);
+    vertical-align: middle;
+}
+
+.hp-page .circleYellow {
+    background-color: #F7D547;
+}
+
+.hp-page .circleGreen {
+    background-color: #2ca880;
+}
+
+.hp-page .circleRed {
+    background-color: #e00000;
+}
+
+.hp-page .circleWhite {
+    background-color: #fff;
+    border: 1px solid #c9d6e4;
+    box-shadow: none;
+}
+
+/* ── Badges de tipo y estatus SAP ───────────────────────────── */
+.hp-page .hp-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: .18rem .55rem;
+    border-radius: 999px;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    white-space: nowrap;
+}
+
+.hp-page .hp-badge-green {
+    background-color: var(--hp-green-soft);
+    color: var(--hp-green);
+}
+
+.hp-page .hp-badge-red {
+    background-color: var(--hp-red-soft);
+    color: var(--hp-red);
+}
+
+.hp-page .hp-badge-amber {
+    background-color: var(--hp-amber-soft);
+    color: var(--hp-amber);
+}
+
+.hp-page .hp-badge-neutral {
+    background-color: #f0f3f7;
+    color: #5a6a7a;
+}
+
+.hp-page .hp-badge-blue {
+    background-color: var(--hp-primary-soft);
+    color: var(--hp-primary);
+}
+
+/* ── Modales ────────────────────────────────────────────────── */
+.hp-modal .modal-dialog.modal-lg {
+    max-width: 820px;
+}
+
+.hp-modal .modal-body-custom {
+    padding-bottom: 1.5rem;
+}
+
+.hp-modal .modal-title-custom {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+}
+
+/* Tablas dentro de modales */
+.hp-page .hp-table-sm {
+    margin-bottom: 0;
+    border-collapse: collapse !important;
+    width: 100%;
+}
+
+    .hp-page .hp-table-sm thead th {
+        background-color: var(--hp-primary-soft) !important;
+        color: var(--hp-primary) !important;
+        font-size: .68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        text-align: center;
+        vertical-align: middle;
+        padding: .6rem .4rem;
+        border: none !important;
+        border-bottom: 2px solid var(--hp-primary) !important;
+        box-shadow: none !important;
+        white-space: normal;
+    }
+
+    .hp-page .hp-table-sm tbody td {
+        text-align: center;
+        vertical-align: middle;
+        padding: .5rem .4rem;
+        font-size: .8rem;
+        color: var(--hp-text);
+        border: none !important;
+        border-top: 1px solid var(--hp-border-soft) !important;
+        background-color: transparent;
+        white-space: nowrap;
+    }
+
+    .hp-page .hp-table-sm tbody tr:hover > * {
+        background-color: #f3f8fd;
+    }
+
+/* Contenedor con scroll para tablas anchas dentro de modales */
+.hp-table-scroll {
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+    .hp-table-scroll::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .hp-table-scroll::-webkit-scrollbar-thumb {
+        background: #c9d6e4;
+        border-radius: 8px;
+    }
+
+/* ── Formulario del modal de edicion ────────────────────────── */
+.hp-modal .formulario {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: .9rem 1.1rem;
+    margin: 0;
+}
+
+    .hp-modal .formulario p {
+        margin: 0;
+    }
+
+    .hp-modal .formulario label {
+        display: block;
+        margin-bottom: .3rem;
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        color: var(--hp-muted);
+    }
+
+    .hp-modal .formulario input,
+    .hp-modal .formulario select,
+    .hp-modal .formulario textarea {
+        width: 100%;
+        height: 38px;
+        padding: .4rem .75rem;
+        border: 1px solid var(--hp-border);
+        border-radius: 8px;
+        background-color: #fff;
+        color: var(--hp-text);
+        font-family: inherit;
+        font-size: .88rem;
+        font-weight: 500;
+    }
+
+    .hp-modal .formulario textarea {
+        height: auto;
+        min-height: 90px;
+        resize: vertical;
+    }
+
+        .hp-modal .formulario input:focus,
+        .hp-modal .formulario select:focus,
+        .hp-modal .formulario textarea:focus {
+            outline: none;
+            border-color: var(--hp-primary);
+            box-shadow: 0 0 0 .15rem rgba(0, 88, 161, .18);
+        }
+
+    .hp-modal .formulario .full {
+        grid-column: 1 / 3;
+    }
+
+/* Textarea del modal de deshabilitar */
+.hp-modal .hp-textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: .55rem .75rem;
+    border: 1px solid var(--hp-border);
+    border-radius: 8px;
+    background-color: #fff;
+    color: var(--hp-text);
+    font-family: inherit;
+    font-size: .88rem;
+    resize: vertical;
+}
+
+    .hp-modal .hp-textarea:focus {
+        outline: none;
+        border-color: var(--hp-primary);
+        box-shadow: 0 0 0 .15rem rgba(0, 88, 161, .18);
+    }
+
+.hp-modal .hp-form-note {
+    margin-top: .5rem;
+    font-size: .78rem;
+    color: var(--hp-muted);
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 1199px) {
+    .hp-field-date {
+        flex: 1 1 150px;
+    }
+}
+
+@media (max-width: 991px) {
+    .hp-field-code,
+    .hp-field-line,
+    .hp-field-status {
+        flex: 1 1 130px;
+    }
+
+    .hp-filter-actions {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .hp-page {
+        padding: 1rem;
+    }
+
+    .hp-card-body {
+        padding: 1rem;
+    }
+
+    .hp-tools {
+        width: 100%;
+    }
+
+    .hp-card-note {
+        display: none;
+    }
+
+    .hp-page .dataTables_wrapper .dataTables_filter input {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .hp-modal .formulario {
+        grid-template-columns: 1fr;
+    }
+
+    .hp-modal .formulario .full {
+        grid-column: 1;
+    }
+}

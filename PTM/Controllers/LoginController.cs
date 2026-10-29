@@ -43,14 +43,20 @@ namespace PTM.Controllers
                         {
                             var textResult = await response.Content.ReadAsStringAsync();
                             LoginResponse jsonResult = JsonConvert.DeserializeObject<LoginResponse>(textResult);
-                            if(jsonResult.data[0].tipousuario == "Operador" || jsonResult.data[0].tipousuario == "Molinos")
-                            {
-                                var objectResponse1 = new { status = 500, data = $"El usuario {jsonResult.data[0].tipousuario} no puede acceder al sitio web" };
-                                var result1 = Json(objectResponse1, JsonRequestBehavior.AllowGet);
-                                return result1;
-                            }
 
                             Session["Rol"] = jsonResult.data[0].tipousuario;
+                            //asignamos los casos de VistaMolinosActiva para planta para saber si inicia en la vista de ppvc o molinos
+                            switch (jsonResult.data[0].planta)
+                            {
+                                case 1:
+                                    //si el usuario es AdmMolinos, asignamos VistaMolinosActiva como 1 para que entre por default a la vista molinos, o asignamos 0 para que entre a la vista ppvc
+                                    Session["VistaMolinosActiva"] = (jsonResult.data[0].tipousuario == "AdmMolinos" || jsonResult.data[0].tipousuario == "Molinos" || jsonResult.data[0].tipousuario == "Operador") ? "1" : "0";
+                                    break;
+                                case 2:
+                                    Session["VistaMolinosActiva"] = jsonResult.data[0].tipousuario == "AdmMolinos" ? "1" : "0";
+                                    break;
+                            }
+
                             Session["DateConection"] = DateTime.Now.ToString();
                             Session["UserId"] = jsonResult.data[0].empleadoid;
                             Session["Name"] = jsonResult.data[0].nombrecompleto;

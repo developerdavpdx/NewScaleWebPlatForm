@@ -1,0 +1,239 @@
+﻿@{
+    ViewBag.Title = "Asignación de líneas (Corrugado)";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@* Estilos compartidos con la vista de Asignación de líneas (PVC/INY) *@
+<link href="~/Styles/AsignacionLinia.css?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Styles/AsignacionLinia.css")).Ticks" rel="stylesheet" />
+<link href="~/Styles/Modales.css?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Styles/Modales.css")).Ticks" rel="stylesheet" />
+
+<div class="container-fluid al-page">
+
+    <div class="al-header">
+        <div>
+            <h2 class="al-title">Asignación de líneas</h2>
+            <p class="al-subtitle">Corrugado · Asigna productos y órdenes a cada línea de producción.</p>
+            <span class="al-count al-count-heading">
+                <b id="alTotal">0</b> líneas ·
+                <b id="alAsignadas">0</b> asignadas ·
+                <b id="alDisponibles">0</b> disponibles
+            </span>
+        </div>
+        <div class="al-tools">
+            <button type="button" class="al-refresh" id="BtnRefreshLineas">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
+                Actualizar
+            </button>
+            <button type="button" class="al-excel al-excel-text" id="DivIconEcel" title="Exportar a Excel">
+                <i class="fa fa-file-excel-o" aria-hidden="true" id="ExcelIcon"></i>
+                <span>Exportar</span>
+            </button>
+            <button type="button" class="btn al-btn al-btn-primary" id="BtnAddLineaModal" data-toggle="modal" data-target="#agregarLinea">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                Agregar Línea
+            </button>
+            <button type="button" class="btn al-btn al-btn-danger" data-toggle="modal" data-target="#QuitarLinea">
+                <i class="fa fa-trash" aria-hidden="true"></i>
+                Eliminar Línea
+            </button>
+        </div>
+    </div>
+
+    @* Tarjetas de líneas, se generan desde el script *@
+    <div class="buttonSection" id="buttonSection">
+    </div>
+</div>
+
+@* ================= Modal asignar / historial ================= *@
+<div class="modal fade al-modal modalClose" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header-custom">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-wrap">
+                        <i class="fa fa-sitemap" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="modal-title-custom" id="myModalLabel">Línea número <span id="lineaNumber"></span></div>
+                        <div class="modal-subtitle-custom">Asigna un producto o consulta el historial de la línea</div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-custom cerrarModal" data-dismiss="modal" aria-label="Cerrar">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="modal-body-custom">
+                <ul class="nav nav-tabs nav-fill al-tabs" id="ulTabs">
+                    <li class="nav-item" id="asignacionLi"><a data-toggle="tab" class="nav-link active tabHeader" href="#menuAsignacion" id="asignacion">Asignación</a></li>
+                    <li class="nav-item" id="historialLi"><a data-toggle="tab" class="nav-link tabHeader" href="#menuHistorial" id="historial">Historial</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    @* Asignaciones *@
+                    <div id="menuAsignacion" class="tab-pane fade show active">
+                        <div class="al-field">
+                            <label class="form-label-custom" for="entrada-busqueda">
+                                <i class="fa fa-barcode" aria-hidden="true"></i>
+                                Producto a asignar a la línea
+                            </label>
+                            <div class="al-autocomplete">
+                                <input class="form-control-custom" type="text" id="entrada-busqueda" placeholder="Ingresar código" autocomplete="off">
+                                <ul id="sugerencias-autocompletar"></ul>
+                            </div>
+                        </div>
+                        <div class="al-field">
+                            <label class="form-label-custom" for="kgxhora">
+                                <i class="fa fa-tachometer" aria-hidden="true"></i>
+                                Kilogramos por hora
+                            </label>
+                            <input class="form-control-custom" id="kgxhora" />
+                        </div>
+                        <div class="al-field">
+                            <label class="form-label-custom" for="selectOF">
+                                <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                Orden de fabricación
+                            </label>
+                            <select class="form-select-custom" id="selectOF">
+                                <option value="0" selected>Seleccionar...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    @* Historial *@
+                    <div id="menuHistorial" class="tab-pane fade">
+                        <table id="tableHistorial" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Fecha de Asignación</th>
+                                    <th>Código Ingresado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyTableHistorial">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer-custom">
+                <button type="button" class="btn-modal-cancelar al-desasignar me-auto" id="desasignarBtn">
+                    <i class="fa fa-times-circle" aria-hidden="true"></i>
+                    Desasignar
+                </button>
+                <button type="button" class="btn-modal-cancelar cerrarModal" data-dismiss="modal">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    Cerrar
+                </button>
+                <button type="button" class="btn-modal-guardar" id="AsignarLinea">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                    Asignar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@* ================= Modal Agregar Línea ================= *@
+<div class="modal fade al-modal modalClose" id="agregarLinea" tabindex="-1" role="dialog" aria-labelledby="agregarLineaLabel">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header-custom">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-wrap">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="modal-title-custom" id="agregarLineaLabel">Agregar línea</div>
+                        <div class="modal-subtitle-custom">Registrar una nueva línea de producción</div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-custom cerrarModal" data-dismiss="modal" aria-label="Cerrar">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="modal-body-custom">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <label class="form-label-custom" for="inputNumLinea">Número de línea</label>
+                        <input id="inputNumLinea" class="form-control-custom" disabled />
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label-custom" for="selectInputProcess">Proceso</label>
+                        <select id="selectInputProcess" class="form-select-custom">
+                            <option value="0" selected>Seleccionar...</option>
+                            <option value="1">Corrugado</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer-custom">
+                <button type="button" class="btn-modal-cancelar cerrarModal" data-dismiss="modal">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    Cerrar
+                </button>
+                <button type="button" class="btn-modal-guardar" id="BtnAddNweLine">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                    Agregar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@* ================= Modal Eliminar Línea ================= *@
+<div class="modal fade al-modal modalClose" id="QuitarLinea" tabindex="-1" role="dialog" aria-labelledby="quitarLineaLabel">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header-custom">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-wrap">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="modal-title-custom" id="quitarLineaLabel">Eliminar línea</div>
+                        <div class="modal-subtitle-custom">Quitar una línea del catálogo de producción</div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-custom cerrarModal" data-dismiss="modal" aria-label="Cerrar">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="modal-body-custom">
+                <div class="modal-banner-warning">
+                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                    Esta acción no se puede deshacer.
+                </div>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label-custom" for="inputNumLineaQuitar">Número de línea a eliminar</label>
+                        <input id="inputNumLineaQuitar" class="form-control-custom" placeholder="Ej. 3" inputmode="numeric" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer-custom">
+                <button type="button" class="btn-modal-cancelar cerrarModal" data-dismiss="modal">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    Cerrar
+                </button>
+                <button type="button" class="btn-modal-guardar danger" id="EliminarLineaBtn">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                    Eliminar
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/Corrugado/AsignacionLineas/AsignacionLineasCorrugado.js?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Scripts/Corrugado/AsignacionLineas/AsignacionLineasCorrugado.js")).Ticks"></script>

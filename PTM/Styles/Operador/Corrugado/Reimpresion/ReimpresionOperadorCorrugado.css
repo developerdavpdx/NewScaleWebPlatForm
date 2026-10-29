@@ -1,0 +1,64 @@
+﻿/*Contenedor de los filtros*/
+.containerFilters {
+    background-color: #f4f6f9;
+    border-radius: 12px;
+    box-shadow: 0 5px 14px rgba(0,0,0,0.08);
+    padding: 16px 20px;
+    max-width: 62rem;
+}
+
+/* Contenedor horizontal para filtros e icono */
+.filters-and-icon {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Filtros a la izquierda */
+#FiltrosDiv {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+}
+
+/* Cada grupo label+input en columna */
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+/* La parte de fecha es una fila interna */
+.fecha-range {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.fecha-al {
+    font-weight: normal;
+    padding: 0 4px;
+}
+
+/* Ajuste tamaños inputs y rango fecha */
+.fecha-range > input,
+.filter-group > input {
+    width: 200px;
+    box-sizing: border-box;
+}
+
+/* Icono búsqueda */
+.iconSearch {
+    font-size: 27px;
+    cursor: pointer;
+    user-select: none;
+    color: #333;
+    background-color: #d2eaff;
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid;
+    margin-top: 6px;
+}
+
+    .iconSearch:hover {
+        background-color: #bdd3e6;
+    }

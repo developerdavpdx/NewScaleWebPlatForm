@@ -1,0 +1,312 @@
+﻿@using System.Text;
+
+@{
+    ViewBag.Title = "Ingresos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.BodyClass = "ingresos-page";
+}
+
+<link href="~/Styles/MOLINOS/Ingresos/Ingresos.css?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Styles/MOLINOS/Ingresos/Ingresos.css")).Ticks" rel="stylesheet" />
+<link href="~/Styles/Modales.css" rel="stylesheet" />
+
+<div class="ing-page">
+
+    @* ================= ENCABEZADO ================= *@
+    <div class="ing-header">
+        <div>
+            <h2 class="ing-title">Ingreso de scrap</h2>
+            <p class="ing-subtitle">Carga masiva desde Excel y control de los ingresos registrados por turno.</p>
+        </div>
+        <div class="ing-tools">
+            <span class="ing-pill ing-pill-muted">
+                <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                Formato .xlsx / .xls
+            </span>
+        </div>
+    </div>
+
+    @* ================= CARGA MASIVA ================= *@
+    <section class="ing-section">
+        <div class="ing-card">
+
+            <div class="ing-card-head">
+                <i class="fa fa-upload" aria-hidden="true"></i>
+                <h5>Ingreso de scrap</h5>
+                <span class="ing-pill"><b id="ingPreviewCount">0</b> registros</span>
+            </div>
+
+            <div class="ing-card-body">
+
+                <div class="ing-upload">
+                    <label class="ing-file" for="archivoexcel">
+                        <input type="file" name="archivoexcel" id="archivoexcel" accept=".xlsx, .xls" />
+                        <span class="ing-file-btn">
+                            <i class="fa fa-folder-open" aria-hidden="true"></i>
+                            Seleccionar archivo
+                        </span>
+                        <span class="ing-file-name" id="archivoexcelName">Ningún archivo seleccionado</span>
+                    </label>
+
+                    <button type="button" id="cargaDatosExcelIngresos" class="ing-btn ing-btn-primary">
+                        <i class="fa fa-table" aria-hidden="true"></i>
+                        Cargar datos
+                    </button>
+                </div>
+
+                <div class="ing-table-wrap">
+                    <table id="tablaDatosIngresos" class="table ing-table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Tipo</th>
+                                <th>Familia</th>
+                                <th>Peso</th>
+                                <th>Fecha de registro</th>
+                                <th>Origen</th>
+                                <th>Planta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="ing-card-foot">
+                <span class="ing-foot-note">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                    Revisa la previsualización antes de confirmar; se guardan solo las filas mostradas.
+                </span>
+                <button type="button" id="BtnIngresarDatosExcel" class="ing-btn ing-btn-success">
+                    <i class="fa fa-check-circle" aria-hidden="true"></i>
+                    Confirmar ingresos
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    @* ================= FILTROS HISTORIAL ================= *@
+    <section class="ing-section">
+        <div class="ing-card">
+
+            <div class="ing-card-head">
+                <i class="fa fa-filter" aria-hidden="true"></i>
+                <h5>Filtros</h5>
+                <span class="ing-card-note">Periodo y turno del historial</span>
+            </div>
+
+            <div class="ing-card-body">
+                <div class="ing-filter-row">
+
+                    <div class="ing-field ing-field-date">
+                        <label class="ing-label" for="FechaInicioScrapIngreso">Fecha inicial</label>
+                        <input class="ing-input" type="date" id="FechaInicioScrapIngreso" />
+                    </div>
+
+                    <div class="ing-field ing-field-date">
+                        <label class="ing-label" for="FechafinScrapIngreso">Fecha final</label>
+                        <input class="ing-input" type="date" id="FechafinScrapIngreso" />
+                    </div>
+
+                    <div class="ing-field ing-field-turno">
+                        <label class="ing-label" for="InputturnoScrapIngreosMolinos">Turno</label>
+                        <select id="InputturnoScrapIngreosMolinos" class="ing-select">
+                            <option value="3" selected>Seleccionar...</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+
+                    <div class="ing-filter-actions" id="search">
+                        <button type="button" id="SearchScrapIngreso" class="ing-btn ing-btn-primary">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            Buscar
+                        </button>
+                        <button type="button" id="DescargarExcelHistorialIngresos" class="ing-btn ing-btn-ghost">
+                            <i class="fa fa-file-excel-o ing-icon-excel" aria-hidden="true"></i>
+                            Excel
+                        </button>
+                        <button type="button" id="DescargarPDFHistorialIngresos" class="ing-btn ing-btn-ghost">
+                            <i class="fa fa-file-pdf-o ing-icon-pdf" aria-hidden="true"></i>
+                            PDF
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    @* ================= HISTORIAL DE INGRESOS ================= *@
+    <section class="ing-section">
+        <div class="ing-card">
+
+            <div class="ing-card-head">
+                <i class="fa fa-history" aria-hidden="true"></i>
+                <h5>Historial de ingresos</h5>
+                <span class="ing-pill"><b id="ingCount">0</b> registros</span>
+                <div class="ing-card-tools">
+                    <button type="button" id="AddScrapRegister" class="ing-btn ing-btn-outline ing-btn-sm">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        Agregar
+                    </button>
+                </div>
+            </div>
+
+            <div class="ing-card-body ing-card-body-table">
+                <div class="ing-table-wrap">
+                    <table class="table ing-table text-center" id="TablaIngresosScrap">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Tipo</th>
+                                <th>Familia</th>
+                                <th>Peso</th>
+                                <th>Fecha de registro</th>
+                                <th>Origen</th>
+                                <th>Planta</th>
+                                <th>Editar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center totalBodyScrap" id="TableMolineros">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    @* ================= MODAL AGREGAR INGRESO ================= *@
+    <div class="modal fade" id="AddIgresoScrapModal" tabindex="-1" role="dialog" aria-labelledby="addIngresoScrapLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header-custom">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="modal-icon-wrap">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <div class="modal-title-custom" id="addIngresoScrapLabel">Agregar ingreso de scrap</div>
+                            <div class="modal-subtitle-custom">Registro manual del historial</div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close-custom" data-dismiss="modal" aria-label="Cerrar">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body-custom">
+                    <div class="modal-banner-info">
+                        <i class="fa fa-info-circle" aria-hidden="true"></i>
+                        El registro se agrega a la planta actual con la fecha y hora en que se guarde.
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label-custom" for="inputCodigoIngresoScrapRegister">Código</label>
+                            <input type="text" class="form-control-custom" id="inputCodigoIngresoScrapRegister" placeholder="Ingrese código" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-custom" for="inputTipoIngresoScrapRegister">Tipo</label>
+                            <input type="text" class="form-control-custom" id="inputTipoIngresoScrapRegister" placeholder="Ingrese tipo" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-custom" for="inputFamiliaIngresoScrapRegister">Familia</label>
+                            <input type="text" class="form-control-custom" id="inputFamiliaIngresoScrapRegister" placeholder="Ingrese familia" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-custom" for="inputFechaIngresoScrapRegister">Fecha de registro</label>
+                            <input type="date" class="form-control-custom form-filter" id="inputFechaIngresoScrapRegister" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-custom" for="inputPesoIngresoScrapRegister">Peso</label>
+                            <input type="number" class="form-control-custom" id="inputPesoIngresoScrapRegister" placeholder="0.00" step="0.01" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-custom" for="inputOrigenIngresoScrapRegister">Origen</label>
+                            <input type="text" class="form-control-custom" id="inputOrigenIngresoScrapRegister" placeholder="Ingrese origen" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer-custom">
+                    <button type="button" class="btn-modal-cancelar" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="btnAddRegisterIngresoScrapFinish" class="btn-modal-guardar success">
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                        Agregar
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @* ================= MODAL EDITAR INGRESO ================= *@
+    <div class="modal fade" id="EditIgresoScrapModal" tabindex="-1" role="dialog" aria-labelledby="editIngresoScrapLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header-custom">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="modal-icon-wrap">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <div class="modal-title-custom" id="editIngresoScrapLabel">Editar ingreso de scrap</div>
+                            <div class="modal-subtitle-custom">Actualiza o elimina el registro seleccionado</div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close-custom" data-dismiss="modal" aria-label="Cerrar">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body-custom">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label-custom" for="inputCodigoIngresoScrapRegisterEdit">Código</label>
+                            <input type="text" class="form-control-custom" id="inputCodigoIngresoScrapRegisterEdit" placeholder="Ingrese código" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-custom" for="inputTipoIngresoScrapRegisterEdit">Tipo</label>
+                            <input type="text" class="form-control-custom" id="inputTipoIngresoScrapRegisterEdit" placeholder="Ingrese tipo" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-custom" for="inputFamiliaIngresoScrapRegisterEdit">Familia</label>
+                            <input type="text" class="form-control-custom" id="inputFamiliaIngresoScrapRegisterEdit" placeholder="Ingrese familia" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-custom" for="inputOrigenIngresoScrapRegisterEdit">Origen</label>
+                            <input type="text" class="form-control-custom" id="inputOrigenIngresoScrapRegisterEdit" placeholder="Ingrese origen" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label-custom" for="inputPesoIngresoScrapRegisterEdit">Peso</label>
+                            <input type="number" class="form-control-custom" id="inputPesoIngresoScrapRegisterEdit" placeholder="0.00" step="0.01" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer-custom">
+                    <button type="button" id="btnRemoveScrapRegister" class="btn-modal-guardar danger">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                        Eliminar
+                    </button>
+                    <button type="button" class="btn-modal-cancelar" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="btnupdateRegisterIngresoScrap" class="btn-modal-guardar success">
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                        Actualizar
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="~/Scripts/MOLINOS/Ingresos.js?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Scripts/MOLINOS/Ingresos.js")).Ticks"></script>

@@ -3,19 +3,103 @@ const loader = document.getElementById('loaderDiv')
 var jsondata = null;
 var tablataras;
 var tablaKgHora;
-var datosfinales = null; //guardaremos los datos de taras o kghora, dependiendo cual archivo carguemos
+var datosfinales = null;   // ultimo archivo cargado (compatibilidad)
+var datosTaras = null;     // datos del excel de taras
+var datosKgHora = null;    // datos del excel de kg/hora
+
+const idiomaTabla = {
+    lengthMenu: 'Mostrar _MENU_ registros',
+    search: 'Buscar:',
+    info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+    infoEmpty: 'Sin registros',
+    infoFiltered: '(filtrado de _MAX_ registros)',
+    zeroRecords: 'No se encontraron resultados',
+    emptyTable: 'Sin registros para mostrar',
+    paginate: {
+        first: 'Primero',
+        previous: 'Anterior',
+        next: 'Siguiente',
+        last: '脷ltimo'
+    }
+}
+
+function mostrarLoader(visible) {
+    if (loader) {
+        loader.style.display = visible ? 'flex' : 'none';
+    }
+}
+
+function aviso(tipo, titulo, mensaje) {
+    if (typeof iziToast === 'undefined') {
+        console.warn(titulo + ': ' + mensaje);
+        return;
+    }
+    iziToast[tipo]({
+        position: 'topRight',
+        title: titulo,
+        message: `<p>${mensaje}</p>`
+    });
+}
 
 $(document).ready(() => {
     //obtenemos las tablas desde el html
-    tablataras = $('#tablaDatos').DataTable();
-    tablaKgHora = $('#tablaDatosKgHora').DataTable();
+    tablataras = $('#tablaDatos').DataTable({
+        language: idiomaTabla,
+        columnDefs: [
+            { targets: 1, className: 'taras-cell-num' },
+            { targets: 2, className: 'taras-cell-text' }
+        ]
+    });
 
+    tablaKgHora = $('#tablaDatosKgHora').DataTable({
+        language: idiomaTabla,
+        columnDefs: [
+            { targets: [1, 2, 3], className: 'taras-cell-num' }
+        ]
+    });
+
+    actualizarContadores();
+});
+
+//refresca los pills "N registros" de cada seccion
+function actualizarContadores() {
+    if (tablataras) {
+        $('#tarasCount').text(tablataras.rows().count());
+    }
+    if (tablaKgHora) {
+        $('#kgHoraCount').text(tablaKgHora.rows().count());
+    }
+}
+
+//muestra el nombre del archivo elegido junto al boton
+function pintarNombreArchivo(inputId, spanId) {
+    var input = document.getElementById(inputId);
+    var span = document.getElementById(spanId);
+    if (!input || !span) return;
+
+    if (input.files && input.files.length > 0) {
+        span.textContent = input.files[0].name;
+        span.classList.add('is-selected');
+    } else {
+        span.textContent = 'Ning煤n archivo seleccionado';
+        span.classList.remove('is-selected');
+    }
+}
+
+$(document).on('change', '#archivoexcel', function () {
+    pintarNombreArchivo('archivoexcel', 'archivoexcelName');
+});
+
+$(document).on('change', '#archivoexcelKgHora', function () {
+    pintarNombreArchivo('archivoexcelKgHora', 'archivoexcelKgHoraName');
 });
 
 //cargar el excel de taras
 function cargarexcel() {
-    loader.style.display = 'flex'
+    mostrarLoader(true)
     tablataras.clear().draw()
+    actualizarContadores()
+
     var inputArchivo = document.getElementById('archivoexcel');
     // Verificar que se haya seleccionado un archivo
     if (inputArchivo.files.length > 0) {
@@ -35,33 +119,31 @@ function cargarexcel() {
                 limpiarmatriz(jsondata);
             } else {
                 console.log('Error al enviar el archivo de Excel.');
-                loader.style.display = 'none'
-                iziToast.error({
-                    position: "topRight",
-                    title: `Ha surgido un error`,
-                    message: `<p>Error al al leer el archivo excel.</p>`,
-                })
+                mostrarLoader(false)
+                aviso('error', 'Ha surgido un error', 'Error al leer el archivo Excel.');
             }
+        };
+
+        xhr.onerror = function () {
+            mostrarLoader(false)
+            aviso('error', 'Ha surgido un error', 'No se pudo conectar con el servidor.');
         };
 
         xhr.send(formData);
 
     } else {
-        iziToast.error({
-            position: "topRight",
-            title: `Faltan datos`,
-            message: `<p>Favor de agregar el archivo para ser cargado.</p>`,
-        })
-        loader.style.display = 'none'
+        aviso('error', 'Faltan datos', 'Favor de agregar el archivo para ser cargado.');
+        mostrarLoader(false)
     }
 }
 
 //cargar el excel de kgHora
 function cargarexcelKgHora() {
-    loader.style.display = 'flex'
+    mostrarLoader(true)
 
     //limpiamos la tabla
     tablaKgHora.clear().draw()
+    actualizarContadores()
 
     //asignamos el archivo a nuestra variable
     var inputArchivokg = document.getElementById('archivoexcelKgHora');
@@ -86,24 +168,21 @@ function cargarexcelKgHora() {
                 geneartablaKgHora(jsondata);
             } else {
                 console.log('Error al convertir el archivo Excel en json.');
-                loader.style.display = 'none'
-                iziToast.error({
-                    position: "topRight",
-                    title: `Ha surgido un error`,
-                    message: `<p>Error al al leer el archivo excel.</p>`,
-                })
+                mostrarLoader(false)
+                aviso('error', 'Ha surgido un error', 'Error al leer el archivo Excel.');
             }
+        };
+
+        xhr.onerror = function () {
+            mostrarLoader(false)
+            aviso('error', 'Ha surgido un error', 'No se pudo conectar con el servidor.');
         };
 
         xhr.send(formDatakg);
 
     } else {
-        iziToast.error({
-            position: "topRight",
-            title: `Faltan datos`,
-            message: `<p>Favor de agregar el archivo para ser cargado.</p>`,
-        })
-        loader.style.display = 'none'
+        aviso('error', 'Faltan datos', 'Favor de agregar el archivo para ser cargado.');
+        mostrarLoader(false)
     }
 }
 
@@ -116,39 +195,45 @@ function limpiarmatriz(matriz) {
 function geneartabla(datos) {
     datos.shift();
     for (var i = 0; i < datos.length; i++) {
-        datos[i][1] = parseFloat(datos[i][1]).toFixed(3);
+        var tara = parseFloat(datos[i][1]);
+        datos[i][1] = isNaN(tara) ? datos[i][1] : tara.toFixed(3);
     }
 
+    datosTaras = datos;
     datosfinales = datos;
-    //console.log(datosfinales)
     tablataras.rows.add(datos).draw();
-    loader.style.display = 'none'
+    actualizarContadores()
+    mostrarLoader(false)
 }
 
 //generamos la tabla de kgHora para previsualizar
 function geneartablaKgHora(datos) {
     datos.shift();
     for (var i = 0; i < datos.length; i++) {
-        datos[i][1] = parseFloat(datos[i][1]).toFixed(3);
+        var kgHora = parseFloat(datos[i][1]);
+        datos[i][1] = isNaN(kgHora) ? datos[i][1] : kgHora.toFixed(3);
     }
 
     //guardamos los datos para enviarlos al api posteriormente
+    datosKgHora = datos;
     datosfinales = datos;
-    //console.log(datosfinales)
     tablaKgHora.rows.add(datos).draw();
-    loader.style.display = 'none'
+    actualizarContadores()
+    mostrarLoader(false)
 }
 
 
 function actualizartaras() {
-    loader.style.display = "flex"
-    //convertimos a jsno los datos ya cargados
-    var jsondatosfinales = JSON.stringify(datosfinales);
+    mostrarLoader(true)
 
-    if (jsondatosfinales == undefined || jsondatosfinales == null) {
-        loader.style.display = 'none'
-        return
+    if (!datosTaras || datosTaras.length === 0) {
+        mostrarLoader(false)
+        aviso('warning', 'No se encontraron datos', 'Favor de cargar el excel de taras primero.');
+        return;
     }
+
+    //convertimos a json los datos ya cargados
+    var jsondatosfinales = JSON.stringify(datosTaras);
 
     var formData = new FormData();
     formData.append('datos', jsondatosfinales);
@@ -159,23 +244,22 @@ function actualizartaras() {
 
     xhr.onload = function () {
         if (xhr.status === 200) {
-            var obj = JSON.parse(xhr.responseText);
             iziToast.success({
                 position: "topRight",
-                title: `Actualizaci髇 Correcta`,
-                message: `<p>Los c骴igos se han actualizado de manera correcta</p>`,
+                title: `Actualizaci贸n Correcta`,
+                message: `<p>Los c贸digos se han actualizado de manera correcta</p>`,
             })
-            //console.log(obj);
-            loader.style.display = "none"
+            mostrarLoader(false)
             LimpiarDAtosExcel();
         } else {
-            iziToast.error({
-                position: "topRight",
-                title: `Ha surgido un error`,
-                message: `<p>Error al obtener la informaci髇 de los SKUs</p>`,
-            })
-            loader.style.display = "none"
+            aviso('error', 'Ha surgido un error', 'Error al actualizar la informaci贸n de los SKUs.');
+            mostrarLoader(false)
         }
+    };
+
+    xhr.onerror = function () {
+        mostrarLoader(false)
+        aviso('error', 'Ha surgido un error', 'No se pudo conectar con el servidor.');
     };
 
     xhr.send(formData);
@@ -184,14 +268,16 @@ function actualizartaras() {
 }
 
 function actualizarKgHora() {
-    loader.style.display = "flex"
-    //convertimos a jsno los datos ya cargados
-    var jsondatosfinales = JSON.stringify(datosfinales);
+    mostrarLoader(true)
 
-    if (jsondatosfinales == undefined || jsondatosfinales == null) {
-        loader.style.display = 'none'
-        return
+    if (!datosKgHora || datosKgHora.length === 0) {
+        mostrarLoader(false)
+        aviso('warning', 'No se encontraron datos', 'Favor de cargar el excel de kg/hora primero.');
+        return;
     }
+
+    //convertimos a json los datos ya cargados
+    var jsondatosfinales = JSON.stringify(datosKgHora);
 
     var formData = new FormData();
     formData.append('datos', jsondatosfinales);
@@ -202,23 +288,22 @@ function actualizarKgHora() {
 
     xhr.onload = function () {
         if (xhr.status === 200) {
-            var obj = JSON.parse(xhr.responseText);
             iziToast.success({
                 position: "topRight",
-                title: `Actualizaci\u00F3n Correcta`, //usamos unicode porque no reconoce los acentos
-                message: `<p>Los c\u00F3digos se han actualizado de manera correcta</p>`,
+                title: `Actualizaci贸n Correcta`,
+                message: `<p>Los c贸digos se han actualizado de manera correcta</p>`,
             });
-            //console.log(obj);
-            loader.style.display = "none"
+            mostrarLoader(false)
             LimpiarDAtosExcel();
         } else {
-            iziToast.error({
-                position: "topRight",
-                title: `Ha surgido un error`,
-                message: `<p>Error al obtener la informaci髇 de los SKUs</p>`,
-            })
-            loader.style.display = "none"
+            aviso('error', 'Ha surgido un error', 'Error al actualizar la informaci贸n de los SKUs.');
+            mostrarLoader(false)
         }
+    };
+
+    xhr.onerror = function () {
+        mostrarLoader(false)
+        aviso('error', 'Ha surgido un error', 'No se pudo conectar con el servidor.');
     };
 
     xhr.send(formData);
@@ -228,15 +313,21 @@ function actualizarKgHora() {
 
 //Limpiamos todos los datos del excel (tablas y datos)
 function LimpiarDAtosExcel() {
-    //limoiamos la tabla de kgHora
+    //limpiamos la tabla de kgHora
     tablaKgHora.clear().draw();
-    //limoiamos la tabla de Taras
+    //limpiamos la tabla de Taras
     tablataras.clear().draw();
     //limpiamos los datos
     datosfinales = null;
-    //Limpiamos los input de LimpiarDAtosExcel
+    datosTaras = null;
+    datosKgHora = null;
+    //Limpiamos los input de archivo
     $("#archivoexcel").val("");
     $("#archivoexcelKgHora").val("");
+    //restauramos el nombre de archivo y los contadores
+    pintarNombreArchivo('archivoexcel', 'archivoexcelName');
+    pintarNombreArchivo('archivoexcelKgHora', 'archivoexcelKgHoraName');
+    actualizarContadores();
 }
 
 //ACTIONS
@@ -248,12 +339,8 @@ $(document).on("click", "#cargaDatosKgHora", function () {
 //Al hacer click en actualizar (de kgHora)
 $(document).on("click", "#ActualizaKgHora", function () {
     //verificamos que se hayan cargado los datos del excel
-    if (datosfinales == null) {
-        iziToast.warning({
-            position: "topRight",
-            title: `No se Econtraron Datos`,
-            message: `<p>Favor de cargar el excel primero</p>`,
-        })
+    if (!datosKgHora || datosKgHora.length === 0) {
+        aviso('warning', 'No se encontraron datos', 'Favor de cargar el excel de kg/hora primero.');
     } else {
         actualizarKgHora();
     }
@@ -267,12 +354,8 @@ $(document).on("click", "#cargaTaras", function () {
 //Al hacer click en actualizar (de taras)
 $(document).on("click", "#ActualizaTara", function () {
     //verificamos que se hayan cargado los datos del excel
-    if (datosfinales == null) {
-        iziToast.warning({
-            position: "topRight",
-            title: `No se Econtraron Datos`,
-            message: `<p>Favor de cargar el excel primero</p>`,
-        })
+    if (!datosTaras || datosTaras.length === 0) {
+        aviso('warning', 'No se encontraron datos', 'Favor de cargar el excel de taras primero.');
     } else {
         actualizartaras();
     }

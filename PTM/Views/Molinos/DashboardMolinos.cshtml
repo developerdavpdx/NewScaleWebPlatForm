@@ -1,0 +1,95 @@
+@{
+    ViewBag.Title = "Dashboard molinos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Styles/Molinos/DashboardMolinos.css?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Styles/Molinos/DashboardMolinos.css")).Ticks" rel="stylesheet" />
+
+<div class="mol-page">
+
+    @* ================= ENCABEZADO ================= *@
+    <div class="mol-header">
+        <div>
+            <h2 class="mol-title">Dashboard molinos</h2>
+            <p class="mol-subtitle">Estatus del día: volumen molido y kg/hora por molino.</p>
+        </div>
+        <div class="mol-tools">
+            <span class="mol-pill">
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                Turno <b id="labelTurno"></b>
+            </span>
+            <span class="mol-pill mol-pill-muted">
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+                <b id="molFecha">--</b>
+            </span>
+            <button type="button" class="mol-btn mol-btn-outline" id="btnRefreshMolinos" onclick="cargarDashboardMolinos()">
+                <i class="fa fa-rotate-right" aria-hidden="true"></i>
+                Actualizar
+            </button>
+            <div id="DivSwitch" class="mol-switch">
+                <span class="mol-switch-label">Vista molinos</span>
+                <label class="switch">
+                    <input type="checkbox" id="SwitchMolino">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    @* ================= INDICADORES ================= *@
+    <div class="mol-kpis">
+        <article class="mol-kpi mol-kpi-volumen">
+            <div class="mol-kpi-icon"><i class="fa fa-balance-scale" aria-hidden="true"></i></div>
+            <div class="mol-kpi-body">
+                <span class="mol-kpi-label">Volumen equipo molienda</span>
+                <span class="mol-kpi-value"><b id="volumenMolinos">--</b><small>kg</small></span>
+            </div>
+        </article>
+
+        <article class="mol-kpi mol-kpi-kghora">
+            <div class="mol-kpi-icon"><i class="fa fa-tachometer" aria-hidden="true"></i></div>
+            <div class="mol-kpi-body">
+                <span class="mol-kpi-label">Kg / hora</span>
+                <span class="mol-kpi-value"><b id="KgHoraMolino">--</b><small>kg/hora</small></span>
+            </div>
+        </article>
+    </div>
+
+    @* ================= ESTADO VACIO ================= *@
+    <div class="mol-empty is-hidden" id="molEmpty">
+        <i class="fa fa-info-circle" aria-hidden="true"></i>
+        <span>Sin información para el turno actual. Los indicadores se actualizarán en cuanto haya registros de molienda.</span>
+    </div>
+
+    @* ================= GRAFICAS ================= *@
+    <div class="mol-chart-card" id="molChartCard">
+        <div class="mol-chart-head">
+            <i class="fa fa-bar-chart" aria-hidden="true"></i>
+            <h5>Gráficas por molino</h5>
+            <span class="mol-chart-hint">Desliza o usa las flechas para cambiar de gráfica</span>
+        </div>
+
+        @* Carrusel: se conserva tal cual (mismas flechas, scrollbar y autoplay) *@
+        <div class="swiper" id="swiperMolinos">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <figure class="highcharts-figure">
+                        <div id="VolumenesMolino" class="mol-chart"></div>
+                    </figure>
+                </div>
+                <div class="swiper-slide">
+                    <figure class="highcharts-figure">
+                        <div id="KgHoraMoloinos" class="mol-chart"></div>
+                    </figure>
+                </div>
+            </div>
+
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-scrollbar"></div>
+        </div>
+    </div>
+
+</div>
+
+<script src="~/Scripts/MOLINOS/DashboardMolinos.js?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Scripts/MOLINOS/DashboardMolinos.js")).Ticks"></script>

@@ -1,0 +1,132 @@
+﻿.titleHeader {
+    background-color: #075DA5;
+    color: white;
+    font-size: 22px;
+    text-align: center;
+    height: 50px;
+    font-weight: bolder;
+}
+
+.containerTitle {
+    background-color: white;
+}
+
+.containerFilters {
+    background-color: white;
+}
+
+tbody tr {
+    text-align: center
+}
+
+.btn-details {
+    width: 100%
+}
+
+label {
+    font-size: 1.5rem;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #075DA5;
+    color: white;
+}
+
+#search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer
+}
+
+/* agregamos un fondo diferente a las filas impares en la tabla */
+#RowsConcentradoInv tr:nth-child(odd) {
+    background-color: #d1fcff73 !important;
+}
+
+#RowsConcentradoInv tr {
+    box-shadow: inset 0 5px 8px -7px rgba(0,0,0,0.5) !important;
+}
+
+/* Ajustamos los inputs dinamicos de la tabla Inventario Inicial */
+.InputDin {
+    height: 1.3rem;
+    width: 110%;
+    font-size: large;
+}
+
+/* Boton actualizar de la tabla Inventario Inicial */
+#BtnUpdateConcentradoInv {
+    width: 103px;
+}
+
+/* AJUSTES DE LAS TABLAS UNITARIAMENTE */
+/* Ajusta el tamaño de las tablas laterales */
+.col-md-4 {
+    flex: 0 0 25%; /* Ocupa menos espacio en las tablas de los lados */
+    max-width: 25%;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+    /* Aumenta el espacio de la tabla central */
+    .col-md-4.center-table {
+        flex: 0 0 50%; /* La tabla central ocupa más espacio */
+        max-width: 50%;
+    }
+
+/* Acomoda el ancho de columnas en función del contenido */
+.TableEntradasScrap th, .TableEntradasScrap td {
+    font-size: 0.85rem; /* Reducimos el tamaño de la fuente para la tabla central */
+    white-space: nowrap;
+}
+
+    /* Ajusta las columnas de "Código" y "PPVC" para dar más espacio */
+    .TableInvInicial th:nth-child(1), .TableProdMol th:nth-child(1),
+    .TableEntradasScrap th:nth-child(1), .TableEntradasScrap th:nth-child(3) {
+        width: 25%; /* La columna "Código" en todas las tablas */
+    }
+
+    .TableInvInicial th:nth-child(2), .TableProdMol th:nth-child(2),
+    .TableEntradasScrap th:nth-child(2) {
+        width: 10%; /* Columna "PPVC" y "Cantidad" */
+    }
+    /* Resto de columnas en la tabla central */
+    .TableEntradasScrap th:nth-child(n+4) {
+        width: 10%;
+    }
+
+/* Reduce el padding de las celdas en la tercera tabla */
+.TableProdMol th, .TableProdMol td {
+    padding: 0.5rem 0rem; /* Ajusta según lo necesites; reduce los valores para menos espacio */
+}
+
+    /* Ajusta el ancho de las columnas en la tercera tabla */
+    .TableProdMol th:nth-child(1), .TableProdMol td:nth-child(1) {
+        width: 70%; /* Columna "Código" */
+    }
+
+    .TableProdMol th:nth-child(2), .TableProdMol td:nth-child(2) {
+        width: 30%; /* Columna "Cantidad (KG)" */
+    }
+
+/* Cuando las patanllas sean menores a 1601px en ancho*/
+@media only screen and (max-width: 1601px) {
+    .TituloDinMenor {
+        font-size: large;
+    }
+
+    /* Activa el scroll horizontal en las tablas */
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    /* Ajusta el tamaño de las fuentes para optimizar el espacio */
+    .table th, .table td {
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+}

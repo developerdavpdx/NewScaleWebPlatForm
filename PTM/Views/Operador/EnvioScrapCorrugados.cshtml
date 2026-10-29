@@ -1,0 +1,193 @@
+﻿@using System.Text;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Libreria confirm de jquery-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-confirm/dist/jquery-confirm.min.css">
+<!-- Estilos del modulo -->
+<link href="~/Styles/OPERADOR/CORRUGADO/EnvioScrap/EnvioScrapOperadorCorrugado.css" rel="stylesheet" />
+
+<div>
+    <br />
+    <!-- Titulo del modulo (el style se carga desde el layout con titleHeader)-->
+    <div class="titleHeader">
+        <h3>ENVÍO SCRAP</h3>
+    </div>
+
+    <br />
+
+    <div class="d-flex justify-content-between align-items-center">
+        <!--Switch para cambiar a scrap sin cortes de sierra-->
+        <div class="row d-flex" id="DivSwitchScrap">
+            <label class="LabelSwitchBascula">Scrap sin cortes de sierra</label>
+            <label class="switch">
+                <input type="checkbox" id="SwitchScrapCortesSierra">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <!-- input para mostrar la bascula-->
+        <div id="DivBascula">
+            <label class="LabelSwitchBascula d-block" for="basculaSelect">Báscula seleccionada</label>
+            <input id="BasculaAsigned" disabled>
+        </div>
+    </div>
+
+    <br />
+
+    <div id="ContenedorPrincipal">
+        <!-- Formulario de Scrap-->
+        <form id="formularioEnvioScrap">
+            <!-- Linea -->
+            <div class="InputForm ">
+                <label for="selectLinea" class="LabelForm">Línea</label>
+                <div class="InputForm">
+                    <select class="form-control Activar_Desactivar" id="selectLinea" disabled>
+                        <option selected>Seleccione...</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Operador -->
+            <div class="InputForm ">
+                <label for="staticOperador" class="LabelForm">Operador</label>
+                <div class="InputForm">
+                    <input type="text" class="form-control" id="staticOperador" value="" disabled>
+                </div>
+            </div>
+            <!-- Codigo de articulo -->
+            <div class="InputForm ">
+                <label for="staticCodigo" class="LabelForm">Código de Artículo</label>
+                <div class="InputForm">
+                    <input type="text" class="form-control Activar_Desactivar" id="staticCodigo" disabled>
+                </div>
+            </div>
+            <!-- Peso -->
+            <div class="InputForm ">
+                <label for="staticPeso" class="LabelForm">Peso (Kg)</label>
+                <div class="InputForm">
+                    <input type="number" class="form-control Activar_Desactivar" id="staticPeso" disabled>
+                </div>
+            </div>
+            <!-- Proceso -->
+            <div class="InputForm ">
+                <label for="staticProceso" class="LabelForm">Proceso</label>
+                <div class="InputForm">
+                    <select class="form-control Activar_Desactivar" id="staticProceso" disabled>
+                        <option selected value="">Seleccione...</option>
+                        <option value="Corrugado">Corrugados</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Familia -->
+            <div class="InputForm ">
+                <label for="staticEmail" class="LabelForm">Familia</label>
+                <div class="InputForm">
+                    <input type="text" class="form-control Activar_Desactivar" id="staticFamilia" disabled>
+                </div>
+            </div>
+            <!-- Comentarios -->
+            <div class="InputForm ">
+                <label for="comentariosArea" class="LabelForm">Comentarios</label>
+                <div>
+                    <textarea id="comentariosArea" placeholder="Agrega un comentario" class="form-control Activar_Desactivar" disabled></textarea>
+                </div>
+            </div>
+        </form>
+
+        <!-- vista previa del ticket-->
+        <div id="ticketScrap">
+            <h5 style="font-size: 2rem !important; text-align: center; margin-bottom: 20px; ">Vista Previa</h5>
+            <!-- Ticket (es el mismo formato que para PVC e INY)-->
+            <div id="DivTicketPrevia" class="ticket" hidden>
+                <!-- Logo PTM -->
+                <div style=" text-align: center;">
+                    <img src="../../images/LogoNWScale2.png" alt="Logotipo" style="width: 150px; max-width: 150px; ">
+                </div>
+                <!-- Fecha y Hora -->
+                <p class="centrado" id="FechaHoraTicketPreview">
+                    --fechayhora
+                </p>
+
+                <table>
+                    <thead>
+                        <!-- Titulos de columnas -->
+                        <tr>
+                            <th class="columna1">CONCEPTO</th>
+                            <th class="columna2">VALOR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- ID Ticket -->
+                        <tr>
+                            <td class="columna1">ID TICKET:</td>
+                            <td class="columna1" id="idTicketPreview">--idticket</td>
+                        </tr>
+                        <!-- Linea -->
+                        <tr>
+                            <td class="columna1">Línea:</td>
+                            <td class="columna1" id="lineaTicketTicketPreview">--idlinea</td>
+                        </tr>
+                        <!-- Codigo -->
+                        <tr>
+                            <td class="columna1">CÓDIGO ITEM:</td>
+                            <td class="columna1" id="itemSapTicketPreview">--selectitem</td>
+                        </tr>
+                        <!-- Turno -->
+                        <tr>
+                            <td class="columna1">TURNO:</td>
+                            <td class="columna1" id="TurnoTicketPreview">--turno</td>
+                        </tr>
+                        <!-- Operador -->
+                        <tr>
+                            <td class="columna1">OPERADOR:</td>
+                            <td class="columna1" id="OperadorTicketPreview">--operador</td>
+                        </tr>
+                        <!-- Peso -->
+                        <tr>
+                            <td class="columna1">PESO:</td>
+                            <td class="columna1" id="pesoTicketPreview">--peso</td>
+                        </tr>
+                        <!-- Familia -->
+                        <tr>
+                            <td class="columna1">FAMILIA (SAP):</td>
+                            <td class="columna1" id="familiaSapTicketPreview">--familiasap</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <!-- Logo PDX-->
+                <p class="centrado" style="color: gray;">
+                    POWERED BY
+                    <br><img src="../../images/Paradox1.png" style="width: 40%;">
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Botones -->
+    <div class="Btns">
+        <button id="ClearForm" class="btn btn-primary border-0" style="background-color:#51b5e1;">
+            Limpiar
+        </button>
+        <button id="BtnConfirmarScrap" class="btn btn-primary border-0 " style="background-color:#51b5e1; margin-left:20px;">
+            Confirmar
+        </button>
+    </div>
+
+    <!-- Modal de alerta de scrap sin cortes de cierra -->
+    <div class="modal-body" id="modalCortesSierraAlert">
+
+    </div>
+
+</div>
+
+<!-- Libreria "confirm" de jquery-->
+<script src="https://cdn.jsdelivr.net/npm/jquery-confirm/dist/jquery-confirm.min.js"></script>
+<!-- Para usar "Zebra Browser Print" y poder imprimir en una impresora conectada por usb-->
+<script src="https://cdn.jsdelivr.net/npm/zebra-browser-print-min@3.0.216/BrowserPrint-3.0.216.min.js"></script>
+<!-- libreria del modulo -->
+<script src="~/Scripts/Operadores/Corrugado/EnvioScrap/EnvioScrapCorrugados.js"></script>

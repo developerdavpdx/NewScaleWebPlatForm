@@ -1,22 +1,60 @@
 ﻿const loader = document.getElementById('loaderDiv')
 let tableDatosMestros;
 let planta;
+let cargandoDatosMaestros = false;
 
 $(document).ready(function () {
     localStorage.planta == '335' ? planta = '2' : planta = '1'
     loader.style.display = 'flex'
     tableDatosMestros = $('#DatosMaestros').DataTable({
         ordering: false,
-        responsive: true
+        responsive: true,
+        pageLength: 10,
+        autoWidth: false,
+        columnDefs: [
+            { targets: 1, className: 'text-start' },
+            { targets: 4, className: 'col-usuario' }
+        ],
+        language: {
+            lengthMenu: 'Mostrar _MENU_ registros',
+            search: 'Buscar:',
+            info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+            infoEmpty: 'Sin registros',
+            infoFiltered: '(filtrado de _MAX_ registros)',
+            zeroRecords: 'No se encontraron resultados',
+            emptyTable: 'Sin datos disponibles',
+            paginate: {
+                first: 'Primero',
+                previous: 'Anterior',
+                next: 'Siguiente',
+                last: 'Último'
+            }
+        }
+    });
+
+    // Mantiene el contador sincronizado con los registros cargados
+    tableDatosMestros.on('draw', function () {
+        const contador = document.getElementById('dmCount')
+        if (contador) {
+            contador.textContent = tableDatosMestros.rows().count()
+        }
     })
+
     PeticionApiSKU()
 })
 
 let skuInfo
 //sollicitqamos los sku al api
 function PeticionApiSKU() {
+    if (cargandoDatosMaestros) {
+        return
+    }
+    cargandoDatosMaestros = true
+
     let data = {
-        "planta": planta
+        "planta": planta,
+        "corrugado": null,
+        "ignorenewscale":null
         }
     fetch("/DatosMaestros/GetAllPt", {
         method: "POST",
@@ -29,50 +67,40 @@ function PeticionApiSKU() {
     }).then((jsonString) => {
         if (jsonString.status == 200) {
             let Rows = []
-            const fecha = new Date
             var responseJson = JSON.parse(jsonString.data)
-            //console.log(responseJson)
             var data = responseJson.data
             skuInfo = responseJson.skuInfo
-            //console.log(data)
-            let fechaActualizacionñ
+            let fechaActualizacion
             let iconUpdate = false;
             let usuario = ""
 
-            for (x = 0; x < data.length; x++) {
-                fechaActualizacion = "No Existe Actualización"
-                usuario = "No Existe Actualización"
-                iconUpdate = '<i style="font-size:14px; color: #C12123;" class="fa fa-times" aria-hidden="true"></i>'
+            for (let x = 0; x < data.length; x++) {
+                fechaActualizacion = '<span class="dm-muted">No Existe Actualización</span>'
+                usuario = '<span class="dm-muted">No Existe Actualización</span>'
+                iconUpdate = '<span class="dm-badge dm-badge-no">No</span>'
                 let tara = 0;
                 if (skuInfo.length != 0) {
                     let codigoItem = data[x].codigoitem
                     let skuFilter = skuInfo.filter(x => x.itemCode == codigoItem);
                     if (skuFilter.length != 0) {
-                        console.log(skuFilter)
                         let isUpdate = ExisteActualizacion(skuFilter[0].lastUpdate)
                         fechaActualizacion = ConvertDate(skuFilter[0].lastUpdate)
-                        skuFilter[0].usuario == null || skuFilter[0].usuario == "" ? usuario = "No Existe Actualización" : usuario = skuFilter[0].usuario
-                        console.log(isUpdate)
-                        isUpdate ? iconUpdate = '<i style="font-size:14px; color: #2B9B2B;" class="fa fa-check" aria-hidden="true"></i>' : iconUpdate = '<i style="font-size:14px; color: #C12123;" class="fa fa-times" aria-hidden="true"></i>'
+                        skuFilter[0].usuario == null || skuFilter[0].usuario == "" ? usuario = '<span class="dm-muted">No Existe Actualización</span>' : usuario = skuFilter[0].usuario
+                        isUpdate ? iconUpdate = '<span class="dm-badge dm-badge-ok">Sí</span>' : iconUpdate = '<span class="dm-badge dm-badge-no">No</span>'
                         tara = skuFilter[0].variable;
                     }
-                 
+
                 }
-                //console.log(tara)
-                Rows.push([data[x].codigoitem, data[x].nombre, iconUpdate, fechaActualizacion, usuario,tara, `<button class="btn btn-info btn-details" onclick="verDetallesSKU('${data[x].codigoitem}')">Ver detalles</button>`])
+                Rows.push([data[x].codigoitem, data[x].nombre, iconUpdate, fechaActualizacion, usuario, tara, `<button class="btn btn-outline-info btn-details" onclick="verDetallesSKU('${data[x].codigoitem}')">Ver detalles</button>`])
             }
 
             tableDatosMestros.rows.add(Rows).draw()
-
-            loader.style.display = 'none'
         } else {
             iziToast.error({
                 position: "topRight",
                 title: "Ha surgido un error",
                 message: "<p>No se encuentran código activos</p>"
             })
-            loader.style.display = 'none'
-
         }
     }).catch((error) => {
         console.error(error);
@@ -81,9 +109,19 @@ function PeticionApiSKU() {
             title: `Ha surgido un error`,
             message: `<p>Favor de verificar la conexión con el servidor</p>`,
         })
-
+    }).finally(() => {
+        cargandoDatosMaestros = false
         loader.style.display = 'none'
     })
+}
+
+function recargarDatosMaestros() {
+    if (cargandoDatosMaestros) {
+        return
+    }
+    loader.style.display = 'flex'
+    tableDatosMestros.clear().draw()
+    PeticionApiSKU()
 }
 
 function ConvertDate(dateTime) {
@@ -92,7 +130,7 @@ function ConvertDate(dateTime) {
     const month = (fecha.getMonth() + 1).toString().padStart(2, '0');
     const year = fecha.getFullYear();
     var date = `${day}/${month}/${year}`
-    var hours = `${fecha.getHours().toString().padStart(2, '0')}:${fecha.getMinutes().toString().padStart(2, '0')} ${fecha.getHours() >= 12 ? 'PM' : 'AM'}`
+    var hours = `${fecha.getHours().toString().padStart(2, '0')}:${fecha.getMinutes().toString().padStart(2, '0')}`
     let listInfoDate = `${date} ${hours}`
     return listInfoDate
 }

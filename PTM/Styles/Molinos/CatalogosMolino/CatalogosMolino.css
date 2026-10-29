@@ -1,0 +1,51 @@
+﻿.btnAsignada {
+    width: 49%;
+    margin-bottom: 3px;
+    height: 187px;
+    background-color: #80808099 !important;
+}
+
+.buttonSection {
+    width: 101.7%;
+}
+
+.buttonSection .btn-info {
+    width: 49%;
+    padding: 2%;
+    margin-bottom: 2px;
+    height: 187px;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #075DA5;
+    color: white;
+}
+
+#BtnAgregaMolino, #BtnActualizarObjetivosModal, #AgregarMolinoNuevo, #BtnBorrarMolino {
+    background-color: #00986c;
+    color: white;
+}
+
+/*Boton de "Motivos de Paro"*/
+#BtnModalMotivosDeParo{
+    float: right;
+}
+
+/*head de la tabla de motivos paro*/
+#TablaMotivosParo tr th {
+    font-size: large;
+}
+
+/*rows de la tabla de motivos paro*/
+#TableMotivosParoRows tr td {
+    box-shadow: inset 0 5px 8px -7px rgba(0,0,0,0.5);
+    font-size: large;
+}
+
+/*modal interno de agregar molino*/
+#agregarMolinoModalint{
+    width: 41rem;
+}

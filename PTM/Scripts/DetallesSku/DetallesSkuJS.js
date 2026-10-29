@@ -3,7 +3,6 @@ var sku = sessionStorage.getItem('id')
 let labelSku = document.getElementById('skuCode')
 let inputItemName = document.getElementById('ItemName')
 let inputCategoriaSku = document.getElementById('CategorySKU')
-let inputLinea = document.getElementById('Linie')
 let inputPesoMin = document.getElementById('minWeight')
 let inputPesoMax = document.getElementById('maxWeight')
 let inputMultiplo = document.getElementById('inputMultiplo')
@@ -42,7 +41,8 @@ function GetSkuDetails(SKU) {
     loader.style.display = 'flex'
     var data = {
         "sku": SKU,
-        "planta": planta
+        "planta": planta,
+        "ignorenewscale":"0"
     }
     fetch('/DetallesSku/GetPTbySku', {
         method: 'POST',
@@ -63,9 +63,10 @@ function GetSkuDetails(SKU) {
                 for (x = 0; x < PvcMatEmb.length; x++) {
                     document.getElementById("divMatEmb").innerHTML += `
                         <div class="col-lg-4">
-                            ${PvcMatEmb[x]}
-                            <div>
-                                <input class="form-control FormControlTexts" type="number" id="input${PvcMatEmb[x]}" style="width:100% !important" />
+                            <label class="sku-label" for="input${PvcMatEmb[x]}">${PvcMatEmb[x]}</label>
+                            <div class="sku-unit">
+                                <input class="sku-input" type="number" id="input${PvcMatEmb[x]}" inputmode="decimal" step="any" min="0" />
+                                <span class="sku-unit-suffix">kg</span>
                             </div>
                         </div>
                     `
@@ -74,9 +75,10 @@ function GetSkuDetails(SKU) {
                 for (x = 0; x < InyMatEmb.length; x++) {
                     document.getElementById("divMatEmb").innerHTML += `
                         <div class="col-lg-3">
-                            ${InyMatEmb[x]}
-                            <div>
-                                <input class="form-control FormControlTexts" type="number" id="input${InyMatEmb[x]}" style="width:100% !important" />
+                            <label class="sku-label" for="input${InyMatEmb[x]}">${InyMatEmb[x]}</label>
+                            <div class="sku-unit">
+                                <input class="sku-input" type="number" id="input${InyMatEmb[x]}" inputmode="decimal" step="any" min="0" />
+                                <span class="sku-unit-suffix">kg</span>
                             </div>
                         </div>
                     `
@@ -93,6 +95,12 @@ function GetSkuDetails(SKU) {
             //infoPtSku[0].Status == true ? inputLinea.value = `L${infoPtSku[0].numLine}` : inputLinea.value = 'No Asignado'
             inputPesoMax.value = data[0].pesomaximo
             inputPesoMin.value = data[0].pesominimo
+
+            // Encabezado de la página
+            const headerCode = document.getElementById('skuHeaderCode')
+            const headerName = document.getElementById('skuHeaderName')
+            if (headerCode) headerCode.textContent = data[0].codigoitem
+            if (headerName) headerName.textContent = data[0].nombre
 
             //loader.style.display = 'none'//cambiar de lugar a la nueva funcion
 
@@ -127,13 +135,14 @@ function GetSkuDetails(SKU) {
         }
     }).catch((error) => {
         loader.style.display = 'none'
+        const headerName = document.getElementById('skuHeaderName')
+        if (headerName) headerName.textContent = 'No se pudo cargar la información del artículo.'
     })
 }
 
 //inicio del evento, actualizar
+//inicio del evento, actualizar
 function ActualizarSKU() {
-    //actualizamos los datos de linea, y luego los demas valores (para los datos de linea se usa prodecure)
-    ActualizarDetailsLinea();
     /*let FijoValue = document.getElementById("FijoValue").value*/
     if (selectMulti[selectMulti.selectedIndex].value == 0/* || selectFijo[selectFijo.selectedIndex].value == 0*/) {
         iziToast.error({
@@ -170,7 +179,7 @@ function ActualizarSKU() {
         "id": sku,
         "MultiploCant": inputMultiplo.value,
         "MultiploCat": $(selectMulti[selectMulti.selectedIndex]).data('multiplo'),
-        "Variable" : inputVariable.value,
+        "Variable": inputVariable.value,
         //"FijoCat": $(selectFijo[selectFijo.selectedIndex]).data('fijo'),
         //"FijoValue": FijoValue,
         "itemName": document.getElementById("ItemName").value,
@@ -184,8 +193,10 @@ function ActualizarSKU() {
         "planta": planta,
         "usuario": localStorage.usuario
     }
-    //loader.style.display = 'none'
-    // mandamos los datos para procesarlos
+
+    // ya con todo validado, actualizamos los datos de linea (se usa procedure)
+    ActualizarDetailsLinea();
+    // y mandamos los datos de embalaje para procesarlos
     PeticionActualizarSku(data)
 }
 
@@ -251,6 +262,19 @@ function ObtenerInfoPorLinea(sku, planta) {
             let divDetailsLine = document.getElementById("divDetailsLine");
             //limpiamos cualquier contenido anterior
             divDetailsLine.innerHTML = "";
+
+            if (SkuDetailLinea.length === 0) {
+                divDetailsLine.innerHTML = `
+                    <div class="col-12">
+                        <div class="sku-empty">
+                            <i class="bi bi-inbox" aria-hidden="true"></i>
+                            <p>Este SKU todavía no tiene líneas registradas.</p>
+                        </div>
+                    </div>
+                `
+                loader.style.display = 'none'
+                return
+            }
             //creamos las variables de los input
             let InputkgHora;
             let InputLinea;
@@ -271,25 +295,27 @@ function ObtenerInfoPorLinea(sku, planta) {
                     //si EficienciaL se vuelve 0 (porque pesoTotal viene en 0, ya que no se encontro un registro en ProductoTerminados)
                     if (EficienciaL == 0.00) {
                         EficienciaL = "No existe ultimo registro"
+                    } else {
+                        EficienciaL = `${EficienciaL} %`
                     }
                 }
                 
 
                 InputkgHora = `<div class="col-3">
-                                   <input class="form-control FormControlTexts KgHoraClass" value="${SkuDetailLinea[x].kgHora}"/>
-                                   <br />
+                                   <span class="sku-cell-label d-md-none">Kg x Hora</span>
+                                   <input class="sku-input KgHoraClass" inputmode="decimal" value="${SkuDetailLinea[x].kgHora}"/>
                                </div>`;
                 InputEficiencia = `<div class="col-3">
-                                       <input class="form-control FormControlTexts EficienciaClass" value="${EficienciaL}" disabled/>
-                                       <br />
+                                       <span class="sku-cell-label d-md-none">Último % de eficiencia</span>
+                                       <input class="sku-input EficienciaClass" value="${EficienciaL}" disabled/>
                                    </div>`;
                 InputLinea = `<div class="col-3">
-                                  <input class="form-control FormControlTexts LineaClass" value="${SkuDetailLinea[x].linea}"/>
-                                  <br />
+                                  <span class="sku-cell-label d-md-none">Línea(s)</span>
+                                  <input class="sku-input LineaClass" inputmode="numeric" value="${SkuDetailLinea[x].linea}"/>
                               </div>`;
                 IntputPlanta = `<div class="col-3">
-                                  <input class="form-control FormControlTexts PlantaClass" value="${SkuDetailLinea[x].planta}" valueId="${SkuDetailLinea[x].id}" disabled/>
-                                  <br />
+                                  <span class="sku-cell-label d-md-none">Planta</span>
+                                  <input class="sku-input PlantaClass" value="${SkuDetailLinea[x].planta}" valueId="${SkuDetailLinea[x].id}" disabled/>
                               </div>`;
                 //insertamos los input en el div correspondiente
                 divDetailsLine.innerHTML += InputkgHora + InputEficiencia + InputLinea + IntputPlanta;
@@ -385,6 +411,7 @@ function LimpiarYCerrarModal() {
     $('#LineaNew').val('');
     $('#codigoNew').val('');
     //cerramos el modal
+    $('body').removeClass('modal-open');
     $('#ModalAgregarDatosDeLinea').removeClass('show');
     $('#ModalAgregarDatosDeLinea').css('display', 'none');
     
@@ -448,6 +475,7 @@ $(document).on("click", ".ActualizarSKU", function () {
 //al hacer click en agregar datos de linea (abrimos el modal)
 $(document).on("click", "#MostrarModalAgregarDatosDeLinea", function () {
     let codigoNew = $('#codigoNew').val(sku);
+    $('body').addClass('modal-open');
     $('#ModalAgregarDatosDeLinea').addClass('show');
     $('#ModalAgregarDatosDeLinea').css('display', 'block');
 });

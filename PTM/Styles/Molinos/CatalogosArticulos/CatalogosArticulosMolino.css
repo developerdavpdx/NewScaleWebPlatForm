@@ -1,0 +1,31 @@
+﻿.titleHeader {
+    background-color: #075DA5;
+    color: white;
+    font-size: 22px;
+    text-align: center;
+    height: 50px;
+    font-weight: bolder;
+}
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #075DA5;
+    color: white;
+}
+
+#AddCodeArticulosMolinos, #AgregarCodigoNuevo, #EliminarCodebtnfinish {
+    background-color: #00986c;
+    color: white;
+}
+
+#datatable-search-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-left: auto;
+}
+
+#TablaArticulos_filter {
+    font-size: large
+}

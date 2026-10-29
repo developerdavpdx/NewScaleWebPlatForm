@@ -13,6 +13,31 @@ const tara = document.getElementById("tara");
 const anillo = document.getElementById("anillo");
 const fleje = document.getElementById("fleje");
 
+//Arma el mensaje del aviso con la causa real que devuelve el portal/API
+function DetalleErrorHistorial(jsonData, textoGenerico) {
+    const detalle = jsonData && jsonData.data ? String(jsonData.data) : ''
+    if (!detalle) return `<p>${textoGenerico}</p>`
+    const seguro = detalle.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    return `<p>${textoGenerico}</p><p style="font-size:12px;margin-top:6px;opacity:.85">${seguro}</p>`
+}
+
+//Textos en español para todas las tablas de la vista
+const idiomaTabla = {
+    lengthMenu: 'Mostrar _MENU_ registros',
+    search: 'Buscar:',
+    info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+    infoEmpty: 'Sin registros',
+    infoFiltered: '(filtrado de _MAX_ registros)',
+    zeroRecords: 'No se encontraron resultados',
+    emptyTable: 'Sin registros para mostrar',
+    paginate: {
+        first: 'Primero',
+        previous: 'Anterior',
+        next: 'Siguiente',
+        last: 'Último'
+    }
+}
+
 
 pesoNetoInput.addEventListener("keydown", (event) => {
     if (event.key === "e" || event.key === "E") {
@@ -56,29 +81,79 @@ $(document).ready(() => {
     loader.style.display = 'flex'
     tablasPesadas = $('#PesadasTable').DataTable({
         scrollX: true,
-        autoWidth: true,
+        autoWidth: false,
         ordering: false,
-        responsive: true,
+        pageLength: 10,
+        language: idiomaTabla,
         columnDefs: [{
             "className": "ComentarioTd",
-            "targets": [12]
-        }]
+            "targets": [17, 18]
+        }],
+        drawCallback: function () {
+            actualizarContadores(this.api())
+        }
     });
 
     tableCorreo = $('#tablaCorreo').DataTable({
         ordering: false,
-        responsive: true
+        autoWidth: false,
+        paging: false,
+        info: false,
+        searching: false,
+        lengthChange: false,
+        language: idiomaTabla
     })
 
     tableBitacora = $("#BitacoraHistorial").DataTable({
         ordering: false,
-        responsive: true,
+        autoWidth: false,
+        pageLength: 10,
+        language: idiomaTabla
     })
+
+    //Mantenemos el contador de seleccionados al dia
+    $(document).on('change', '#bodyTablePesadas input[type="checkbox"]', actualizarSeleccionados)
+
     ObtenerEmail()
     PintarCortesTurnosPlantas(planta)
     GetHistorialWeight()
 
 })
+
+//Actualiza el contador de registros y el de seleccionados
+function actualizarContadores(api) {
+    const contador = document.getElementById('hpCount')
+    if (contador) {
+        contador.textContent = api ? api.rows().count() : 0
+    }
+    actualizarSeleccionados()
+}
+
+function actualizarSeleccionados() {
+    const contador = document.getElementById('hpSelected')
+    if (!contador) return
+    contador.textContent = document.querySelectorAll('#bodyTablePesadas input[type="checkbox"]:checked').length
+}
+
+//Badge para la columna "Tipo"
+function badgeTipo(tipo) {
+    const clase = tipo === 'PT' ? 'hp-badge-blue' : 'hp-badge-neutral'
+    return `<span class="hp-badge ${clase}">${tipo}</span>`
+}
+
+//Badge para la columna "Estatus SAP"
+function badgeEstatusSap(estatus) {
+    const texto = estatus == null ? '' : String(estatus).trim()
+    if (texto === '') return ''
+    const valor = texto.toLowerCase()
+    let clase = 'hp-badge-neutral'
+    if (valor === 'enviado') {
+        clase = 'hp-badge-green'
+    } else if (valor.indexOf('error') !== -1) {
+        clase = 'hp-badge-red'
+    }
+    return `<span class="hp-badge ${clase}">${texto}</span>`
+}
 
 function PintarCortesTurnosPlantas(planta) {
     let inputSelectTurno = document.getElementById("turno")
@@ -156,14 +231,14 @@ function GetHistorialWeight() {
 
 
                     let btns_actions = `
-                        <div>
-                            <button class="btn btn-info" data-toggle="modal" data-target="#EdicionRegModal" data-toggle="tooltip" data-placement="left" title="Editar Registro" onclick="EditarLinea(${historialPesadas[x].id})" ${isDisabled}><i class="fa-regular fa-pen-to-square"></i></button>
+                        <div class="hp-actions">
+                            <button class="btn btn-info" data-toggle="modal" data-target="#EdicionRegModal" data-toggle="tooltip" data-placement="left" title="Editar Registro" onclick="EditarLinea(${historialPesadas[x].id})" ${isDisabled}><i class="fa fa-pencil"></i></button>
                             <button class="btn btn-danger deshabilitar_historialpesadas" data-toggle="modal" data-target="#AgregaComenModal" data-placement="left" title="Deshabilitar Registro" iddestino="${historialPesadas[x].id}" ${isDisabled}><i class="fa fa-ban" aria-hidden="true" ></i></button>
                             <button class="btn btn-warning" data-toggle="modal" data-target="#BitacoraModal" data-toggle="tooltip" data-placement="left" title="Bitacora" onclick="VerBitacora(${historialPesadas[x].id})"><i class="fa fa-history" aria-hidden="true"></i></button>
                         </div>`
                     let fecha = ConvertDate(historialPesadas[x].scrapMolinos.fechaScrap)
                     Rows.push([checkBoxHabilitado, fecha, historialPesadas[x].scrapMolinos.envioScrap.linea, historialPesadas[x].scrapMolinos.codigoItem,
-                        'SCRPT', historialPesadas[x].scrapMolinos.envioScrap.turno, historialPesadas[x].scrapMolinos.cantidad, historialPesadas[x].id, historialPesadas[x].scrapMolinos.atadoScrpt, (historialPesadas[x].scrapMolinos.peso).toFixed(2), historialPesadas[x].scrapMolinos.taraScrpt, historialPesadas[x].scrapMolinos.anilloScrpt, historialPesadas[x].scrapMolinos.flejeScrpt, 0, circleColor, historialPesadas[x].estadosSAP.estatus, '',
+                        badgeTipo('SCRPT'), historialPesadas[x].scrapMolinos.envioScrap.turno, historialPesadas[x].scrapMolinos.cantidad, historialPesadas[x].id, historialPesadas[x].scrapMolinos.atadoScrpt, (historialPesadas[x].scrapMolinos.peso).toFixed(2), historialPesadas[x].scrapMolinos.taraScrpt, historialPesadas[x].scrapMolinos.anilloScrpt, historialPesadas[x].scrapMolinos.flejeScrpt, 0, circleColor, badgeEstatusSap(historialPesadas[x].estadosSAP.estatus), '',
                         historialPesadas[x].comentarioSAP == null ? '' : historialPesadas[x].comentarioSAP,
                         historialPesadas[x].comentario == null ? `` : `<b>${historialPesadas[x].comentario}</b>`, btns_actions])
                 }
@@ -179,22 +254,23 @@ function GetHistorialWeight() {
                     console.log(minWeight)
                     let pesoEstandar = minWeight * historialPesadas[x].productoTerminado.numTubos
                     let pesoNeto = historialPesadas[x].productoTerminado.pesoTotal
-                    let sobrePeso = ((pesoNeto / pesoEstandar) - 1) * 100             
+                    //Evitamos NaN cuando el SKU no tiene peso minimo configurado
+                    let sobrePeso = pesoEstandar > 0 ? ((pesoNeto / pesoEstandar) - 1) * 100 : 0
                     //let sobrePeso = SobrePesoPTM(pesoNeto, pesoEstandar)
                     console.log(sobrePeso)
                     //<i class="fa fa-history" aria-hidden="true"></i>
                     //<i class="fa fa-ban" aria-hidden="true"></i>EdicionRegModal
                     let btns_actions = `
-                        <div>
-                            <button class="btn btn-info" data-toggle="modal" data-target="#EdicionRegModal" data-toggle="tooltip" data-placement="left" title="Editar Registro" onclick="EditarLinea(${historialPesadas[x].id})" ${isDisabled}><i class="fa-regular fa-pen-to-square"></i></button>
+                        <div class="hp-actions">
+                            <button class="btn btn-info" data-toggle="modal" data-target="#EdicionRegModal" data-toggle="tooltip" data-placement="left" title="Editar Registro" onclick="EditarLinea(${historialPesadas[x].id})" ${isDisabled}><i class="fa fa-pencil"></i></button>
                             <button class="btn btn-danger deshabilitar_historialpesadas" data-toggle="modal" data-target="#AgregaComenModal" data-placement="left" title="Deshabilitar Registro" iddestino="${historialPesadas[x].id}" ${isDisabled}><i class="fa fa-ban" aria-hidden="true"></i></button>
                             <button class="btn btn-warning" data-toggle="modal" data-target="#BitacoraModal" data-toggle="tooltip" data-placement="left" title="Bitacora" onclick="VerBitacora(${historialPesadas[x].id})"><i class="fa fa-history" aria-hidden="true"></i></button>
                         </div>`
                     let fecha = ConvertDate(historialPesadas[x].productoTerminado.fechaPesaje)
                     Rows.push([checkBoxHabilitado, fecha, historialPesadas[x].productoTerminado.id_Linea, historialPesadas[x].productoTerminado.codigo,
-                        'PT', historialPesadas[x].productoTerminado.turnoPT, historialPesadas[x].productoTerminado.numTubos, historialPesadas[x].productoTerminado.ordenFabricacion, (historialPesadas[x].productoTerminado.atadoPT).toFixed(2), (pesoNeto).toFixed(2),
+                        badgeTipo('PT'), historialPesadas[x].productoTerminado.turnoPT, historialPesadas[x].productoTerminado.numTubos, historialPesadas[x].productoTerminado.ordenFabricacion, (historialPesadas[x].productoTerminado.atadoPT).toFixed(2), (pesoNeto).toFixed(2),
                         (historialPesadas[x].productoTerminado.taraPT).toFixed(2), (historialPesadas[x].productoTerminado.anilloPT).toFixed(2), (historialPesadas[x].productoTerminado.flejePT).toFixed(2), `${sobrePeso.toFixed(2)} %`,
-                        circleColor, historialPesadas[x].estadosSAP.estatus, historialPesadas[x].docNum, historialPesadas[x].comentarioSAP == null ? '' : historialPesadas[x].comentarioSAP,
+                        circleColor, badgeEstatusSap(historialPesadas[x].estadosSAP.estatus), historialPesadas[x].docNum, historialPesadas[x].comentarioSAP == null ? '' : historialPesadas[x].comentarioSAP,
                         historialPesadas[x].comentario == null ? `` : historialPesadas[x].comentario, btns_actions])
                 }
             }
@@ -206,12 +282,22 @@ function GetHistorialWeight() {
             loader.style.display = 'none'
             //nos aseguramos de que el 'backdrop' deje de existir al terminar el loader
             //$('.modal-backdrop').remove();
+            iziToast.warning({
+                position: "topRight",
+                title: `Historial de pesadas`,
+                message: DetalleErrorHistorial(jsonData, 'No se pudo obtener el historial de pesadas.'),
+            })
         }
     }).catch((error) => {
         console.log(error)
         loader.style.display = 'none'
         //nos aseguramos de que el 'backdrop' deje de existir al terminar el loader
         //$('.modal-backdrop').remove();
+        iziToast.error({
+            position: "topRight",
+            title: `Historial de pesadas`,
+            message: `<p>Error al consultar el historial de pesadas.</p>`,
+        })
     })
 }
 
@@ -443,7 +529,7 @@ function filtradoHistorialPesadas() {
                 message: `<p>Favor de ingresar las fechas para poder continuar</p>`
             })
             loader.style.display = "none"
-            //return
+            return
         }
     }
 
@@ -465,7 +551,7 @@ function filtradoHistorialPesadas() {
                 color: "blue",
             })
             loader.style.display = "none"
-            //return
+            return
         }
     }
 
@@ -513,17 +599,17 @@ function filtradoHistorialPesadas() {
                 filtradoHP[x].idEstatusHP == 4 || filtradoHP[x].idEstatusSAP == 1 ? checkBoxHabilitado = '<input type="checkbox" disabled />' : checkBoxHabilitado = `<input id="${filtradoHP[x].id}" type="checkbox"/>`
                 if (filtradoHP[x].tipo == 'Scrap') {
                     let btns_actions = `
-                        <div>
-                            <button class="btn btn-info" data-toggle="modal" data-target="#EdicionRegModal" data-toggle="tooltip" data-placement="left" title="Editar Registro" onclick="EditarLinea(${filtradoHP[x].id})" ${isDisabled}><i class="fa-regular fa-pen-to-square"></i></button>
+                        <div class="hp-actions">
+                            <button class="btn btn-info" data-toggle="modal" data-target="#EdicionRegModal" data-toggle="tooltip" data-placement="left" title="Editar Registro" onclick="EditarLinea(${filtradoHP[x].id})" ${isDisabled}><i class="fa fa-pencil"></i></button>
                             <button class="btn btn-danger deshabilitar_historialpesadas" data-toggle="modal" data-target="#AgregaComenModal" data-placement="left" title="Deshabilitar Registro" iddestino="${filtradoHP[x].id}" ${isDisabled}><i class="fa fa-ban" aria-hidden="true"></i></button>
                             <button class="btn btn-warning" data-toggle="modal" data-target="#BitacoraModal" data-toggle="tooltip" data-placement="left" title="Bitacora" onclick="VerBitacora(${filtradoHP[x].id})"><i class="fa fa-history" aria-hidden="true"></i></button>
                         </div>`
                     let fecha = ConvertDate(filtradoHP[x].scrapMolinos.fechaScrap)
                     Rows.push([checkBoxHabilitado, fecha, '', filtradoHP[x].scrapMolinos.codigoItem,
-                        'SCRPT', filtradoHP[x].scrapMolinos.envioScrap.turno, filtradoHP[x].scrapMolinos.cantidad != null ? filtradoHP[x].scrapMolinos.cantidad : '', filtradoHP[x].id, filtradoHP[x].scrapMolinos.atadoScrpt,
+                        badgeTipo('SCRPT'), filtradoHP[x].scrapMolinos.envioScrap.turno, filtradoHP[x].scrapMolinos.cantidad != null ? filtradoHP[x].scrapMolinos.cantidad : '', filtradoHP[x].id, filtradoHP[x].scrapMolinos.atadoScrpt,
                         (filtradoHP[x].scrapMolinos.peso).toFixed(2), filtradoHP[x].scrapMolinos.taraScrpt ? filtradoHP[x].scrapMolinos.taraScrpt : '',
                         filtradoHP[x].scrapMolinos.anilloScrpt ? filtradoHP[x].scrapMolinos.anilloScrpt : '', filtradoHP[x].scrapMolinos.flejeScrpt ? filtradoHP[x].scrapMolinos.flejeScrpt : '',
-                        '', circleColor, filtradoHP[x].estadosSAP.estatus, '',
+                        '', circleColor, badgeEstatusSap(filtradoHP[x].estadosSAP.estatus), '',
                         filtradoHP[x].comentarioSAP == null ? '' : filtradoHP[x].comentarioSAP,
                         filtradoHP[x].comentario == null ? `` : `<b>${filtradoHP[x].comentario}</b>`, btns_actions])
                 }
@@ -542,21 +628,22 @@ function filtradoHistorialPesadas() {
                     console.log("peso neto: " + minWeight)
                     let pesoNeto = filtradoHP[x].productoTerminado.pesoTotal
                     console.log("peso neto: " + pesoNeto)
-                    let sobrePeso = ((pesoNeto / pesoEstandar) - 1) * 100             //<---
+                    //Evitamos NaN cuando el SKU no tiene peso minimo configurado
+                    let sobrePeso = pesoEstandar > 0 ? ((pesoNeto / pesoEstandar) - 1) * 100 : 0
                     //let sobrePeso = SobrePesoPTM(pesoNeto, pesoEstandar)
                     //<i class="fa fa-history" aria-hidden="true"></i>
                     //<i class="fa fa-ban" aria-hidden="true"></i>EdicionRegModal
                     let btns_actions = `
-                        <div>
-                            <button class="btn btn-info" data-toggle="modal" data-target="#EdicionRegModal" data-toggle="tooltip" data-placement="left" title="Editar Registro" onclick="EditarLinea(${filtradoHP[x].id})" ${isDisabled}><i class="fa-regular fa-pen-to-square"></i></button>
+                        <div class="hp-actions">
+                            <button class="btn btn-info" data-toggle="modal" data-target="#EdicionRegModal" data-toggle="tooltip" data-placement="left" title="Editar Registro" onclick="EditarLinea(${filtradoHP[x].id})" ${isDisabled}><i class="fa fa-pencil"></i></button>
                             <button class="btn btn-danger deshabilitar_historialpesadas" data-toggle="modal" data-target="#AgregaComenModal" data-placement="left" title="Deshabilitar Registro" iddestino="${filtradoHP[x].id}" ${isDisabled}><i class="fa fa-ban" aria-hidden="true"></i></button>
                             <button class="btn btn-warning" data-toggle="modal" data-target="#BitacoraModal" data-toggle="tooltip" data-placement="left" title="Bitacora" onclick="VerBitacora(${filtradoHP[x].id})"><i class="fa fa-history" aria-hidden="true"></i></button>
                         </div>`
                     let fecha = ConvertDate(filtradoHP[x].productoTerminado.fechaPesaje)
                     Rows.push([checkBoxHabilitado, fecha, filtradoHP[x].productoTerminado.id_Linea, filtradoHP[x].productoTerminado.codigo,
-                        'PT', filtradoHP[x].productoTerminado.turnoPT, filtradoHP[x].productoTerminado.numTubos, filtradoHP[x].productoTerminado.ordenFabricacion, (filtradoHP[x].productoTerminado.atadoPT).toFixed(3), (pesoNeto).toFixed(3),
+                        badgeTipo('PT'), filtradoHP[x].productoTerminado.turnoPT, filtradoHP[x].productoTerminado.numTubos, filtradoHP[x].productoTerminado.ordenFabricacion, (filtradoHP[x].productoTerminado.atadoPT).toFixed(3), (pesoNeto).toFixed(3),
                         (filtradoHP[x].productoTerminado.taraPT).toFixed(3), (filtradoHP[x].productoTerminado.anilloPT).toFixed(3), (filtradoHP[x].productoTerminado.flejePT).toFixed(3), `${sobrePeso.toFixed(3)} %`,
-                        circleColor, filtradoHP[x].estadosSAP.estatus, filtradoHP[x].docNum, filtradoHP[x].comentarioSAP == null ? '' : filtradoHP[x].comentarioSAP,
+                        circleColor, badgeEstatusSap(filtradoHP[x].estadosSAP.estatus), filtradoHP[x].docNum, filtradoHP[x].comentarioSAP == null ? '' : filtradoHP[x].comentarioSAP,
                         filtradoHP[x].comentario == null ? `` : `<b>${filtradoHP[x].comentario}</b>`, btns_actions])
                 }
             }
@@ -568,12 +655,22 @@ function filtradoHistorialPesadas() {
             loader.style.display = 'none'
             //nos aseguramos de que el 'backdrop' deje de existir al terminar el loader
             //$('.modal-backdrop').remove();
+            iziToast.warning({
+                position: "topRight",
+                title: `Historial de pesadas`,
+                message: DetalleErrorHistorial(jsonData, 'No se pudo aplicar el filtro al historial de pesadas.'),
+            })
         }
     }).catch((error) => {
         console.log(error)
         loader.style.display = 'none'
         //nos aseguramos de que el 'backdrop' deje de existir al terminar el loader
        // $('.modal-backdrop').remove();
+        iziToast.error({
+            position: "topRight",
+            title: `Historial de pesadas`,
+            message: `<p>Error al filtrar el historial de pesadas.</p>`,
+        })
     })
 }
 
@@ -693,7 +790,7 @@ function GuardarEdicion() {
         loader.style.display = 'none'
         //nos aseguramos de que el 'backdrop' deje de existir al terminar el loader
         //$('.modal-backdrop').remove();
-        //return
+        return
     }
     let lineaPtH = document.getElementById('selectLinea')
     lineaPtH = lineaPtH.options[lineaPtH.selectedIndex].value
@@ -706,7 +803,7 @@ function GuardarEdicion() {
         loader.style.display = 'none'
         //nos aseguramos de que el 'backdrop' deje de existir al terminar el loader
        // $('.modal-backdrop').remove();
-       // return
+        return
     }
     let idSKU = document.getElementById('selectSku')
     idSKU = idSKU.options[idSKU.selectedIndex].value
@@ -719,7 +816,7 @@ function GuardarEdicion() {
         loader.style.display = 'none'
         //nos aseguramos de que el 'backdrop' deje de existir al terminar el loader
        // $('.modal-backdrop').remove();
-        //return
+        return
     }
     let NumTubosPtH = document.getElementById("cantidad").value
     let PesoTotalPtH = document.getElementById('pesoNeto').value
@@ -799,6 +896,7 @@ function checkBoxSeleccionar() {
             item.checked = false
         })
     }
+    actualizarSeleccionados()
 }
 
 function ConvertDate(dateTime) {
@@ -904,8 +1002,13 @@ function VerBitacora(idHPesada) {
 function EnviarASap() {
     // Deshabilitar botón inmediatamente
     const btnEnviar = document.querySelector('button[onclick="EnviarASap()"]');
-    btnEnviar.disabled = true;
-    btnEnviar.innerText = 'Enviando...';
+    const etiquetaBtn = btnEnviar ? btnEnviar.querySelector('.hp-btn-label') : null;
+    if (btnEnviar) {
+        btnEnviar.disabled = true;
+    }
+    if (etiquetaBtn) {
+        etiquetaBtn.innerText = 'Enviando...';
+    }
 
     loader.style.display = 'flex';
     let checked = false;
@@ -1096,7 +1199,12 @@ function rehabilitarBoton() {
     const btnEnviar = document.querySelector('button[onclick="EnviarASap()"]');
     if (btnEnviar) {
         btnEnviar.disabled = false;
-        btnEnviar.innerText = 'Enviar SAP';
+        const etiquetaBtn = btnEnviar.querySelector('.hp-btn-label');
+        if (etiquetaBtn) {
+            etiquetaBtn.innerText = 'Enviar SAP';
+        } else {
+            btnEnviar.innerText = 'Enviar SAP';
+        }
     }
 }
 
@@ -1193,7 +1301,7 @@ function ObtenerEmail() {
         let rows = []
         if (sapemail.length > 0) {
             for (x = 0; x < sapemail.length; x++) {
-                rows.push([sapemail[x].nombrecompleto, sapemail[x].name, sapemail[x].nombrecompleto])
+                rows.push([sapemail[x].nombrecompleto, sapemail[x].name, sapemail[x].email])
             }
 
             tableCorreo.rows.add(rows).draw()

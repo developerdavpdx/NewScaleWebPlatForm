@@ -1,0 +1,126 @@
+﻿@using System.Text;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Styles/OPERADOR/CORRUGADO/PesajePT/PesajePTOperadorCorrugado.css" rel="stylesheet" />
+
+<div>
+    <div>
+        <br />
+        <!-- Titulo del modulo (el style se carga desde el layout con titleHeader)-->
+        <div class="titleHeader">
+            <h3>ESCANEO DE PRODUCTO TERMINADO</h3>
+        </div>
+
+        <br />
+
+        <div id="content">
+
+            <div class="container-fluid">
+
+                <div id="DivAtadoBascula">
+                    <!-- check de atado incompleto-->
+                    <div id="LabelAtadoIncompleteDiv">
+                        <input class="form-check-input atadoIncompletoCampo" type="checkbox" id="atadoIncompleto" />
+                        <label class="form-check-label atadoIncompletoCampo" for="atadoIncompleto">
+                            Atado incompleto
+                        </label>
+                    </div>
+                    <!-- select de bascula-->
+                    <div id="DivSelect_bascula">
+                        <label for="basculaSelect">Selecciona una báscula</label>
+                        <select class="form-control" id="basculaSelect">
+                            <option value="0">Seleccione..</option>
+                            <!-- agrega más opciones según necesites -->
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="buttonSection" id="buttonSection">
+                    <!-- botones de "lineas" aquí -->
+                </div>
+
+                <!-- Modal atado incompleto -->
+                <div class="modal fade modalClose" id="AtadoIncompletoModal" tabindex="-1" role="dialog" aria-labelledby="scanSKU">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" id="headerModalFlejes"
+                                 style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                                <h5 class="modal-title" id="myModalLabel">Atado Incompleto</h5>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label style="font-size: 1.25rem; font-weight: bold;">Ingrese la cantidad de tubos</label>
+                                        <input class="form-control" id="tubosAtadoIncompleto" type="number" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-danger cerrarModal">Cancelar</button>
+                                <button class="btn btn-info" id="Btn_ConfirmarAtadoIncompleto">Confirmar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal alerta peso (BajoPeso) -->
+                <div class="modal fade" id="BPModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="padding-top: 60px;">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header modalhead" style="border-bottom:none;">
+                                <!-- Icono-->
+                                <div id="IconBajoPesoDiv">
+                                    <i id="IconBajoPeso" class="fa fa-exclamation" aria-hidden="true"></i>
+                                </div>
+                                <!-- Titulo del modal-->
+                                <h4 id="TitleBajoPeso" class="modal-title">Alerta de peso</h4>
+                            </div>
+                            <!-- Mensaje -->
+                            <div id="DescripcionBajoPeso" class="modal-body text-center">
+                                <!-- Mensaje dinámico -->
+                            </div>
+                            <div class="modal-footer footModalAlert">
+                                <button class="btn CerrarModal btnCerrarModalAlertPeso" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal alerta peso (SobrePeso) -->
+                <div class="modal fade" id="SPModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="padding-top: 60px;">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header modalhead" style="border-bottom:none;">
+                                <!-- Icono-->
+                                <div id="IconSobrePesoDiv">
+                                    <i id="IconSobrePeso" class="fa fa-exclamation" aria-hidden="true"></i>
+                                </div>
+                                <!-- Titulo del modal-->
+                                <h4 id="TitleSobrePeso" class="modal-title">Alerta de peso</h4>
+                            </div>
+                            <!-- Mensaje -->
+                            <div id="DescripcionSobrePeso" class="modal-body text-center">
+                                <!-- Mensaje dinámico -->
+                            </div>
+                            <div class="modal-footer footModalAlert">
+                                <button class="btn CerrarModal btnCerrarModalAlertPeso" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Para usar "Zebra Browser Print" y poder imprimir en una impresora conectada por usb-->
+<script src="https://cdn.jsdelivr.net/npm/zebra-browser-print-min@3.0.216/BrowserPrint-3.0.216.min.js"></script>
+<!-- libreria del modulo -->
+<script src="~/Scripts/Operadores/Corrugado/PesajePT/PesajePTCorrugados.js"></script>

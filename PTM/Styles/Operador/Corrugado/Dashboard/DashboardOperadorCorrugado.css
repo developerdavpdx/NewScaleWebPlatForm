@@ -1,0 +1,108 @@
+﻿.titleHeader {
+    text-align: center;
+    background-color: #075DA5;
+    color: white;
+    font-size: 22px;
+    height: 50px;
+    font-weight: bolder;
+}
+
+.carousel {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+}
+
+.carousel-inner {
+    position: absolute;
+    display: flex;
+    width: 300%;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+}
+
+.highcharts-figure {
+    margin: 0;
+}
+
+.highcharts-container {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper {
+    width: 100%;
+    height: 650px;
+}
+
+.scaleIcon {
+    width: 3rem;
+    height: 3rem;
+}
+
+/*Stilos del swuitch de cambio de vista*/
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+    /* Ocultar el checkbox original */
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+/* Fondo del switch (cuando está apagado) */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+    /* El círculo interno del switch */
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+/* Cuando el checkbox está marcado */
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+    /* Mover el círculo al otro lado cuando está marcado */
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+
+/* Cuando las patanllas sean superiores a 1601px en ancho*/
+@media only screen and (min-width: 1601px) {
+    .Titulos {
+        padding-left: 9rem;
+        padding-right: 7rem;
+    }
+}

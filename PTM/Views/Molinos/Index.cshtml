@@ -1,709 +1,195 @@
-﻿
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Inventario físico de scrap y molinos";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
+<link href="~/Styles/Molinos/InventarioScrapMolinos/InventarioScrapMolinos.css?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Styles/Molinos/InventarioScrapMolinos/InventarioScrapMolinos.css")).Ticks" rel="stylesheet" />
+<link href="~/Styles/Modales.css?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Styles/Modales.css")).Ticks" rel="stylesheet" />
 
-    .titleHeader {
-        background-color: #075DA5;
-        color: white;
-        font-size: 22px;
-        text-align: center;
-        height: 50px;
-        font-weight: bolder;
-    }
+<div class="container-fluid mi-page">
 
-    #ProcesoCat {
-        /*background-color: #dcf4ff;*/
-        background-color: #c7eafb;
-        vertical-align: middle;
-        text-align: center;
-        font-weight: bolder;
-    }
+    <div class="mi-header">
+        <div>
+            <h2 class="mi-title">Inventario físico de scrap y molinos</h2>
+            <p class="mi-subtitle">Existencias por proceso, categoría y estado del material.</p>
+        </div>
 
-    #Categoria {
-        /*background-color: #c7eafb;*/
-        background-color: #dcf4ff;
-        vertical-align: middle;
-        text-align: center;
-        font-weight: bolder;
-    }
-
-    #tr-col {
-        /*background-color: #F1F0F2;*/
-        background-color: white;
-    }
-
-    #tr-col-baja td {
-        /*background-color: #F1F0F2;*/
-        background-color: white;
-        color: red !important
-    }
-
-    tbody #tr-col:last-child {
-        background-color: white
-    }
-
-    /*#tr-totalC-col {
-        background-color: #dcf4ff;
-    }
-
-    #tr-total-col {
-        background-color: #dcf4ff;
-        font-weight: bolder;
-    }*/
-    #td-acomulado {
-        background-color: white;
-        text-align: center;
-        vertical-align: middle;
-    }
-
-    td {
-        text-align: center;
-    }
-
-    .td-title {
-        text-align: left
-    }
-
-    th {
-        background-color: #002D52 !important;
-        color: white !important;
-        vertical-align: middle !important
-    }
-
-    .bajaTr {
-        color: #d50e00;
-        text-align: left;
-    }
-
-    #tr-total-col {
-        background-color: white
-    }
-
-    #td-total-col {
-        text-align: right;
-    }
-
-    .tr-Inyecciones {
-        background-color: #6097c7b3;
-        color: white;
-        vertical-align: middle !important;
-        text-align: center;
-        font-weight: bolder
-    }
-
-    #tr-totalINY-col {
-        background-color: #55b0e994;
-        font-weight: bolder;
-        color: white !important
-    }
-
-        #tr-totalINY-col td {
-            border-top: solid 1px;
-        }
-
-    #td-totalINY-col {
-        text-align: right;
-    }
-
-    .secondHead {
-        background-color: #002D52 !important;
-        color: white !important;
-    }
-
-        .secondHead td {
-            vertical-align: middle !important;
-            text-align: center !important;
-        }
-
-    .InyCategoria {
-        vertical-align: middle !important;
-        background-color: #87aed1ab !important;
-        color: white;
-        text-align: center
-    }
-
-    .modal-header {
-        color: white;
-        background-color: #595959;
-        font-size: 20px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        border-top-left-radius: 4px;
-    }
-</style>
-
-<div class="container titleHeader">
-    <h2>INVENTARIO FÍSICO DE SCRAP Y MOLINOS</h2>
-</div>
-
-<br />
-
-<div class="container">
-    @if (Session["Rol"].ToString() == "AdmMolinos" || Session["Rol"].ToString() == "Consulta")
-    {
-        <div class="mt-3 mb-3 d-flex justify-content-end">
-            <div class="card-i p-3" style="width:auto; display: flex; align-items: center;">
-                <i onclick="generarexcel()" class="fa fa-table m-1 fa-2x t-b" aria-hidden="true" style="color: #016E38; cursor: pointer"></i>
-                <i onclick="generarpdf()" class="fa-solid fa-file-pdf m-1 fa-2x t-b" style="color: #ad0b00; cursor: pointer"></i>
-                <i class="fa fa-envelope m-1 fa-2x t-b" aria-hidden="true" data-toggle="modal" data-target="#CorreoModal" style="color: #51B5E1"></i>
-                @*<i class="fa fa-print m-1 fa-2x t-b" aria-hidden="true" style="color: #51B5E1"></i>*@
+        @if (Session["Rol"].ToString() == "AdmMolinos" || Session["Rol"].ToString() == "Consulta")
+        {
+            <div class="mi-tools">
+                <button type="button" class="mi-btn mi-btn-excel" onclick="generarexcel()">
+                    <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                    Excel
+                </button>
+                <button type="button" class="mi-btn mi-btn-pdf" onclick="generarpdf()">
+                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                    PDF
+                </button>
+                <button type="button" class="mi-btn mi-btn-outline" data-toggle="modal" data-target="#CorreoModal">
+                    <i class="fa fa-envelope" aria-hidden="true"></i>
+                    Correo
+                </button>
                 @if (Session["Rol"].ToString() == "AdmMolinos")
                 {
-                    <button class="btn btn-info" data-toggle="modal" data-target="#AgregarAcumulado">Agregar Acumulado Embarque</button>
+                    <button type="button" class="mi-btn mi-btn-primary" data-toggle="modal" data-target="#AgregarAcumulado">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        Agregar acumulado
+                    </button>
                 }
             </div>
-        </div>
-    }
-        <table class="table table-striped" id="tablePTMWindMill">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Material</th>
-                    <th>Estado</th>
-                    <th style="width: 12%">Scrap</th>
-                    <th style="width: 12%">Viruta</th>
-                    <th style="width: 12%">Molido</th>
-                    <th>Pulverizado</th>
-                    <th style="width: 9%">Polvo de Filtros de Vacío</th>
-                    <th style="width: 10%">Compuesto Virgen en Saco</th>
-                    <th style="width: 14%">Acumulado Entrega de Merma de Embarque</th>
-                </tr>
-            </thead>
-            <tbody id="bodytab">
-                <tr>
-                    <td rowspan="24" id="ProcesoCat">PVC Extrusion</td>
-                    <td rowspan="6" id="Categoria">IPS</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Bueno</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td rowspan="6" id="td-acomulado">-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Quemado/Cont</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col-baja">
-                    <td class="bajaTr">Baja</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Total Consumible</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-totalINY-col">
-                    <td id="td-total-col">Total</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td rowspan="6" id="Categoria">DWV</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Bueno</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td rowspan="6" id="td-acomulado">-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Quemado/Cont</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col-baja">
-                    <td class="bajaTr">Baja</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title td-title">Total Consumible</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-totalINY-col">
-                    <td id="td-total-col">Total</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td rowspan="6" id="Categoria">C900</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Bueno</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td rowspan="6" id="td-acomulado">-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Quemado/Cont</td>
-                    <td></td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col-baja">
-                    <td class="bajaTr">-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Total Consumible</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-totalINY-col">
-                    <td id="td-total-col">Total</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td rowspan="6" id="Categoria">CPVC</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Bueno</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td rowspan="6" id="td-acomulado">-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Quemado/Cont</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col-baja">
-                    <td class="bajaTr">Baja</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Total Consumible</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-totalINY-col">
-                    <td class="td-total-col" style="text-align: right !important">Total</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td rowspan="20" class="tr-Inyecciones">Inyección</td>
-                    <td rowspan="7" class="InyCategoria">DWV</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Bueno</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td rowspan="7" id="td-acomulado">-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Colada</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Quemado/Cont.</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col-baja">
-                    <td class="bajaTr">Baja</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Total Consumible</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-totalINY-col">
-                    <td class="td-total-col" style="text-align: right !important">Total</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td rowspan="7" class="InyCategoria">CLAY</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Bueno</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td rowspan="7" id="td-acomulado">-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Colada</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Quemado/Cont.</td>
-                    <td></td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="bajaTr">Baja</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Total Consumible</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-totalINY-col">
-                    <td class="td-total-col" style="text-align: right !important">Total Inyección</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr>
-                    <td rowspan="6" class="InyCategoria">PURGA</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Bueno</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td rowspan="5" id="td-acomulado">-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Quemado/Cont.</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Degradada P/Baja</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td class="td-title">Total P/Reciclaje</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-totalINY-col">
-                    <td class="td-total-col" style="text-align: right !important">Total Purga</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr class="secondHead">
-                    <td colspan="3">Material</td>
-                    <td>Srap</td>
-                    <td>Viruta</td>
-                    <td>Molido</td>
-                    <td>Pulverizado</td>
-                    <td>Polvo de Filtros de Vacio</td>
-                    <td>Compuesto Virgen en Saco</td>
-                    <td>Total Material Reprocesado</td>
-                </tr>
-                <tr id="tr-col">
-                    <td colspan="3" style="vertical-align: middle; text-align: center">Total PVC</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-                <tr id="tr-col">
-                    <td colspan="3" style="vertical-align: middle; text-align: center">Total PVC</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>
-            </tbody>
-        </table>
+        }
     </div>
 
-<div class="modal fade" id="CorreoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog">
-        <div class="modal-content modal-lg">
-            <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Envío de Reporte</h4>
-            </div>
-            <div class="modal-body">
-                @*<div class="nuevo-correo">
-                        <h4>Nuevo Correo:</h4>
-                        <div>
-                            <label for="nombre" align="right">Nombre:</label>
-                            <input type="text" id="nombreInput" name="nombreInput">
-                        </div>
-                        <div>
-                            <label for="correo" align="right">Correo:</label>
-                            <input type="email" id="corroInput" name="correoInput">
-                        </div>
-                        <div class="btn-agregar">
-                            <a class="btn btn-info" id="btnCorreo">Agregar</a>
-                        </div>
+    <div class="mi-card">
+        <div class="mi-card-head">
+            <i class="fa fa-cubes" aria-hidden="true"></i>
+            <h5>Inventario por proceso</h5>
+            <span class="mi-card-note">Existencias y acumulados de embarque</span>
+        </div>
+
+        <div class="mi-table-wrap">
+            <table class="mi-table" id="tablePTMWindMill">
+                <thead>
+                    <tr>
+                        <th>Proceso</th>
+                        <th>Categoría</th>
+                        <th>Estado</th>
+                        <th>Scrap</th>
+                        <th>Viruta</th>
+                        <th>Molido</th>
+                        <th>Pulverizado</th>
+                        <th>Polvo de filtros de vacío</th>
+                        <th>Compuesto virgen en saco</th>
+                        <th>Acumulado entrega de merma</th>
+                    </tr>
+                </thead>
+                <tbody id="bodytab">
+                    <tr>
+                        <td colspan="10" class="mi-loading">
+                            <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                            Cargando inventario...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+@* ================= Modal de correo ================= *@
+<div class="modal fade mi-modal" id="CorreoModal" tabindex="-1" role="dialog" aria-labelledby="correoModalLabel">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header-custom">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-wrap">
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
                     </div>
-                    <hr />*@
-                <div class="correos">
-                    @*<h2>Correos:</h2>*@
-                    <table id="tablaCorreo" class="table table-striped">
-                        <thead>
-                            <tr class="header-table">
-                                <th id="th-pedidas">Nombre</th>
-                                <th id="th-pedidas">Departamento</th>
-                                <th id="th-pedidas">Correo</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-center">
-                            @*<tr class="text-center">
-                                <td>Arturo Mejia</td>
-                                <td>Operador</td>
-                                <td>arturo.mejia@paradox-et.com</td>
-                            </tr>
-                            <tr class="text-center">
-                                <td>Juan Pérez García</td>
-                                <td>Operador</td>
-                                <td>mariana.fernandez@paradox-et.com</td>
-                            </tr>*@
-                            @*<tr class="text-center">
-                                    <td>Juan Pérez García</td>
-                                    <td>Operador</td>
-                                    <td>contacto@ptmmexico.com</td>
-                                </tr>
-                                <tr class="text-center">
-                                    <td>Juan Pérez García</td>
-                                    <td>Operador</td>
-                                    <td>contacto@ptmmexico.com</td>
-                                </tr>
-                                <tr class="text-center">
-                                    <td>Juan Pérez García</td>
-                                    <td>Operador</td>
-                                    <td>contacto@ptmmexico.com</td>
-                                </tr>
-                                <tr class="text-center">
-                                    <td>Juan Pérez García</td>
-                                    <td>Operador</td>
-                                    <td>contacto@ptmmexico.com</td>
-                                </tr>*@
-                        </tbody>
-                    </table>
+                    <div>
+                        <div class="modal-title-custom" id="correoModalLabel">Envío de reporte</div>
+                        <div class="modal-subtitle-custom">Inventario físico de scrap y molinos</div>
+                    </div>
                 </div>
+                <button type="button" class="btn-close-custom" data-dismiss="modal" aria-label="Cerrar">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-info" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-info" onclick="emailreporte()">Enviar</button>
+
+            <div class="modal-body-custom">
+                <div class="modal-banner-info">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                    El reporte se enviará a los correos registrados en la lista.
+                </div>
+                <table id="tablaCorreo" class="mi-table-sm">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Departamento</th>
+                            <th>Correo</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                    </tbody>
+                </table>
             </div>
+
+            <div class="modal-footer-custom">
+                <button type="button" class="btn-modal-cancelar" data-dismiss="modal">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    Cancelar
+                </button>
+                <button type="button" class="btn-modal-guardar" onclick="emailreporte()">
+                    <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                    Enviar
+                </button>
+            </div>
+
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="AgregarAcumulado" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content modal-lg">
-            <div class="modal-header" id="headerModalFlejes" style="color: white; background-color: #002D52; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
-                @*<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>*@
-                <h4 class="modal-title" id="myModalLabel">SCRAP MOLINO</h4>
+@* ================= Modal agregar acumulado ================= *@
+<div class="modal fade mi-modal" id="AgregarAcumulado" tabindex="-1" role="dialog" aria-labelledby="acumuladoModalLabel">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header-custom">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="modal-icon-wrap">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="modal-title-custom" id="acumuladoModalLabel">Agregar acumulado de embarque</div>
+                        <div class="modal-subtitle-custom">Registro manual de merma de embarque</div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close-custom" data-dismiss="modal" aria-label="Cerrar">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
             </div>
-            <div class="modal-body">
-                <div class="col-8 p-3">
-                    <form>
-                        <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-2 col-form-label">Peso</label>
-                            <div class="col-sm-10">
-                                <input type="number" class="form-control" id="staticPeso">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-2 col-form-label">Proceso</label>
-                            <div class="col-sm-10">
-                                <select class="form-control" id="selectProces" onchange="obtenerFamiliasProceso(this)">
-                                    <option value="0" selected>Seleccione...</option>
-                                    <option value="1">INY</option>
-                                    <option value="2">PVC</option>
-                                </select>
-                            </div>
-                        </div>
-                        @*<div class="form-group row">
-                                <label for="staticEmail" class="col-sm-2 col-form-label">Familia</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control">
-                                        <option selected>Seleccione...</option>
-                                        <option>Scrap</option>
-                                        <option>Viruta</option>
-                                        <option>Molido</option>
-                                        <option>Pulverizado</option>
-                                        <option>Polvo de Fltros de Vacio</option>
-                                        <option>Compuesto Virgen en Saco</option>
-                                    </select>
-                                </div>
-                            </div>*@
-                        <div class="form-group row">
-                            <label for="staticEmail" class="col-sm-2 col-form-label">Sub Familia</label>
-                            <div class="col-sm-10">
-                                <select class="form-control" id="selectSubFam" disabled>
-                                    <option value="0" selected>Seleccione...</option>
-                                </select>
-                            </div>
-                        </div>
-                    </form>
-                    <div class="d-flex flex-row justify-content-end mt-5">
-                        <button class="btn btn-warning border-0 p-3 btn-lg" data-dismiss="modal" style="background-color:#51b5e1;" id="closeModal"><i class="fa fa-ban" aria-hidden="true"></i> Cancelar</button>
-                        <button class="btn btn-primary border-0 p-3 btn-lg" style="background-color:#51b5e1; margin-left:20px;" onclick="GuardarAcumulado()"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
+
+            <div class="modal-body-custom">
+                <div class="modal-banner-info">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                    El registro se agrega a la planta actual con la fecha y hora en que se guarde.
+                </div>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label-custom" for="staticPeso">Peso</label>
+                        <input type="number" class="form-control-custom" id="staticPeso" placeholder="0.00" step="0.01" />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label-custom" for="selectProces">Proceso</label>
+                        <select class="form-select-custom" id="selectProces" onchange="obtenerFamiliasProceso(this)">
+                            <option value="0" selected>Seleccione...</option>
+                            <option value="1">INY</option>
+                            <option value="2">PVC</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label-custom" for="selectSubFam">Sub familia</label>
+                        <select class="form-select-custom" id="selectSubFam" disabled>
+                            <option value="0" selected>Seleccione...</option>
+                        </select>
                     </div>
                 </div>
             </div>
+
+            <div class="modal-footer-custom">
+                <button type="button" class="btn-modal-cancelar" data-dismiss="modal" id="closeModal">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                    Cancelar
+                </button>
+                <button type="button" class="btn-modal-guardar" onclick="GuardarAcumulado()">
+                    <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                    Guardar
+                </button>
+            </div>
+
         </div>
     </div>
 </div>
 
-<script src="~/Scripts/MolinosJs.js"></script>
+<script src="~/Scripts/Molinos/MolinosJs.js?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Scripts/Molinos/MolinosJs.js")).Ticks"></script>

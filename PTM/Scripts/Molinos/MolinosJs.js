@@ -24,7 +24,16 @@ $(document).ready(() => {
     localStorage.planta == '335' ? planta = '2' : planta = '1'
     tableCorreo = $("#tablaCorreo").DataTable({
         ordering: false,
-        responsive: true
+        responsive: true,
+        language: {
+            search: 'Buscar:',
+            lengthMenu: 'Mostrar _MENU_ registros',
+            info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+            infoEmpty: 'Sin registros',
+            zeroRecords: 'No se encontraron resultados',
+            emptyTable: 'Sin correos registrados',
+            paginate: { previous: 'Anterior', next: 'Siguiente' }
+        }
     })
     ObtenerEmail()
     peticionObtenerScrap()
@@ -34,46 +43,103 @@ function ObtenerEmail() {
     fetch("/ReciboScrap/GetEmailsMolinos").then((response) => {
         return response.ok ? response.json() : Promise.reject(response)
     }).then((jsondata) => {
-        var data = JSON.parse(jsondata.data)
-        var sapemail = data.sapemail
-        let rows = []
-        if (sapemail.length > 0) {
+        // Validar que la respuesta tenga los datos
+        if (!jsondata || !jsondata.data) {
+            console.error("Error: Respuesta vacía o sin datos");
+            return;
+        }
+
+        if (typeof jsondata.data === 'string' && !jsondata.data.trim().startsWith('{')) {
+            console.warn("No se pudieron cargar los correos:", jsondata.data);
+            return;
+        }
+
+        try {
+            var data = JSON.parse(jsondata.data)
+            var sapemail = data.sapemail
+
+            // Validar que sapemail sea un array
+            if (!Array.isArray(sapemail) || sapemail.length === 0) {
+                console.warn("No hay emails disponibles");
+                return;
+            }
+
+            let rows = []
             for (x = 0; x < sapemail.length; x++) {
                 rows.push([sapemail[x].nombrecompleto, sapemail[x].name, sapemail[x].email])
             }
 
             tableCorreo.rows.add(rows).draw()
+        } catch (error) {
+            console.warn("No se pudieron cargar los correos:", error.message);
         }
+    }).catch((error) => {
+        console.error("Error en ObtenerEmail:", error)
     })
 }
 
 function peticionObtenerScrap() {
-    fetch("/Molinos/GetAllMolinos").then((response) => {
+    fetch(`/Molinos/GetAllMolinos?planta=${planta}`).then((response) => {
         return response.ok ? response.json() : Promise.reject(response)
     }).then((jsonData) => {
-        if (jsonData.status == 200) {
-            var data = JSON.parse(jsonData.data)
-            console.log(data)
-            var resultResponse = data.result;
-            var resultAcumulados = data.acumuladoEmbarque;
-            var resultRegistrosAyer = data.registrosAyer
-            var resultRegistrosHoy = data.registrosHoy
+        // Validar status y datos
+        if (!jsonData || jsonData.status !== 200) {
+            console.error("Error: Respuesta del servidor no válida");
+            return;
+        }
 
+        if (!jsonData.data) {
+            console.error("Error: No hay datos en la respuesta");
+            return;
+        }
+
+        try {
+            var data = JSON.parse(jsonData.data)
+
+            // Validar que existan las propiedades necesarias
+            var resultResponse = data.result || [];
+            var resultAcumulados = data.acumuladoEmbarque || [];
+            var resultRegistrosAyer = data.registrosAyer || [];
+            var resultRegistrosHoy = data.registrosHoy || [];
+
+            if (!Array.isArray(resultResponse)) {
+                console.error("Error: result no es un array");
+                return;
+            }
+
+            console.log(data)
             genrarArraySrapMolinos(resultResponse, resultAcumulados, resultRegistrosAyer, resultRegistrosHoy);
+        } catch (error) {
+            console.error("Error al parsear JSON de Molinos:", error);
         }
     }).catch((error) => {
-        console.log(error)
+        console.error("Error en peticionObtenerScrap:", error)
     })
 }
 
 function filtradoFamiliaScrapPVC(ScrapPVC) {
+    // Validar que el array exista
+    if (!Array.isArray(ScrapPVC)) {
+        console.error("ScrapPVC no es un array");
+        return [];
+    }
+
     ScrapPvcIPS = ScrapPVC.filter(x => x.familia == 'C900')
-    ScrapPvcIPS = ScrapPvcIPS.filter(x => x.familia = "IPS")
+    ScrapPvcIPS = ScrapPvcIPS.filter(x => x.familia == "IPS")  // Cambié = por ==
+    return ScrapPvcIPS;
 }
 
 function filtradoFamiliaScrapINY(ScrapINY) {
+    // Validar que el array exista
+    if (!Array.isArray(ScrapINY)) {
+        console.error("ScrapINY no es un array");
+        return [];
+    }
 
+    // Implementar lógica de filtrado
+    return ScrapINY;
 }
+
 let table
 var rows;
 function genrarArraySrapMolinos(dt, resultAcumulados, resultRegistrosAyer, resultRegistrosHoy) {
@@ -603,12 +669,12 @@ function genrarArraySrapMolinos(dt, resultAcumulados, resultRegistrosAyer, resul
 
     bodytabhtml += `<tr class="secondHead">
                 <td colspan="3">Material</td>
-                <td>Srap</td>
+                <td>Scrap</td>
                 <td>Viruta</td>
                 <td>Molido</td>
                 <td>Pulverizado</td>
-                <td>Polvo de Filtros de Vacio</td>
-                <td>Compuesto Virgen en Saco</td>
+                <td>Polvo de filtros de vacío</td>
+                <td>Compuesto virgen en saco</td>
                 <td>Total Material Reprocesado</td>
             </tr>
             <tr id="tr-col">
@@ -677,7 +743,9 @@ async function generarpdf() {
 
     window.jsPDF = window.jspdf.jsPDF;
     var doc = new jsPDF({
-        format: 'letter'
+        format: 'letter',
+        compress: true,
+        objcompress: true
     });
 
     doc.setFont("times");
@@ -1563,7 +1631,6 @@ function obtenerFamiliasProceso(element) {
     }
 }
 
-
 function descargarArchivo(nombreArchivo, base64String) {
     // Crear un enlace temporal en la página
     var enlaceTemporal = document.createElement('a');
@@ -1579,7 +1646,6 @@ function descargarArchivo(nombreArchivo, base64String) {
     // Remover el enlace temporal de la página
     document.body.removeChild(enlaceTemporal);
 }
-
 
 function GuardarAcumulado() {
     loader.style.display = 'flex'

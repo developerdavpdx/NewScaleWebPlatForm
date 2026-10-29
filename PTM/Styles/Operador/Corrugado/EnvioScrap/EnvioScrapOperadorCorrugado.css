@@ -1,0 +1,190 @@
+﻿/*---------------------*/
+/*Div de bascula*/
+#DivBascula {
+    margin-right: 2rem;
+}
+
+/*Labels del switch y la bascula*/
+.LabelSwitchBascula {
+    margin-bottom: 6px;
+    font-weight: bold;
+    padding: 0; /*Eliminamos el padding que se agrega por la clase row*/
+}
+
+/*Stilos del switch de scrap sin cortes de cierra*/
+#DivSwitchScrap {
+    margin-left: 2rem;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+    /* Ocultar el checkbox original */
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+/* Fondo del switch (cuando está apagado) */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+    /* El círculo interno del switch */
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+/* Cuando el checkbox (switch) está marcado */
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+    /* Mover el círculo al otro lado cuando está marcado */
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+/*-----------*/
+
+/* Contenedor Principal */
+#ContenedorPrincipal {
+    display: flex;
+    gap: 2rem; /* espacio entre formulario y vista previa */
+    max-width: 100%;
+    padding: 1rem 2rem;
+    box-sizing: border-box;
+}
+
+/* Vista previa ticket (del lado derecho) */
+#ticketScrap {
+    flex: 0 0 53%; /* ancho fijo de 55% */
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 14px rgba(0,0,0,0.08);
+}
+
+/* Formulario de Scrap (del lado izquierdo)*/
+#formularioEnvioScrap {
+    flex: 0 0 45%; /* ancho fijo de 45% */
+    background: #f4f6f9;
+    border-radius: 12px;
+    box-shadow: 0 5px 14px rgba(0,0,0,0.08);
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 30px;
+}
+    /*Dividimos en columnas*/
+    #formularioEnvioScrap .InputForm {
+        display: flex;
+        flex-direction: column;
+    }
+        /* El último elemento (comentarios) abarca las dos columnas */
+        #formularioEnvioScrap .InputForm:last-child {
+            grid-column: 1 / -1;
+        }
+
+/*Etiquetas*/
+.LabelForm {
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+/*Divs de los inputs*/
+.InputForm {
+    width: 100%;
+}
+
+/*-----*/
+
+/*Botones*/
+.Btns {
+    margin: 2rem 2rem;
+}
+
+
+/*---------------modal de confirmacion de scrap-------------------*/
+.my-custom-class .jconfirm-box {
+    background-color: #f5f5f5;
+    border-radius: 12px;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+.my-custom-class .jconfirm-title {
+    font-weight: bold;
+    font-size: 20px;
+    color: #d9534f; /* color alerta */
+}
+
+.my-custom-class .jconfirm-content {
+    font-size: 16px;
+    padding: 15px 10px;
+}
+
+/*---------------Ticket de impresión-------------------*/
+
+
+.ticket {
+    font-size: 13px;
+    font-family: 'Times New Roman';
+}
+
+td,
+th,
+tr,
+table {
+    border-top: 1px solid black;
+    border-collapse: collapse;
+}
+
+    td.columna1,
+    th.columna1 {
+        width: 125px;
+        max-width: 125px;
+    }
+
+    td.columna2,
+    th.columna2 {
+        width: 125px;
+        max-width: 125px;
+        word-break: break-all;
+    }
+
+.centrado {
+    text-align: center;
+    align-content: center;
+}
+
+.ticket {
+    width: 250px;
+    max-width: 250px;
+    margin: auto;
+}
+
+.img-ticket {
+    max-width: inherit;
+    width: inherit;
+}

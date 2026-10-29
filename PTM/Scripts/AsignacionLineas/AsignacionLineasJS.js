@@ -5,6 +5,8 @@ let tablaBitacora;
 let numLineas;
 let EstaAsignado = false;
 let planta;
+let recargandoLineas = false;
+let numeroNuevaLinea = 0;
 //variables para obtener los codigos a asignar
 const entradaBusqueda = document.getElementById('entrada-busqueda');
 const listaSugerencias = document.getElementById('sugerencias-autocompletar');
@@ -13,17 +15,27 @@ const sugerencias = [];
 $(document).ready(async () => {
     localStorage.planta == '335' ? planta = '2' : planta = '1'
     loader.style.display = 'flex'
-    tablaBitacora =$('#tableHistorial').DataTable({
+    tablaBitacora = $('#tableHistorial').DataTable({
         ordering: false,
-        responsive: true
-    })
+        responsive: true,
+        language: {
+            search: 'Buscar:',
+            lengthMenu: 'Mostrar _MENU_ registros',
+            info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+            infoEmpty: 'Sin registros',
+            zeroRecords: 'No se encontraron resultados',
+            emptyTable: 'Sin historial de asignaciones',
+            paginate: { previous: 'Anterior', next: 'Siguiente' }
+        }
+    });
     await getLineas()
     PeticionObtenerSku()
 })
 
 function AgregaLineaBtn() {
-    numLineas = numLineas.response.length + 1
-    document.getElementById("inputNumLinea").value = numLineas
+    const totalLineas = (numLineas && numLineas.response) ? numLineas.response.length : 0
+    numeroNuevaLinea = totalLineas + 1
+    document.getElementById("inputNumLinea").value = numeroNuevaLinea
 }
 
 function AsignarLinea(element) {
@@ -31,11 +43,11 @@ function AsignarLinea(element) {
     tipoAsignado = $(element).data("asignado").toString();
     //Mostramos el boton de 'asignar' o 'desasignar' segun sea el caso
     if (tipoAsignado == "Asignado") {
-        document.getElementById('desasignarBtn').style.display = 'inline'
+        document.getElementById('desasignarBtn').style.display = 'inline-flex'
         document.getElementById('AsignarLinea').style.display = 'none'
-    //    EstaAsignado = true
+        //    EstaAsignado = true
     } else {
-        document.getElementById('AsignarLinea').style.display = 'inline'
+        document.getElementById('AsignarLinea').style.display = 'inline-flex'
         document.getElementById('desasignarBtn').style.display = 'none'
     }
     //agregammos el numero de linea en el titulo del modal
@@ -203,7 +215,7 @@ function getBitacoraInfo() {
             message: `<p>No hay historial de cambios recientes para esta línea</p>`,
             color: 'blue'
         })
-       
+
         loader.style.display = 'none'
     })
 }
@@ -212,7 +224,7 @@ function getLineas() {
     let data = {
         "planta": planta
     }
-    fetch("/PesajePt/GetNumberOfLinies", {
+    return fetch("/PesajePt/GetNumberOfLinies", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
@@ -223,25 +235,56 @@ function getLineas() {
     }).then((jsonData) => {
         if (jsonData.status == 200) {
             numLineas = JSON.parse(jsonData.data);
-            //console.log(numLineas);
-            for (x = 0; x < numLineas.response.length; x++) {
-                let orden = numLineas.response[x].ordenFabricacion;
-                let kg = numLineas.response[x].kgXHr;
-                let code = numLineas.response[x].itemCodeLinea;
+            const lineas = numLineas.response || []
+
+            if (lineas.length === 0) {
+                $("#buttonSection").append(`
+                    <div class="al-empty">
+                        <i class="fa fa-industry" aria-hidden="true"></i>
+                        <p class="al-empty-title">No hay líneas registradas</p>
+                        <p class="al-empty-text">Usa "Agregar Línea" para crear la primera.</p>
+                    </div>
+                `)
+            }
+
+            for (x = 0; x < lineas.length; x++) {
+                let orden = lineas[x].ordenFabricacion;
+                let kg = lineas[x].kgXHr;
+                let code = lineas[x].itemCodeLinea;
+                let asignado = lineas[x].asignado;
+                let kgFormateado = (kg == null || kg == 0)
+                    ? "---"
+                    : Number(kg).toLocaleString('es-MX', { maximumFractionDigits: 2 })
 
                 $("#buttonSection").append(`
-                        <button class="btn ${numLineas.response[x].asignado ? "btnAsignada" : "btn-info"}" id="btn-item" data-linea-id="${x + 1}" data-asignado="${numLineas.response[x].asignado ? "Asignado" : "Desasignado"}" data-toggle="modal" data-target="#myModal" onclick="AsignarLinea(this)">
-                        <b>
-                            Línea ${x + 1} <br /> 
-                            ${numLineas.response[x].proceso} <br /> 
-                        </b>
-                            <p style="font-size: 1.5rem">
-                             Orden ${orden == null ? "---" : orden} | KgXHr ${kg == 0 ? "---" : kg} <br> Code ${code == null ? "---" : code}
-                            </p>
-                        </button>
-                    `)
+                    <button type="button" class="linea-card ${asignado ? "linea-asignada" : "linea-libre"}"
+                            data-linea-id="${x + 1}"
+                            data-asignado="${asignado ? "Asignado" : "Desasignado"}"
+                            aria-label="Línea ${x + 1}, ${asignado ? "asignada" : "disponible"}"
+                            data-toggle="modal" data-target="#myModal" onclick="AsignarLinea(this)">
+                        <div class="linea-card-top">
+                            <span class="linea-num">Línea ${x + 1}</span>
+                            <span class="linea-estado">${asignado ? "Asignada" : "Disponible"}</span>
+                        </div>
+                        <div class="linea-proceso">${lineas[x].proceso}</div>
+                        <div class="linea-datos">
+                            <div><span>Orden</span><strong>${orden == null ? "---" : orden}</strong></div>
+                            <div><span>Kg x Hr</span><strong>${kgFormateado}</strong></div>
+                            <div><span>Código</span><strong>${code == null ? "---" : code}</strong></div>
+                        </div>
+                    </button>
+                `)
             }
+
+            actualizarContadorLineas()
             loader.style.display = 'none'
+        } else {
+            loader.style.display = 'none'
+            iziToast.error({
+                position: "topRight",
+                title: `Ha surgido un error`,
+                message: `<p>No se pudieron cargar las líneas.</p>`,
+            })
         }
     }).catch((error) => {
         iziToast.error({
@@ -251,6 +294,37 @@ function getLineas() {
         })
 
         loader.style.display = 'none'
+    })
+}
+
+// Mantiene sincronizado el contador del encabezado con las tarjetas pintadas
+function actualizarContadorLineas() {
+    const total = document.querySelectorAll('#buttonSection .linea-card').length
+    const asignadas = document.querySelectorAll('#buttonSection .linea-asignada').length
+    const valores = {
+        alTotal: total,
+        alAsignadas: asignadas,
+        alDisponibles: total - asignadas
+    }
+
+    Object.keys(valores).forEach((id) => {
+        const elemento = document.getElementById(id)
+        if (elemento) {
+            elemento.textContent = valores[id]
+        }
+    })
+}
+
+// Recarga las líneas sin duplicar tarjetas (botón Actualizar)
+function recargarLineas() {
+    if (recargandoLineas) {
+        return
+    }
+    recargandoLineas = true
+    loader.style.display = 'flex'
+    document.getElementById('buttonSection').innerHTML = ''
+    getLineas().finally(() => {
+        recargandoLineas = false
     })
 }
 
@@ -269,7 +343,7 @@ function AgregarNuevaLinea() {
     }
 
     let data = {
-        "linea": numLineas.toString(),
+        "linea": numeroNuevaLinea.toString(),
         "proceso": selectInputProcess.options[selectInputProcess.selectedIndex].textContent,
         "planta": planta
     }
@@ -314,7 +388,7 @@ function EliminarLinea(LineaDelete) {
         "planta": planta
     }
 
-     fetch("/AsignacionLinia/DeleteLineaCreada", {
+    fetch("/AsignacionLinia/DeleteLineaCreada", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json;charset=utf-8'
@@ -425,11 +499,10 @@ function obtenerDocEntrys(Code) {
 
     var selectOF = document.getElementById("selectOF")
     if (Code == 0) {
-        for (let x = selectOF.length; x > 0; x--) 
-        {
+        for (let x = selectOF.length; x > 0; x--) {
             selectOF.remove(x);
             loader.style.display = 'none'
-            
+
         }
 
         return
@@ -701,7 +774,7 @@ $(document).ready(function () {
     $('#inputNumLineaQuitar').on('input', function () {
         this.value = this.value.replace(/[^0-9]/g, '');
 
-        let numlineasVal = numLineas.response.length;
+        let numlineasVal = (numLineas && numLineas.response) ? numLineas.response.length : 0;
         // nos aseguramos de que el numero ingresado sea menor o igual a "numLineas"
         if (parseInt(this.value) > numlineasVal) {
             this.value = ""; // Si el valor supera numLineas, lo ajustamos a ""

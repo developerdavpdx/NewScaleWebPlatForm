@@ -1,0 +1,104 @@
+﻿@using System.Text;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Styles/Operador/Corrugado/Dashboard/DashboardOperadorCorrugado.css" rel="stylesheet" />
+
+<br />
+
+<div class="container titleHeader">
+    <h2 style="padding-top: 7px;"> ESTATUS DEL DÍA: TURNO <b id="labelTurno" style="font-weight: normal"></b> </h2>
+</div>
+
+@* TIUTLOS *@
+<div class="row d-flex align-items-center Titulos" style="padding-top: 10px; width: 99%; justify-content: center;">
+    <!-- Volumen -->
+    <div class="col-4">
+        <div class="card border-bottom-dark shadow py-2">
+            <div class="card-body">
+                <div class="row no-gutters">
+                    <div class="text-center">
+                        <img src="~/Images/icons/Scale.png" class="scaleIcon">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase text-truncate" style="white-space: nowrap;">
+                            Volúmen
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="volumenCorrugadosTitle">
+                            --
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sobrepeso -->
+    <div class="col-4">
+        <div class="card border-bottom-success shadow py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="text-center">
+                        <img src="~/Images/icons/peso.png" class="scaleIcon">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 text-truncate" style="white-space: nowrap;">
+                            Sobrepeso
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="SobrepesoCorrugadosTitle">
+                            --
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Eficiencia -->
+    <div class="col-4">
+        <div class="card border-bottom-success shadow py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="text-center">
+                        <img src="~/Images/icons/Eficiencia.png" class="scaleIcon">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 text-truncate" style="white-space: nowrap;">
+                            Eficiencia
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="EficienciaCorrugadosTitle">
+                            --
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* swiper*@
+<div class="swiper" id="swiperCorrugados">
+    <!-- Additional required wrapper -->
+    <div class="swiper-wrapper">
+        <!-- Slides -->
+        <div class="swiper-slide">
+            <figure class="highcharts-figure">
+                <div id="VolumenesCorrugados" style=" height: 600px; margin: 15px"></div>
+            </figure>
+        </div>
+        <div class="swiper-slide">
+            <figure class="highcharts-figure">
+                <div id="SobrepesoCorrugados" style=" height: 600px; margin: 15px"></div>
+            </figure>
+        </div>
+        <div class="swiper-slide">
+            <figure class="highcharts-figure">
+                <div id="EficienciaCorrugados" style=" height: 600px; margin: 15px"></div>
+            </figure>
+        </div>
+    </div>
+
+    <!-- If we need navigation buttons -->
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+
+    <!-- If we need scrollbar -->
+    <div class="swiper-scrollbar"></div>
+</div>
+
+<script src="~/Scripts/Operadores/Corrugado/Dashboard/DashboardCorrugados.js"></script>

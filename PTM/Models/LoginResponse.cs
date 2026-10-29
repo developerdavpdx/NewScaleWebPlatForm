@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 
@@ -17,5 +18,6 @@ namespace PTM.Models
     public class LoginResponse
     {
         public List<LoginContentResponse> data { get; set; }
+        public string WebApiURL = ConfigurationManager.AppSettings["WebApiURL"];
     }
 }

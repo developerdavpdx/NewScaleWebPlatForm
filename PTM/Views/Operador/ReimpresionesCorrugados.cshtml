@@ -1,0 +1,92 @@
+﻿@using System.Text;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Styles/OPERADOR/CORRUGADO/Reimpresion/ReimpresionOperadorCorrugado.css" rel="stylesheet" />
+
+<div>
+    <br />
+    <!-- Titulo del modulo (el style se carga desde el layout con titleHeader)-->
+    <div class="titleHeader">
+        <h3>REIMPRESION</h3>
+    </div>
+
+    <br />
+
+    <!-- Filtros de busqueda -->
+    <div class="d-flex justify-content-center">
+        <div class="containerFilters">
+            <div class="filters-and-icon">
+                <div id="FiltrosDiv">
+                    <div class="filter-group">
+                        <label>Fecha</label>
+                        <div class="fecha-range">
+                            <input class="form-control" type="date" id="fechaInicioInp" />
+                            <span class="fecha-al">al</span>
+                            <input class="form-control" type="date" id="fechaFinInp" />
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label>Turno</label>
+                        <select id="turnoInp" class="form-control">
+                            <option value=0>Seleccione..</option>
+                            <option value=1>1</option>
+                            <option value=2>2</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Folio</label>
+                        <input class="form-control" id="folioInp" />
+                    </div>
+                </div>
+                <div class="iconSearch" id="searchTickets">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class=" p-4" style="background-color: white">
+        <!-- Tabla de los tickets pasados -->
+        <table class="table table-striped" id="tableTickets">
+            <thead>
+                <tr>
+                    <th>Fólio</th>
+                    <th>Orden Fabricación</th>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- modal para previsualizar -->
+    <div class="modal fade" id="TicketModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" id="headerModalFlejes"
+                     style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                    <h4 class="modal-title" id="myModalLabel">Vista previa del ticket</h4>
+                </div>
+                <div class="modal-body" id="modal-ticket-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button id="BtnPrintModal" class="btn btn-info">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<!-- Script del modulo -->
+<script src="~/Scripts/Operadores/Corrugado/Reimpresion/ReimpresionCorrugados.js"></script>

@@ -1,328 +1,268 @@
-﻿@using System.Text;
-
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Dashboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link href="~/Styles/Inicio.css?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Styles/Inicio.css")).Ticks" rel="stylesheet" />
 
-<style>
-    .titleHeader {
-        text-align: center;
-        background-color: #075DA5;
-        color: white;
-        font-size: 22px;
-        height: 50px;
-        font-weight: bolder;
-    }
+<div class="inicio-page">
 
-    .carousel {
-        position: relative;
-        width: 100%;
-        height: 500px;
-        overflow: hidden;
-    }
-
-    .carousel-inner {
-        position: absolute;
-        display: flex;
-        width: 300%;
-        height: 100%;
-        transition: transform 0.5s ease-in-out;
-    }
-
-    .carousel-item {
-        flex: 1;
-        width: 100%;
-        height: 100%;
-    }
-
-    .highcharts-figure {
-        margin: 0;
-    }
-
-    .highcharts-container {
-        width: 100%;
-        height: 100%;
-    }
-
-    .swiper {
-        width: 100%;
-        height: 650px;
-    }
-
-    .scaleIcon {
-        font-size: 35px;
-    }
-</style>
-
-<br />
-@* Actualizar/visualizar Datos objetivos *@
-@* PPVC *@
-<div id="DivObjetivosPPVC" class="row d-flex justify-content-center align-items-center flex-nowrap mb-2">
-    <div class="col-auto" style="width:8%;">
-        <span style="font-size:1.5rem; font-weight:bold;">PPVC</span>
+    @* ================= ENCABEZADO ================= *@
+    <div class="inicio-header">
+        <div>
+            <h2 class="inicio-title">Dashboard</h2>
+            <p class="inicio-subtitle">Estatus del día por proceso, línea y turno.</p>
+        </div>
+        <div class="inicio-tools">
+            <span class="inicio-pill">
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                Turno <b id="labelTurno"></b>
+            </span>
+            <span class="inicio-pill inicio-pill-muted">
+                <i class="fa fa-industry" aria-hidden="true"></i>
+                <b id="labelPlanta">--</b>
+            </span>
+            <span class="inicio-pill inicio-pill-muted" id="labelActualizado">Sin actualizar</span>
+            <button type="button" class="inicio-btn inicio-btn-outline" id="btnRefreshDashboard" onclick="cargarDashboard()">
+                <i class="fa fa-rotate-right" aria-hidden="true"></i>
+                Actualizar
+            </button>
+        </div>
     </div>
-    <div class="col-auto">
-        <span style="font-size:1.5rem">Sobre Peso Objetivo</span>
-    </div>
-    <div class="col-auto">
-        <input id="SobrepesoObj" class="form-control FormControlTexts" style="width: 100px;" required />
-    </div>
-    <div class="col-auto">
-        <span style="font-size:1.5rem">Scrap Objetivo</span>
-    </div>
-    <div class="col-auto">
-        <input id="ScrapObj" class="form-control FormControlTexts" style="width: 100px;" required />
-    </div>
-    <div class="col-auto">
-        <button id="BtnUpdateObjPPVC" class="btn btn-info">Actualizar</button>
-    </div>
-</div>
 
-@* INY *@
-<div id="DivObjetivosINY" class="row d-flex justify-content-center align-items-center flex-nowrap mb-2">
-    <div class="col-auto" style="width:8%;">
-        <span style="font-size:1.5rem; font-weight:bold;">INY</span>
-    </div>
-    <div class="col-auto">
-        <span style="font-size:1.5rem">Sobre Peso Objetivo</span>
-    </div>
-    <div class="col-auto">
-        <input id="SobrepesoObjINY" class="form-control FormControlTexts" style="width: 100px;" required />
-    </div>
-    <div class="col-auto">
-        <span style="font-size:1.5rem">Scrap Objetivo</span>
-    </div>
-    <div class="col-auto">
-        <input id="ScrapObjINY" class="form-control FormControlTexts" style="width: 100px;" required />
-    </div>
-    <div class="col-auto">
-        <button id="BtnUpdateObjINY" class="btn btn-info">Actualizar</button>
-    </div>
-</div>
+    @* ================= OBJETIVOS ================= *@
+    <div class="inicio-card">
+        <div class="inicio-card-header">
+            <i class="fa fa-bullseye" aria-hidden="true"></i>
+            <h5>Objetivos</h5>
+            <span class="inicio-card-note">Sobrepeso y scrap meta por proceso</span>
+        </div>
+        <div class="inicio-card-body">
 
+            <div id="DivObjetivosPPVC" class="inicio-obj-row">
+                <span class="inicio-obj-proc">PPVC</span>
+                <label class="inicio-field">
+                    <span class="inicio-label">Sobrepeso objetivo</span>
+                    <span class="inicio-input-suffix">
+                        <input id="SobrepesoObj" class="inicio-input" inputmode="decimal" required />
+                        <span>%</span>
+                    </span>
+                </label>
+                <label class="inicio-field">
+                    <span class="inicio-label">Scrap objetivo</span>
+                    <span class="inicio-input-suffix">
+                        <input id="ScrapObj" class="inicio-input" inputmode="decimal" required />
+                        <span>%</span>
+                    </span>
+                </label>
+                <button type="button" id="BtnUpdateObjPPVC" class="inicio-btn inicio-btn-primary">
+                    <i class="fa fa-save" aria-hidden="true"></i>
+                    Guardar
+                </button>
+            </div>
 
-<div class="container titleHeader">
-    <h2 style="padding-top: 7px;"> ESTATUS DEL DÍA: TURNO <b id="labelTurno" style="font-weight: normal"></b> </h2>
-</div>
+            <div id="DivObjetivosINY" class="inicio-obj-row inicio-obj-row-sep">
+                <span class="inicio-obj-proc">INY</span>
+                <label class="inicio-field">
+                    <span class="inicio-label">Sobrepeso objetivo</span>
+                    <span class="inicio-input-suffix">
+                        <input id="SobrepesoObjINY" class="inicio-input" inputmode="decimal" required />
+                        <span>%</span>
+                    </span>
+                </label>
+                <label class="inicio-field">
+                    <span class="inicio-label">Scrap objetivo</span>
+                    <span class="inicio-input-suffix">
+                        <input id="ScrapObjINY" class="inicio-input" inputmode="decimal" required />
+                        <span>%</span>
+                    </span>
+                </label>
+                <button type="button" id="BtnUpdateObjINY" class="inicio-btn inicio-btn-primary">
+                    <i class="fa fa-save" aria-hidden="true"></i>
+                    Guardar
+                </button>
+            </div>
 
-<!--CONETEDOR PPVC-->
-<div id="TitlePpvc" class="container">
-    <h2 style="padding-top: 7px; font-weight: bold"> PPVC </h2>
-</div>
+        </div>
+    </div>
 
-@* TIUTLOS PPVC *@
-<div id="DivTitulosPPVC" class="row" style="padding-top: 10px; width: 99%;">
-    <!-- Volumen -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-bottom-dark shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2 text-center">
-                        <i class="fa fa-balance-scale scaleIcon" aria-hidden="true"></i>
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1" style="color: #3cb2fd">
-                            Volumen
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="volumenInfo">--</div>
+    @* ================= PPVC ================= *@
+    <section id="TitlePpvc" class="inicio-section">
+        <div class="inicio-section-head">
+            <h3><span class="inicio-dot"></span> PPVC</h3>
+            <span class="inicio-pill inicio-pill-muted"><b id="ppvcLineas">0</b> líneas</span>
+        </div>
+
+        <div id="DivTitulosPPVC" class="inicio-kpis">
+
+            <article class="inicio-kpi inicio-kpi-volumen">
+                <div class="inicio-kpi-icon"><i class="fa fa-balance-scale" aria-hidden="true"></i></div>
+                <div class="inicio-kpi-body">
+                    <span class="inicio-kpi-label">Volumen</span>
+                    <span class="inicio-kpi-value"><b id="volumenInfo">--</b><small>kg</small></span>
+                </div>
+            </article>
+
+            <article class="inicio-kpi inicio-kpi-sobrepeso">
+                <div class="inicio-kpi-icon"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></div>
+                <div class="inicio-kpi-body">
+                    <span class="inicio-kpi-label" id="lblSobrepesoPPVC">Sobrepeso</span>
+                    <span class="inicio-kpi-value"><b id="infoSobrePeso">--</b></span>
+                    <span class="inicio-badge is-hidden" id="badgeSobrePeso"></span>
+                </div>
+            </article>
+
+            <article class="inicio-kpi inicio-kpi-eficiencia">
+                <div class="inicio-kpi-icon"><i class="fa fa-check" aria-hidden="true"></i></div>
+                <div class="inicio-kpi-body">
+                    <span class="inicio-kpi-label">Eficiencia</span>
+                    <span class="inicio-kpi-value"><b id="eficicienciaInfo">--</b></span>
+                </div>
+            </article>
+
+            <article class="inicio-kpi inicio-kpi-scrap">
+                <div class="inicio-kpi-icon"><i class="fa fa-trash" aria-hidden="true"></i></div>
+                <div class="inicio-kpi-body">
+                    <span class="inicio-kpi-label">Scrap</span>
+                    <span class="inicio-kpi-value"><b id="scrapInfo">--</b></span>
+                    <span class="inicio-badge is-hidden" id="badgeScrap"></span>
+                </div>
+            </article>
+
+        </div>
+
+        <div class="inicio-empty is-hidden" id="emptyPPVC">
+            <i class="fa fa-info-circle" aria-hidden="true"></i>
+            <span>Sin producción registrada para el turno. Los indicadores se actualizarán en cuanto haya pesajes.</span>
+        </div>
+
+        <div class="inicio-chart-card">
+            <div class="inicio-chart-head">
+                <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                <h5>Gráficas por línea</h5>
+                <span class="inicio-chart-hint">Desliza o usa las flechas para cambiar de gráfica</span>
+            </div>
+
+            @* Carrusel: se conserva tal cual estaba (mismas flechas, scrollbar y autoplay) *@
+            <div class="swiper" id="swiperPPVC">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <figure class="highcharts-figure">
+                            <div id="VolumenesPPVC" class="inicio-chart"></div>
+                        </figure>
+                    </div>
+                    <div class="swiper-slide">
+                        <figure class="highcharts-figure">
+                            <div id="SobrepesoPPVC" class="inicio-chart"></div>
+                        </figure>
+                    </div>
+                    <div class="swiper-slide">
+                        <figure class="highcharts-figure">
+                            <div id="EficienciaPPVC" class="inicio-chart"></div>
+                        </figure>
+                    </div>
+                    <div class="swiper-slide">
+                        <figure class="highcharts-figure">
+                            <div id="ScrapPPVC" class="inicio-chart"></div>
+                        </figure>
                     </div>
                 </div>
+
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-scrollbar"></div>
             </div>
         </div>
-    </div>
-    <!-- Sobrepeso -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-bottom-danger shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2 text-center">
-                        <i class="fa fa-exclamation scaleIcon" aria-hidden="true"></i>
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1" id="SobrePeso">
-                            Sobrepeso
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="infoSobrePeso">--</div>
+    </section>
+
+    @* ================= INY ================= *@
+    <section id="TitleIny" class="inicio-section">
+        <div class="inicio-section-head">
+            <h3><span class="inicio-dot"></span> INY</h3>
+            <span class="inicio-pill inicio-pill-muted"><b id="inyLineas">0</b> líneas</span>
+        </div>
+
+        <div id="DivTitulosINY" class="inicio-kpis">
+
+            <article class="inicio-kpi inicio-kpi-volumen">
+                <div class="inicio-kpi-icon"><i class="fa fa-balance-scale" aria-hidden="true"></i></div>
+                <div class="inicio-kpi-body">
+                    <span class="inicio-kpi-label">Volumen</span>
+                    <span class="inicio-kpi-value"><b id="volumenInfoINY">--</b><small>kg</small></span>
+                </div>
+            </article>
+
+            <article class="inicio-kpi inicio-kpi-sobrepeso">
+                <div class="inicio-kpi-icon"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i></div>
+                <div class="inicio-kpi-body">
+                    <span class="inicio-kpi-label" id="lblSobrepesoINY">Sobrepeso</span>
+                    <span class="inicio-kpi-value"><b id="infoSobrePesoINY">--</b></span>
+                    <span class="inicio-badge is-hidden" id="badgeSobrePesoINY"></span>
+                </div>
+            </article>
+
+            <article class="inicio-kpi inicio-kpi-eficiencia">
+                <div class="inicio-kpi-icon"><i class="fa fa-check" aria-hidden="true"></i></div>
+                <div class="inicio-kpi-body">
+                    <span class="inicio-kpi-label">Eficiencia</span>
+                    <span class="inicio-kpi-value"><b id="eficicienciaInfoINY">--</b></span>
+                </div>
+            </article>
+
+            <article class="inicio-kpi inicio-kpi-scrap">
+                <div class="inicio-kpi-icon"><i class="fa fa-trash" aria-hidden="true"></i></div>
+                <div class="inicio-kpi-body">
+                    <span class="inicio-kpi-label">Scrap</span>
+                    <span class="inicio-kpi-value"><b id="scrapInfoINY">--</b></span>
+                    <span class="inicio-badge is-hidden" id="badgeScrapINY"></span>
+                </div>
+            </article>
+
+        </div>
+
+        <div class="inicio-empty is-hidden" id="emptyINY">
+            <i class="fa fa-info-circle" aria-hidden="true"></i>
+            <span>Sin producción registrada para el turno. Los indicadores se actualizarán en cuanto haya pesajes.</span>
+        </div>
+
+        <div class="inicio-chart-card">
+            <div class="inicio-chart-head">
+                <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                <h5>Gráficas por línea</h5>
+                <span class="inicio-chart-hint">Desliza o usa las flechas para cambiar de gráfica</span>
+            </div>
+
+            <div class="swiper" id="swiperINY">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <figure class="highcharts-figure">
+                            <div id="VolumenesINY" class="inicio-chart"></div>
+                        </figure>
+                    </div>
+                    <div class="swiper-slide">
+                        <figure class="highcharts-figure">
+                            <div id="SobrepesoIny" class="inicio-chart"></div>
+                        </figure>
+                    </div>
+                    <div class="swiper-slide">
+                        <figure class="highcharts-figure">
+                            <div id="EficienciaIny" class="inicio-chart"></div>
+                        </figure>
+                    </div>
+                    <div class="swiper-slide">
+                        <figure class="highcharts-figure">
+                            <div id="ScrapIny" class="inicio-chart"></div>
+                        </figure>
                     </div>
                 </div>
+
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-scrollbar"></div>
             </div>
         </div>
-    </div>
-    <!-- Eficiencia -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-bottom-success shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2 text-center">
-                        <i class="fa fa-check scaleIcon" aria-hidden="true"></i>
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Eficiencia
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="eficicienciaInfo">--</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Scrap -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-bottom-warning shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2 text-center">
-                        <i class="fa fa-trash scaleIcon" aria-hidden="true"></i>
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Scrap
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="scrapInfo">--</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    </section>
+
 </div>
 
-@* swiper PPVC*@
-<div class="swiper" id="swiperPPVC">
-    <!-- Additional required wrapper -->
-    <div class="swiper-wrapper">
-        <!-- Slides -->
-        <div class="swiper-slide">
-            <figure class="highcharts-figure">
-                <div id="VolumenesPPVC" style=" height: 600px; margin: 15px"></div>
-            </figure>
-        </div>
-        <div class="swiper-slide">
-            <figure class="highcharts-figure">
-                <div id="SobrepesoPPVC" style=" height: 600px; margin: 15px"></div>
-            </figure>
-        </div>
-        <div class="swiper-slide">
-            <figure class="highcharts-figure">
-                <div id="EficienciaPPVC" style=" height: 600px; margin: 15px"></div>
-            </figure>
-        </div>
-        <div class="swiper-slide">
-            <figure class="highcharts-figure">
-                <div id="ScrapPPVC" style=" height: 600px; margin: 15px"></div>
-            </figure>
-        </div>
-    </div>
-
-
-    <!-- If we need navigation buttons -->
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
-
-    <!-- If we need scrollbar -->
-    <div class="swiper-scrollbar"></div>
-</div>
-
-<!--CONETEDOR INY-->
-<div id="TitleIny" class="container">
-    <h2 style="padding-top: 7px; font-weight: bold"> INY </h2>
-</div>
-
-@* TIUTLOS INY *@
-<div id="DivTitulosINY" class="row" style="padding-top: 10px; width: 99%;">
-    <!-- Volumen -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-bottom-dark shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2 text-center">
-                        <i class="fa fa-balance-scale scaleIcon" aria-hidden="true"></i>
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1" style="color: #3cb2fd">
-                            Volumen
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="volumenInfoINY">--</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Sobrepeso -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-bottom-danger shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2 text-center">
-                        <i class="fa fa-exclamation scaleIcon" aria-hidden="true"></i>
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1" id="SobrePeso">
-                            Sobrepeso
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="infoSobrePesoINY">--%</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Eficiencia -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-bottom-success shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2 text-center">
-                        <i class="fa fa-check scaleIcon" aria-hidden="true"></i>
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Eficiencia
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="eficicienciaInfoINY">--</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Scrap -->
-    <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-bottom-warning shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2 text-center">
-                        <i class="fa fa-trash scaleIcon" aria-hidden="true"></i>
-                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Scrap
-                        </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="scrapInfoINY">--</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-@* swiper INY*@
-<div class="swiper" id="swiperINY">
-    <!-- Additional required wrapper -->
-    <div class="swiper-wrapper">
-        <!-- Slides -->
-        <div class="swiper-slide">
-            <figure class="highcharts-figure">
-                <div id="VolumenesINY" style=" height: 600px; margin: 15px"></div>
-            </figure>
-        </div>
-        <div class="swiper-slide">
-            <figure class="highcharts-figure">
-                <div id="SobrepesoIny" style=" height: 600px; margin: 15px"></div>
-            </figure>
-        </div>
-        <div class="swiper-slide">
-            <figure class="highcharts-figure">
-                <div id="EficienciaIny" style=" height: 600px; margin: 15px"></div>
-            </figure>
-        </div>
-        <div class="swiper-slide">
-            <figure class="highcharts-figure">
-                <div id="ScrapIny" style=" height: 600px; margin: 15px"></div>
-            </figure>
-        </div>
-    </div>
-
-
-    <!-- If we need navigation buttons -->
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-button-next"></div>
-
-    <!-- If we need scrollbar -->
-    <div class="swiper-scrollbar"></div>
-</div>
-
-<script src="~/Scripts/Inicio/InicioJS.js"></script>
+<script src="~/Scripts/Inicio/InicioJS.js?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Scripts/Inicio/InicioJS.js")).Ticks"></script>

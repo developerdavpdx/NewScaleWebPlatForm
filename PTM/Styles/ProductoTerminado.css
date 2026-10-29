@@ -1,218 +1,689 @@
-﻿body {
-    background-color: #8080801c
+﻿/* ══════════════════════════════════════════════════════════════
+   Producto Terminado
+   Todo el bloque está scopeado bajo .pt-page (incluidos los modales)
+   para no filtrar reglas globales al resto de vistas.
+   ══════════════════════════════════════════════════════════════ */
+
+/* Bloqueo de scroll del fondo mientras hay un modal abierto */
+body.modal-open {
+    overflow: hidden;
 }
 
-#finishproduct {
-    background-color: white; 
-    padding: 15px;
+.pt-page {
+    --pt-primary: #0058A1;
+    --pt-primary-dark: #004a8a;
+    --pt-primary-soft: #eef4fb;
+    --pt-border: #dbe3ec;
+    --pt-border-soft: #edf0f3;
+    --pt-text: #343a40;
+    --pt-muted: #6b7a8c;
+    --pt-radius: 12px;
+    --pt-green: #2e7d32;
+    --pt-green-soft: #eaf6e8;
+    --pt-red: #b4433f;
+    --pt-red-soft: #fdecec;
+    --pt-amber: #b26a00;
+
+    padding: 1.5rem 1.5rem 2rem;
+    font-family: 'Nunito', sans-serif;
 }
 
-.head-tr {   
-    text-align: center;
-}
-
-.pointer-line {
-    cursor: pointer;
-}
-
-.scrap-head {
-    color: #BE5F5F;
-}
-
-.efficiency-head {
-    color: #39a63b;
-}
-
-.scrap-info {
-    background-color: #be5f5f !important;
-    color: white;
-    box-shadow: inset 0 5px 8px -7px rgba(0,0,0,0.5) !important;
-}
-
-.eficiencia-info {
-    color: white;
-    background-color: #74C365 !important;
-    box-shadow: inset 0 5px 8px -7px rgba(0,0,0,0.5) !important;
-}
-
-.ttb {
-    color: #0094ff;
-    background-color: white;
-}
-
-.ttr {
-    background-color: #fcbebe;
-}
-
-.bg-r {
-    background-color: #075DA5;
-    color: white
-}
-
-.bg-rl {
-    background-color: #ffe0e0;
-    color: #BE5F5F;
-}
-
-.card-i {
-    background-color: white;
-    border-radius: 10px;
-}
-
-.t-b {
-    color: #51B5E1;
-}
-
-.info th{
-    text-align: center
-}
-
-#excelIcon {
-    color: #016E38
-}
-
-#pdfIcon {
-    color: #ad0b00
-}
-
-#cardIcon #printerIcon {
-    color: #51B5E1
-}
-
-thead {
-    box-shadow: 0 1px 9px 1px rgba(0, 0, 0, 0.28);
-}
-
-    thead tr {
-        box-shadow: 0 4px 2px -3px rgba(0,0,0,0.5);
-        vertical-align: middle
-    }
-
-th {
-    border: solid 1px #80808017;
-    text-align: center !important;
-    font-size: 15px;
-    text-align: center;
-    font-size: 15px;
-    background-color: white !important;
-    color: #075DA5;
-}
-
-.scrap-head {
-    color: #be5f5f
-}
-
-.efficiency-head {
-    color: #74C365
-}
-
-.titleHeader {
-    text-align: center;
-    background-color: #002D52;
-    color: white;
-    font-size: 22px;
-    height: 50px;
-    font-weight: bolder;
-}
-
-
-#tableProductoPVC tr:nth-child(odd) {
-    background-color: #d1fcff73 !important;
-}
-
-#tableProductoPVC tr {
-    box-shadow: inset 0 5px 8px -7px rgba(0,0,0,0.5) !important;
-}
-
-#tableProductoINY tr:nth-child(odd) {
-    background-color: #d1fcff73 !important;
-}
-
-#tableProductoINY tr {
-    box-shadow: inset 0 5px 8px -7px rgba(0,0,0,0.5) !important;
-}
-
-td {
-    font-size: 11px;
-}
-
-#lineaModal {
-    cursor: pointer;
-    font-size: 11px;
-}
-
-.modal-header {
-    color: white;
-    background-color: #595959;
-    font-size: 20px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    border-top-left-radius: 4px;
-}
-
-#tableHeadInfo {
-    text-align: center;
-    font-size: 15px;
-    box-shadow: 0 1px 9px 1px rgba(0, 0, 0, 0.28);
-    background-color: #075DA5;
-    color: white;
-}
-
-    #tableHeadInfo th {
-        border: solid 1px #ffffff47;
-    }
-
-#tableBodyDetalle tr {
-    box-shadow: inset 0 5px 8px -7px rgba(0,0,0,0.5);
-}
-
-#LineasNumeros {
-    color: #075DA5;
-    font-size: 2rem;
-    text-align: center;
-}
-
-.modaldetailsCss {
-    width: 50rem;
-    border-block-width: 7px;
-}
-
-
-/*Filtros*/
-
-.iconSearch {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px; /* Ajusta el tamaño del icono de búsqueda */
-    margin-top: 15px; /* Alinea verticalmente */
-    cursor: pointer;
-}
-
-.containerFilters {
-    background-color: white;
+/* ── Encabezado ─────────────────────────────────────────────── */
+.pt-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap; /* Esto es útil si no cabe en pantallas pequeñas */
+    flex-wrap: wrap;
+    gap: .85rem;
+    margin-bottom: 1.25rem;
 }
 
+.pt-title {
+    margin: 0;
+    padding-left: .85rem;
+    border-left: 5px solid var(--pt-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--pt-primary);
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    line-height: 1.2;
+}
 
-    .containerFilters label {
-        font-size: 16px; /* Reduce el tamaño de las etiquetas */
-        margin-bottom: 5px; /* Añade un margen pequeño debajo de las etiquetas */
+.pt-subtitle {
+    margin: .35rem 0 0 .95rem;
+    font-size: .85rem;
+    color: var(--pt-muted);
+}
+
+.pt-tools {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+/* ── Pills ──────────────────────────────────────────────────── */
+.pt-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .45rem .9rem;
+    border-radius: 999px;
+    background-color: var(--pt-primary-soft);
+    color: var(--pt-primary);
+    font-size: .8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+    .pt-pill b {
+        font-size: .95rem;
+        font-weight: 700;
     }
 
-    .containerFilters .form-control {
-        width: 100%; /* Asegura que los inputs ocupen todo el ancho disponible */
-        height: 30px; /* Ajusta la altura de los inputs */
-        font-size: 15px; /* Reduce el tamaño del texto dentro de los inputs */
+.pt-pill-danger {
+    background-color: var(--pt-red-soft);
+    color: var(--pt-red);
+}
+
+.pt-pill-green {
+    background-color: var(--pt-green-soft);
+    color: var(--pt-green);
+}
+
+/* ── Botones ────────────────────────────────────────────────── */
+.pt-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    height: 38px;
+    padding: .45rem 1.05rem;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: .82rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color .2s, color .2s, border-color .2s, box-shadow .2s;
+}
+
+    .pt-btn i {
+        font-size: .9rem;
     }
 
-/* Opcionalmente, ajusta los márgenes entre los campos */
-.containerFilters .col-5,
-.containerFilters .col-2,
-.containerFilters .col-1 {
-    padding-right: 5px; /* Añade un pequeño espacio entre los inputs */
+.pt-btn-primary {
+    background-color: var(--pt-primary);
+    border: 1px solid var(--pt-primary);
+    color: #fff;
+}
+
+    .pt-btn-primary:hover,
+    .pt-btn-primary:focus {
+        background-color: var(--pt-primary-dark);
+        border-color: var(--pt-primary-dark);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 88, 161, .3);
+    }
+
+.pt-btn-outline {
+    background-color: #fff;
+    border: 1px solid var(--pt-primary);
+    color: var(--pt-primary);
+}
+
+    .pt-btn-outline:hover,
+    .pt-btn-outline:focus {
+        background-color: var(--pt-primary);
+        color: #fff;
+    }
+
+.pt-btn-ghost {
+    background-color: #fff;
+    border: 1px solid var(--pt-border);
+    color: var(--pt-muted);
+}
+
+    .pt-btn-ghost:hover,
+    .pt-btn-ghost:focus {
+        background-color: #f3f6fa;
+        border-color: #c6d3e2;
+        color: var(--pt-text);
+    }
+
+.pt-btn-sm {
+    height: 32px;
+    padding: .3rem .8rem;
+    font-size: .78rem;
+}
+
+/* Colores de íconos de exportación */
+.pt-btn-excel i {
+    color: #016E38;
+}
+
+.pt-btn-pdf i {
+    color: #ad0b00;
+}
+
+.pt-btn-outline i {
+    color: inherit;
+}
+
+/* ── Tarjetas de sección ────────────────────────────────────── */
+.pt-card {
+    background: #fff;
+    border: none;
+    border-radius: var(--pt-radius);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .08);
+    margin-bottom: 1.1rem;
+    overflow: hidden;
+}
+
+.pt-card-header {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+    background-color: var(--pt-primary-soft);
+    border-bottom: 1px solid #dbe7f4;
+    padding: .8rem 1.35rem;
+}
+
+    .pt-card-header > i,
+    .pt-card-header > svg {
+        color: var(--pt-primary);
+        font-size: .95rem;
+    }
+
+    .pt-card-header h5 {
+        margin: 0;
+        font-size: .82rem;
+        font-weight: 700;
+        color: var(--pt-primary);
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+.pt-card-note {
+    margin-left: auto;
+    font-size: .78rem;
+    color: var(--pt-muted);
+}
+
+.pt-card-tools {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+.pt-card-body {
+    padding: 1.25rem 1.35rem 1.35rem;
+}
+
+/* ── Filtros ────────────────────────────────────────────────── */
+.pt-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+.pt-field {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+}
+
+.pt-field-date {
+    flex: 0 0 160px;
+}
+
+.pt-field-turno {
+    flex: 1 1 280px;
+    min-width: 240px;
+}
+
+.pt-field-code {
+    flex: 0 0 130px;
+}
+
+.pt-field-line {
+    flex: 0 0 110px;
+}
+
+.pt-filter-actions {
+    display: flex;
+    align-items: flex-end;
+    gap: .5rem;
+    margin-left: auto;
+}
+
+.pt-label {
+    margin: 0;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--pt-muted);
+}
+
+.pt-input,
+.pt-select {
+    width: 100%;
+    height: 38px;
+    padding: .4rem .75rem;
+    border: 1px solid var(--pt-border);
+    border-radius: 8px;
+    background-color: #fff;
+    color: var(--pt-text);
+    font-family: inherit;
+    font-size: .88rem;
+    font-weight: 500;
+    transition: border-color .2s, box-shadow .2s, background-color .2s;
+}
+
+    .pt-input:focus,
+    .pt-select:focus {
+        outline: none;
+        border-color: var(--pt-primary);
+        box-shadow: 0 0 0 .15rem rgba(0, 88, 161, .18);
+    }
+
+    .pt-input:disabled {
+        background-color: #f7fafd;
+        border-color: #e6eef7;
+        color: var(--pt-muted);
+        opacity: 1;
+        cursor: not-allowed;
+    }
+
+.pt-scrap-filters {
+    padding-bottom: 1.15rem;
+    margin-bottom: 1.15rem;
+    border-bottom: 1px solid var(--pt-border-soft);
+}
+
+/* ── KPIs ───────────────────────────────────────────────────── */
+.pt-kpis {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: .9rem;
+    margin-bottom: 1.1rem;
+}
+
+.pt-kpi {
+    background: #fff;
+    border: 1px solid #e6eef7;
+    border-left: 3px solid var(--pt-primary);
+    border-radius: 10px;
+    padding: .75rem .95rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .04);
+}
+
+.pt-kpi-label {
+    display: block;
+    margin-bottom: .25rem;
+    font-size: .66rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--pt-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pt-kpi-value {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--pt-text);
+    font-variant-numeric: tabular-nums;
+}
+
+.pt-kpi-green {
+    border-left-color: var(--pt-green);
+}
+
+    .pt-kpi-green .pt-kpi-value {
+        color: var(--pt-green);
+    }
+
+.pt-kpi-red {
+    border-left-color: var(--pt-red);
+}
+
+    .pt-kpi-red .pt-kpi-value {
+        color: var(--pt-red);
+    }
+
+.pt-kpi-amber {
+    border-left-color: #e0a800;
+}
+
+    .pt-kpi-amber .pt-kpi-value {
+        color: var(--pt-amber);
+    }
+
+/* ── Controles de DataTables ────────────────────────────────── */
+.pt-page .dataTables_wrapper .dataTables_length,
+.pt-page .dataTables_wrapper .dataTables_filter {
+    margin-bottom: 1rem;
+    font-size: .85rem;
+    color: #4a5568;
+}
+
+    .pt-page .dataTables_wrapper .dataTables_length select,
+    .pt-page .dataTables_wrapper .dataTables_filter input {
+        height: 36px;
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        padding: .25rem .6rem;
+        margin-left: .4rem;
+        outline: none;
+        background-color: #fff;
+        color: var(--pt-text);
+    }
+
+    .pt-page .dataTables_wrapper .dataTables_filter input {
+        min-width: 220px;
+    }
+
+        .pt-page .dataTables_wrapper .dataTables_length select:focus,
+        .pt-page .dataTables_wrapper .dataTables_filter input:focus {
+            border-color: var(--pt-primary);
+            box-shadow: 0 0 0 .15rem rgba(0, 88, 161, .2);
+        }
+
+.pt-page .dataTables_wrapper .dataTables_info,
+.pt-page .dataTables_wrapper .dataTables_paginate {
+    margin-top: .9rem;
+    font-size: .82rem;
+    color: #4a5568;
+}
+
+    .pt-page .dataTables_wrapper .dataTables_paginate .paginate_button {
+        border-radius: 6px !important;
+        border: 1px solid transparent;
+        padding: .35rem .7rem !important;
+        color: var(--pt-primary) !important;
+    }
+
+        .pt-page .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: var(--pt-primary-soft) !important;
+            border-color: var(--pt-primary-soft) !important;
+            color: var(--pt-primary) !important;
+        }
+
+        .pt-page .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+        .pt-page .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            background: var(--pt-primary) !important;
+            border-color: var(--pt-primary) !important;
+            color: #fff !important;
+            font-weight: 700;
+        }
+
+        .pt-page .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+        .pt-page .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+            color: #b6c2cf !important;
+            background: transparent !important;
+            border-color: transparent !important;
+            cursor: default;
+        }
+
+/* ── Tablas ─────────────────────────────────────────────────── */
+.pt-page .pt-table {
+    width: 100% !important;
+    margin-bottom: 0;
+    border-collapse: collapse !important;
+    border-spacing: 0;
+}
+
+    /* DataTables agrega borde inferior cuando la tabla no tiene footer */
+    .pt-page table.pt-table.no-footer {
+        border-bottom: none;
+    }
+
+    /* Neutraliza las reglas globales de Styles/Flje.css */
+    .pt-page .pt-table thead,
+    .pt-page .pt-table thead tr {
+        box-shadow: none !important;
+    }
+
+    .pt-page .pt-table thead th {
+        background-color: var(--pt-primary-soft) !important;
+        color: var(--pt-primary) !important;
+        font-size: .72rem;
+        font-weight: 700;
+        text-align: center;
+        vertical-align: middle;
+        padding: .7rem .45rem;
+        border: none;
+        border-bottom: 2px solid var(--pt-primary) !important;
+        box-shadow: none !important;
+        line-height: 1.25;
+    }
+
+    .pt-page .pt-table tbody td {
+        text-align: center;
+        vertical-align: middle;
+        padding: .55rem .45rem;
+        font-size: .84rem;
+        color: var(--pt-text);
+        border-top: 1px solid var(--pt-border-soft);
+        border-bottom: none;
+        box-shadow: none;
+    }
+
+    .pt-page .pt-table tbody tr:hover > * {
+        background-color: #f3f8fd;
+        box-shadow: none;
+    }
+
+    /* Columnas de semáforo: mismo código de color, en versión suave */
+    .pt-page .pt-table tbody td.scrap-info {
+        background-color: var(--pt-red-soft) !important;
+        color: var(--pt-red);
+        font-weight: 700;
+    }
+
+    .pt-page .pt-table tbody td.eficiencia-info {
+        background-color: var(--pt-green-soft) !important;
+        color: var(--pt-green);
+        font-weight: 700;
+    }
+
+    .pt-page .pt-table thead th.scrap-head {
+        color: var(--pt-red) !important;
+    }
+
+    /* Versión compacta para tablas dentro de modales */
+    .pt-page .pt-table-sm thead th {
+        padding: .6rem .4rem;
+        font-size: .68rem;
+    }
+
+    .pt-page .pt-table-sm tbody td {
+        padding: .5rem .4rem;
+        font-size: .8rem;
+    }
+
+/* ── Botón de detalle por línea (lo genera el JS) ───────────── */
+.pt-page .pt-row-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid var(--pt-border);
+    border-radius: 8px;
+    background-color: #fff;
+    color: var(--pt-primary);
+    font-size: .95rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color .2s, color .2s, border-color .2s, box-shadow .2s;
+}
+
+    .pt-page .pt-row-btn:hover,
+    .pt-page .pt-row-btn:focus {
+        background-color: var(--pt-primary);
+        border-color: var(--pt-primary);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 88, 161, .3);
+    }
+
+    .pt-page .pt-row-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 .15rem rgba(0, 88, 161, .25);
+    }
+
+/* ── Modal de detalle de línea ──────────────────────────────── */
+.pt-modal .modal-body-custom {
+    padding-bottom: 1.5rem;
+}
+
+.pt-modal .modal-title-custom {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    flex-wrap: wrap;
+}
+
+.pt-modal-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: .12rem .55rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .18);
+    border: 1px solid rgba(255, 255, 255, .3);
+    font-size: .8rem;
+    font-weight: 700;
+}
+
+    .pt-modal-badge:empty {
+        display: none;
+    }
+
+.pt-line-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .75rem;
+    margin-bottom: 1.25rem;
+}
+
+.pt-line-kpi {
+    background: #f7fafd;
+    border: 1px solid #e6eef7;
+    border-radius: 10px;
+    padding: .65rem .8rem;
+}
+
+    .pt-line-kpi span {
+        display: block;
+        margin-bottom: .2rem;
+        font-size: .64rem;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        color: var(--pt-muted);
+    }
+
+    .pt-line-kpi b {
+        display: block;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--pt-text);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .pt-line-kpi-green b {
+        color: var(--pt-green);
+    }
+
+    .pt-line-kpi-amber b {
+        color: var(--pt-amber);
+    }
+
+.pt-line-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    margin-bottom: .75rem;
+}
+
+    .pt-line-head h6 {
+        margin: 0;
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        color: var(--pt-primary);
+    }
+
+.pt-table-scroll {
+    overflow-x: auto;
+}
+
+    .pt-table-scroll #tableDetalladaLinea {
+        min-width: 820px;
+    }
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 1199px) {
+    .pt-kpis {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 991px) {
+    .pt-field-date,
+    .pt-field-code,
+    .pt-field-line {
+        flex: 1 1 140px;
+    }
+
+    .pt-filter-actions {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .pt-page {
+        padding: 1rem;
+    }
+
+    .pt-card-body {
+        padding: 1rem;
+    }
+
+    .pt-tools {
+        width: 100%;
+    }
+
+    .pt-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .pt-line-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .pt-page .dataTables_wrapper .dataTables_filter input {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .pt-card-note {
+        display: none;
+    }
 }

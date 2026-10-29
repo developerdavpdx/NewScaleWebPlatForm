@@ -6,6 +6,23 @@ let planta
 let filtroDefault = 0;
 let LineaTablaDetalle = 0;
 
+//Textos en español para todas las tablas de la vista
+const idiomaTabla = {
+    lengthMenu: 'Mostrar _MENU_ registros',
+    search: 'Buscar:',
+    info: 'Mostrando _START_ a _END_ de _TOTAL_ registros',
+    infoEmpty: 'Sin registros',
+    infoFiltered: '(filtrado de _MAX_ registros)',
+    zeroRecords: 'No se encontraron resultados',
+    emptyTable: 'Sin registros para mostrar',
+    paginate: {
+        first: 'Primero',
+        previous: 'Anterior',
+        next: 'Siguiente',
+        last: 'Último'
+    }
+}
+
 //titulos de los cortes
 //let tituloCorte1 = "PRIMERO | 1er ENTREGA | 04:30:01 - 11:00:00";
 //let tituloCorte2 = ""
@@ -22,22 +39,47 @@ $(document).ready(() => {
 
     tablePvcProdTerm = $('#finishProdTable').DataTable({
         ordering: false,
-        responsive: true
+        responsive: true,
+        pageLength: 10,
+        autoWidth: false,
+        language: idiomaTabla,
+        drawCallback: function () {
+            const contador = document.getElementById('ptCount')
+            if (contador) contador.textContent = this.api().rows().count()
+        }
     });
 
     tableDetailsLinea = $('#tableDetalladaLinea').DataTable({
         ordering: false,
-        responsive: true
+        responsive: true,
+        pageLength: 10,
+        autoWidth: false,
+        lengthChange: false,
+        searching: false,
+        language: idiomaTabla
     });
 
     tablePvcScrap = $('#finishScrapTable').DataTable({
         ordering: false,
-        responsive: true
+        responsive: true,
+        pageLength: 10,
+        autoWidth: false,
+        language: idiomaTabla,
+        drawCallback: function () {
+            const contador = document.getElementById('ptScrapCount')
+            if (contador) contador.textContent = this.api().rows().count()
+        }
     });
 
     tableCorreo = $("#tablaCorreo").DataTable({
         ordering: false,
-        responsive: true
+        responsive: true,
+        autoWidth: false,
+        paging: false,
+        info: false,
+        searching: false,
+        lengthChange: false,
+        language: idiomaTabla
     })
 
     let a = 1
@@ -119,7 +161,7 @@ function GetAllPtPvc() {
                 let scrapPtFormatted = parseFloat(productotermPvc[x].scrapPt).toFixed(2);
 
                 // Creamos el ícono/botón con el valor id_Linea
-                let BtnDetails = `<i class="bi bi-file-earmark-text fa-2x" value = "${productotermPvc[x].id_Linea}" value2 = "${productotermPvc[x].codigo}" id="btnDetails"></i>`;
+                let BtnDetails = `<button type="button" class="pt-row-btn" value="${productotermPvc[x].id_Linea}" value2="${productotermPvc[x].codigo}" title="Ver detalle por línea"><i class="bi bi-file-earmark-text"></i></button>`;
 
                 rows.push([
                     BtnDetails,
@@ -146,19 +188,19 @@ function GetAllPtPvc() {
                 //pesounitT += productotermPvc[x].pUnitEstandar;
             }
 
-            //calculamos el sobrepeso
-            sumSobrePeso = ((sumTotal / PesoEstandarNFormula) - 1);
+            //calculamos el sobrepeso (evitamos NaN cuando no hay registros)
+            sumSobrePeso = PesoEstandarNFormula > 0 ? ((sumTotal / PesoEstandarNFormula) - 1) : 0;
             //sumSobrePeso2 = SobrePesoForm(sumTotal, numtubosT, pesounitT);
 
             //calculamos la eficiencia
-            sumEficiencia = (sumTotal / kgPproducto);
+            sumEficiencia = kgPproducto > 0 ? (sumTotal / kgPproducto) : 0;
 
             $("#sumTotal").text(sumTotal.toFixed(3));
             $("#sumEstandar").text(sumEstandar.toFixed(3));
             $("#sumSobrePeso").text((sumSobrePeso * 100).toFixed(3));
             $("#sumEficiencia").text((sumEficiencia * 100).toFixed(3));
             $("#sumScrapPtKg").text(sumScrapPtKg.toFixed(3));
-            sumScrapPt = (sumScrapPtKg / (sumScrapPtKg + sumTotal));
+            sumScrapPt = (sumScrapPtKg + sumTotal) > 0 ? (sumScrapPtKg / (sumScrapPtKg + sumTotal)) : 0;
             $("#sumScrapPt").text((sumScrapPt * 100).toFixed(2)); //scrap en % [multiplicamos para forzar conversion a numero]
 
             tablePvcProdTerm.rows.add(rows).draw()           
@@ -791,7 +833,7 @@ function emailreporte() {
 
         doc.autoTable({
             head: [['Línea', 'Código', '# Atados/Tarima', '# Tubos', 'P. Neto Total', 'P. Unit. Estándar', 'P. Unit. Real', '% Sobrepeso', '% Eficiencia', 'KG ScrapPT', '% Scrap PT']],
-            body: tablePvcProdTerm.rows().data().toArray(),
+            body: tablePvcProdTerm.rows().data().toArray().map(row => row.slice(1)),
             // Establecer el color de fondo del encabezado
             headStyles: {
                 fillColor: [rgb1[0], rgb1[1], rgb1[2]]
@@ -928,6 +970,7 @@ function verLinea(linea, codigo) {
 
     //limpiamos la tabla de posibles datos pasados
     tableDetailsLinea.clear().draw()
+    loader.style.display = 'flex'
 
     document.getElementById("lineaModal").innerText = linea;
     document.getElementById("lineaTitleModal").innerText = linea;
@@ -1012,10 +1055,10 @@ function verLinea(linea, codigo) {
                 kgPproductoLinea = (dataInfo[x].kgPproducto * dataInfo[x].horasTrabajo);
             }
 
-            //calculamos el sobrepeso
-            SobrepesoLinea = ((PesoNUltimoLinea / PesoEstandarNFormulaLinea) - 1);
+            //calculamos el sobrepeso (evitamos NaN cuando no hay registros)
+            SobrepesoLinea = PesoEstandarNFormulaLinea > 0 ? ((PesoNUltimoLinea / PesoEstandarNFormulaLinea) - 1) : 0;
             //calculamos la eficiencia
-            EficienciaLinea = (PesoNUltimoLinea / kgPproductoLinea);
+            EficienciaLinea = kgPproductoLinea > 0 ? (PesoNUltimoLinea / kgPproductoLinea) : 0;
             //calculamos el scrap en %
             //ScrapPorcentLinea = (KGScraptLinea / (KGScraptLinea + PesoNTotalLinea));
 
@@ -1028,6 +1071,7 @@ function verLinea(linea, codigo) {
 
             //dibujamos los valores en la tabla
             tableDetailsLinea.rows.add(rows).draw()
+            loader.style.display = 'none'
         }
         else {
             iziToast.error({
@@ -1036,9 +1080,11 @@ function verLinea(linea, codigo) {
                 //imprimimos el mensaje que viene desde el controller
                 message: `<p>${jsonData.data}</p>`
             })
+            loader.style.display = 'none'
         }
     }).catch((error) => {
         console.log(error);
+        loader.style.display = 'none'
     })
 }
 
@@ -1063,20 +1109,22 @@ function filtradoHistorialPesadas() {
                 color: "blue",
             })
             loader.style.display = "none"
+            return
         }
         turnoValue = "1"
     }
-        if (corte >= "4" && corte <= "6") {
+    if (corte >= "4" && corte <= "6") {
         //verificar que los campos de fecha no esten vacios
-            if (document.getElementById("desdeFecha").value == '') {
-                iziToast.warning({
-                    position: "topRight",
-                    title: `Aviso`,
-                    message: `<p>Favor de ingresar la fecha que deseas de el reporte del día.</p>`,
-                    color: "blue",
-                })
-                loader.style.display = "none"
-            }
+        if (document.getElementById("desdeFecha").value == '') {
+            iziToast.warning({
+                position: "topRight",
+                title: `Aviso`,
+                message: `<p>Favor de ingresar la fecha que deseas de el reporte del día.</p>`,
+                color: "blue",
+            })
+            loader.style.display = "none"
+            return
+        }
         turnoValue = "2"
     }
     //si olvidan seleccionar las fechas y solo seleccionan 'reporte de todo el dia'
@@ -1153,7 +1201,7 @@ function filtradoHistorialPesadas() {
                 let scrapPtFormatted = parseFloat(productotermPvc[x].scrapPt).toFixed(2);
 
                 // Creamos el ícono/botón con el valor id_Linea
-                let BtnDetails = `<i class="bi bi-file-earmark-text fa-2x" value = "${productotermPvc[x].id_Linea}" value2 = "${productotermPvc[x].codigo}" id="btnDetails"></i>`;
+                let BtnDetails = `<button type="button" class="pt-row-btn" value="${productotermPvc[x].id_Linea}" value2="${productotermPvc[x].codigo}" title="Ver detalle por línea"><i class="bi bi-file-earmark-text"></i></button>`;
 
                 rows.push([
                     BtnDetails,
@@ -1180,17 +1228,17 @@ function filtradoHistorialPesadas() {
                 //pesounitT += productotermPvc[x].pUnitEstandar;
             }
 
-            sumSobrePeso = ((sumTotal / PesoEstandarNFormula) - 1);  //<<--- Calculo de % Sobrepeso total
+            sumSobrePeso = PesoEstandarNFormula > 0 ? ((sumTotal / PesoEstandarNFormula) - 1) : 0;  //<<--- Calculo de % Sobrepeso total
             //sumSobrePeso2 = SobrePesoFormTotal(sumTotal, PesoEstandarNFormula);
 
-            sumEficiencia = (sumTotal / kgPproducto);       //<--- Calculo de la Eficiencia Total
+            sumEficiencia = kgPproducto > 0 ? (sumTotal / kgPproducto) : 0;       //<--- Calculo de la Eficiencia Total
 
             $("#sumTotal").text(sumTotal.toFixed(3));
             $("#sumEstandar").text(sumEstandar.toFixed(3));
             $("#sumSobrePeso").text((sumSobrePeso*100).toFixed(3));
             $("#sumEficiencia").text((sumEficiencia * 100).toFixed(3));
             $("#sumScrapPtKg").text(sumScrapPtKg.toFixed(3));
-            sumScrapPt = (sumScrapPtKg / (sumScrapPtKg + sumTotal));
+            sumScrapPt = (sumScrapPtKg + sumTotal) > 0 ? (sumScrapPtKg / (sumScrapPtKg + sumTotal)) : 0;
             $("#sumScrapPt").text(((sumScrapPt * 100)).toFixed(2));//scrap en % [multiplicamos]
 
             //dibura la tabla
@@ -1335,8 +1383,8 @@ function VerifyCorte(element) {
 }
 
 //Accion del btn al seleccionar una linea para su desglose
-$(document).on("click", "#btnDetails", function () {
-    // Obtener el valor del icono que fue clickeado
+$(document).on("click", ".pt-row-btn", function () {
+    // Obtener el valor del boton que fue clickeado
     let idLinea = $(this).attr("value");
     let codigo = $(this).attr("value2");
 
@@ -1345,22 +1393,27 @@ $(document).on("click", "#btnDetails", function () {
     //asignamos el numero de linea por si se descarga el excel
     LineaTablaDetalle = idLinea;
 
-    // Mostrar el modal
+    // Mostrar el modal y bloquear el scroll del fondo
     $('#detalleLineModal').addClass('show');
     $('#detalleLineModal').css('display', 'block');
+    $('body').addClass('modal-open');
 });
 
-//cerramos el modal details de linea
-$(document).on("click", "#cerrarModalDetails", function () {
+function cerrarModalDetalleLinea() {
     $('#detalleLineModal').removeClass('show');
     $('#detalleLineModal').css('display', 'none');
+    $('body').removeClass('modal-open');
+}
+
+//cerramos el modal details de linea
+$(document).on("click", "#cerrarModalDetails, .pt-close-detalle", function () {
+    cerrarModalDetalleLinea();
 });
 
 //cerrar el modal 'details de linea' cuando se haga click fuera de él
 $(document).on("click", function (e) {
     // Verifica si el clic fue fuera del modal y no sobre el modal o su contenido
     if ($(e.target).hasClass('modal') && $(e.target).attr('id') == 'detalleLineModal') {
-        $('#detalleLineModal').removeClass('show');
-        $('#detalleLineModal').css('display', 'none');
+        cerrarModalDetalleLinea();
     }
 });

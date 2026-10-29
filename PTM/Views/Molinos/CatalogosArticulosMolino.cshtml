@@ -1,0 +1,360 @@
+﻿@using System.Text;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Styles/MOLINOS/CatalogosArticulos/CatalogosArticulosMolino.css" rel="stylesheet" />
+
+<br />
+
+<!-- Content -->
+<div class="container-fluid">
+    <div class="contentContainer">
+        <div class="containerTitle p-4">
+            <div class="totalDesglose">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>DATOS MAESTROS DEL ARTÍCULO</h2>
+                    </div>
+                    <div class="card-body">
+                        <!-- Contenedor Flex para los botones y el campo de búsqueda -->
+                        <div class="d-flex mb-3">
+                            <!-- Botones -->
+                            <div>
+                                <button id="AddCodeArticulosMolinos" class="btn btn-success">Agregar</button>
+                                <button id="RemoveCodeArticulosMolinos" class="btn btn-danger">Eliminar</button>
+                                <button class="btn btn-info" id="BtnModalFamilias">Familias</button>
+                                <button class="btn btn-info" id="BtnModalTipoMaterial">Tipo de matertial</button>
+                            </div>
+                            <!-- Contenedor para el Search de DataTables -->
+                            <div id="datatable-search-container" style="text-align: right;">
+                            </div>
+                        </div>
+
+                        <!-- Tabla -->
+                        <table class="text-center table-striped" id="TablaArticulos" style="width: 100%">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Descripción</th>
+                                    <th>Proceso</th>
+                                    <th>Tipo</th>
+                                    <th>Familia</th>
+                                    <th>Fecha de creación</th>
+                                    <th>Editar</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center totalBodyScrap" id="TableArticulosLine">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Agregar Codigo -->
+<div class="modal fade" id="agregarCodigoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title" id="myModalLabel">Agregar Código</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <label>Código</label>
+                        <input id="inputCode" class="form-control" />
+                    </div>
+                    <div class="col-6">
+                        <label>Proceso</label>
+                        <select id="selectInputProcessCodeMolino" class="form-control" style="width: 92%;">
+                            <option value="0" selected>Seleccionar...</option>
+                            <option value="Entrada">Entrada</option>
+                            <option value="Salida">Salida</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label>Tipo</label>
+                        <select id="inputTipo" class="form-control" style="width: 92%;">
+                            <option value="0" selected>Seleccionar...</option>
+                            @*<option value="viruta">viruta</option>
+                            <option value="pedacera">pedacera</option>
+                            <option value="tuberia">tuberia</option>
+                            <option value="probetas">probetas</option>*@
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label>Familia</label>
+                        <select id="inputFamilia" class="form-control" style="width: 92%;">
+                            <option value="0" selected>Seleccionar...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div style="width: 96%">
+                        <label class="text-nowrap">Descripción</label>
+                        <textarea id="inputDescripcionCode" class="form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button id="AgregarCodigoNuevo" type="button" class="btn btn-success">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Codigo -->
+<div class="modal fade" id="EliminarCodigoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" style="padding-left: 7rem">
+        <div class="modal-content" style="width: 20rem">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title" id="myModalLabel">Eliminar Código</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12">
+                        <label>Código</label>
+                        <input id="inputCodigoRemovedatamaster" class="form-control" style="width: 90%" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button id="EliminarCodebtnfinish" type="button" class="btn btn-success">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Actualizar Articulo -->
+<div class="modal fade" id="UpdateCodigoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title" id="myModalLabel">Actualizar Código</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Código</label>
+                            <input id="inputCodeUpdate" class="form-control" disabled />
+                        </div>
+                        <div class="col-6">
+                            <label>Proceso</label>
+                            <select id="selectInputProcessCodeMolinoUpdate" class="form-control" style="width: 92%;">
+                                <option value="0" selected>Seleccionar...</option>
+                                <option value="Entrada">Entrada</option>
+                                <option value="Salida">Salida</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Tipo</label>
+                            <select id="inputTipoUpdate" class="form-control" style="width: 92%;">
+                                <option value="0" selected>Seleccionar...</option>
+                                @*<option value="viruta">viruta</option>
+                                <option value="pedacera">pedacera</option>
+                                <option value="tuberia">tuberia</option>
+                                <option value="probetas">probetas</option>*@
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label>Familia</label>
+                            <select id="inputFamiliaUpdate" class="form-control" style="width: 92%;">
+                                <option value="0" selected>Seleccionar...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div style="width: 96%">
+                            <label class="text-nowrap">Descripción</label>
+                            <textarea id="inputDescripcionCodeUpdate" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button id="UpdateCodebtnfinish" type="button" class="btn btn-success">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Familias -->
+<div class="modal fade" id="FamiliasArticulosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title">Familias existentes</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row d-flex card-body" style="margin-top: 1rem; margin-right: 0rem">
+                    <table id="TablaFamilias">
+                        <thead>
+                            <tr>
+                                <th>Familia</th>
+                                <th>Editar</th>
+                                <th>Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center totalBodyScrap" id="TableFamiliasRows">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button type="button" id="AgregegarFamiliaModal" class="btn btn-success">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar Familia -->
+<div class="modal fade" id="AddFamiliaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title">Agregar Familia</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div>
+                        <label>Familia:</label>
+                        <input id="inputFamiliaAdd" class="form-control" style="width: 94%" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button type="button" id="AgregegarFamiliaBtnFinal" class="btn btn-success">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Familia -->
+<div class="modal fade" id="UpdateFamiliaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title">Editar Familia</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div>
+                        <label>Familia:</label>
+                        <input id="inputFamiliaEdit" class="form-control" style="width: 94%" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button type="button" id="ActualizarFamiliaBtn" class="btn btn-success">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Tipos de material -->
+<div class="modal fade" id="TiposMaterialArticulosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title">Tipos de material</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row d-flex card-body" style="margin-top: 1rem; margin-right: 0rem">
+                    <table id="TablaTiposMaterial">
+                        <thead>
+                            <tr>
+                                <th>Tipo</th>
+                                <th>Proceso</th>
+                                <th>Editar</th>
+                                <th>Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center totalBodyScrap" id="TableTiposMaterialRows">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button type="button" id="AgregegarTiposMaterialModal" class="btn btn-success">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar Tipo de Material -->
+<div class="modal fade" id="AddTiposMaterialModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title">Agregar Tipos de material</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <label>Tipo de material:</label>
+                        <input id="inputTiposMaterialAdd" class="form-control"/>
+                    </div>
+                    <div class="col-6">
+                        <label>Proceso:</label>
+                        <select id="selectInputProcessTipoMAterialAdd" class="form-control" style="width: 94%;">
+                            <option value="Salida" selected>Salida</option>
+                            <option value="Entrada">Entrada</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button type="button" id="AgregegarTiposMaterialBtnFinal" class="btn btn-success">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Tipo de Materia -->
+<div class="modal fade" id="UpdateTiposMateriaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-lg">
+            <div class="modal-header" style="color: white; background-color: #595959; font-size: 20px; height: 40px; display: flex; align-items: center; border-top-left-radius: 4px;">
+                <h4 class="modal-title">Editar Tipo de materia</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <label>Tipo de materia:</label>
+                        <input id="inputTiposMateriaEdit" class="form-control"/>
+                    </div>
+                    <div class="col-6">
+                        <label>Proceso:</label>
+                        <select id="selectInputProcessTipoMAterialUpdate" class="form-control" style="width: 92%;">
+                            <option value="Salida" selected>Salida</option>
+                            <option value="Entrada">Entrada</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger cerrarModal" data-dismiss="modal">Cerrar</button>
+                <button type="button" id="ActualizarTiposMateriaBtn" class="btn btn-success">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/MOLINOS/CatalogosArticuloMolino.js?v=@System.IO.File.GetLastWriteTime(Server.MapPath("~/Scripts/MOLINOS/CatalogosArticuloMolino.js")).Ticks"></script>
