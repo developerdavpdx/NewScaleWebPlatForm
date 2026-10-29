@@ -825,7 +825,8 @@ Notas:
     1e0e0a7  feat(ui): infraestructura compartida del rediseno
     068e59a  feat(ui): rediseno de vistas y modulos
              Molinos/Corrugado/Operador
-    (siguiente) fix: correcciones tecnicas y documentacion
+    22f1682  fix: correcciones tecnicas, iconos FA 4.7 y
+             documentacion
 - main NO se toca hasta que el usuario apruebe la revision visual.
   Para volver: git checkout main
 - Se commitearon las vistas de las secciones 4 y 5, las carpetas
