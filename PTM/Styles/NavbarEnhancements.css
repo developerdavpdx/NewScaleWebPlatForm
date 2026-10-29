@@ -1,0 +1,142 @@
+/**
+ * Mejoras para el Navbar Superior
+ * Soluciona problemas de contraste y spacing
+ */
+
+/* Estilos para la barra superior (topbar) */
+.topbar {
+    background-color: #0058a1 !important;
+    min-height: 70px;
+    padding: 0.5rem 1rem;
+    /* Agregamos sombra para mejor separación visual */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Mejora del texto en el navbar */
+.topbar .navbar-nav {
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Estilos para los enlaces del navbar */
+.topbar .nav-link {
+    color: #ffffff !important;
+    font-weight: 500;
+    padding: 0.75rem 1rem !important;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    letter-spacing: 0.3px;
+    /* Mejor espaciado de líneas */ line-height: 1.5;
+}
+
+/* Hover effect para mejor UX */
+.topbar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #f8f9fa !important;
+    transform: translateY(-2px);
+}
+
+/* Activar link */
+.topbar .nav-link.active {
+    background-color: rgba(70, 160, 230, 0.3);
+    border-bottom: 3px solid #46a0e6;
+}
+
+/* Iconos en el navbar - mejorar tamaño y contraste */
+.topbar .fa,
+.topbar i {
+    font-size: 1.1rem;
+    margin-right: 0.5rem;
+    color: #ffffff;
+}
+
+/* Separadores entre elementos */
+.topbar .nav-item {
+    margin: 0 0.25rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Dropdown menus en el navbar */
+.topbar .dropdown-menu {
+    background-color: #0a3d6e;
+    border: none;
+    border-radius: 6px;
+}
+
+.topbar .dropdown-menu .dropdown-item {
+    color: #ffffff;
+    padding: 0.75rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.topbar .dropdown-menu .dropdown-item:hover {
+    background-color: rgba(70, 160, 230, 0.4);
+    color: #f8f9fa;
+    padding-left: 1.25rem;
+}
+
+/* Nombre de usuario / label en navbar */
+#labelName,
+.topbar .navbar-text {
+    color: #ffffff !important;
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+/* Usuario específico */
+#user-profile-dropdown {
+    color: #ffffff;
+    padding: 0.5rem 0.75rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+#user-profile-dropdown:hover {
+    background-color: rgba(70, 160, 230, 0.3);
+}
+
+/* Asegurar que el contenido dentro del navbar sea legible */
+.topbar * {
+    text-shadow: none;
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 768px) {
+    .topbar {
+        min-height: auto;
+        padding: 0.5rem;
+    }
+
+    .topbar .nav-link {
+        font-size: 0.95rem;
+        padding: 0.5rem 0.8rem !important;
+    }
+
+    .topbar .fa,
+    .topbar i {
+        font-size: 1rem;
+        margin-right: 0.3rem;
+    }
+
+    #labelName {
+        font-size: 0.95rem;
+    }
+}
+
+/* Extra: Mejorar visibilidad de iconos en el navbar */
+.topbar .badge {
+    background-color: #ff6b6b;
+    padding: 0.25em 0.6em;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
+}
+
+/* Divisores visuales entre secciones del navbar */
+.nav-divider {
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 0.5rem 0;
+    height: 30px;
+}

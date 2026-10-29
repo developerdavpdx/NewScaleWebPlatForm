@@ -1,0 +1,407 @@
+/* ==================================================================
+   Modal global "Correos" (#correoTXT)
+   Vive en Views/Shared/_Layout.cshtml, por eso se carga en el layout.
+   Todo esta scopeado bajo #correoTXT para no tocar los demas modales.
+   ================================================================== */
+
+/* El layout usa Bootstrap 4 JS con CSS 5, que no define .modal-open:
+   sin esto el fondo sigue scrolleando con el modal abierto. */
+body.modal-open {
+    overflow: hidden;
+}
+
+#correoTXT {
+    --cm-primary: #0058A1;
+    --cm-primary-dark: #004a8a;
+    --cm-primary-soft: #eef4fb;
+    --cm-border: #dbe3ec;
+    --cm-border-soft: #edf0f3;
+    --cm-text: #22303f;
+    --cm-muted: #6b7a8c;
+    --cm-red: #b4433f;
+    --cm-red-soft: #fdecec;
+}
+
+#correoTXT .modal-dialog {
+    max-width: 640px;
+}
+
+#correoTXT .modal-content {
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 18px 45px rgba(15, 35, 60, .28);
+    font-family: 'Nunito', sans-serif;
+    color: var(--cm-text);
+    overflow: hidden;
+}
+
+/* ── Encabezado ─────────────────────────────────────────────── */
+#correoTXT .cm-header {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding: 1rem 1.35rem;
+    background: linear-gradient(135deg, var(--cm-primary) 0%, #0072c6 100%);
+    color: #fff;
+}
+
+#correoTXT .cm-header-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, .18);
+    font-size: 1rem;
+}
+
+#correoTXT .cm-title {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+    line-height: 1.25;
+}
+
+#correoTXT .cm-subtitle {
+    font-size: .76rem;
+    font-weight: 500;
+    opacity: .85;
+}
+
+#correoTXT .cm-close {
+    margin-left: auto;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(255, 255, 255, .35);
+    border-radius: 8px;
+    background-color: transparent;
+    color: #fff;
+    font-size: .85rem;
+    cursor: pointer;
+    transition: background-color .15s, border-color .15s;
+}
+
+    #correoTXT .cm-close:hover {
+        background-color: rgba(255, 255, 255, .18);
+        border-color: rgba(255, 255, 255, .6);
+    }
+
+/* ── Body ───────────────────────────────────────────────────── */
+#correoTXT .cm-body {
+    padding: 1.15rem 1.35rem 1.25rem;
+}
+
+/* ── Tabs ───────────────────────────────────────────────────── */
+#correoTXT .cm-tabs {
+    display: flex;
+    gap: .35rem;
+    padding: .3rem;
+    margin-bottom: 1.1rem;
+    border: none;
+    border-radius: 10px;
+    background-color: #f3f6fa;
+}
+
+    #correoTXT .cm-tabs .nav-item {
+        flex: 1 1 0;
+        margin: 0;
+        text-align: center;
+    }
+
+    /* .layOut.css fuerza .nav-link { color: #fff !important } */
+    #correoTXT .cm-tabs .nav-link {
+        display: block;
+        padding: .55rem .75rem;
+        border: none !important;
+        border-radius: 8px !important;
+        background-color: transparent !important;
+        color: var(--cm-muted) !important;
+        font-size: .84rem;
+        font-weight: 700;
+        letter-spacing: .02em;
+        transition: background-color .15s, color .15s, box-shadow .15s;
+    }
+
+        #correoTXT .cm-tabs .nav-link:hover {
+            color: var(--cm-primary) !important;
+        }
+
+        #correoTXT .cm-tabs .nav-link.active {
+            background-color: #fff !important;
+            color: var(--cm-primary) !important;
+            box-shadow: 0 1px 4px rgba(15, 35, 60, .12);
+        }
+
+    #correoTXT .cm-tabs .nav-link i {
+        margin-right: .35rem;
+        font-size: .8rem;
+    }
+
+/* ── Panel de alta ──────────────────────────────────────────── */
+#correoTXT .cm-label {
+    display: block;
+    margin-bottom: .35rem;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--cm-muted);
+}
+
+#correoTXT .cm-hint {
+    margin: .5rem 0 0;
+    font-size: .78rem;
+    color: var(--cm-muted);
+}
+
+#correoTXT .cm-input {
+    height: 42px;
+    border: 1px solid var(--cm-border);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: .9rem;
+    color: var(--cm-text);
+    box-shadow: none;
+}
+
+    #correoTXT .cm-input:focus {
+        border-color: var(--cm-primary);
+        box-shadow: 0 0 0 .15rem rgba(0, 88, 161, .18);
+    }
+
+/* ── Pie de cada panel ──────────────────────────────────────── */
+#correoTXT .cm-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: .6rem;
+    margin-top: 1.15rem;
+}
+
+#correoTXT .cm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .4rem;
+    height: 38px;
+    padding: .45rem 1.1rem;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: .82rem;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color .2s, border-color .2s, box-shadow .2s, color .2s;
+}
+
+    #correoTXT .cm-btn:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 .15rem rgba(0, 88, 161, .25);
+    }
+
+#correoTXT .cm-btn-primary {
+    background-color: var(--cm-primary);
+    border-color: var(--cm-primary);
+    color: #fff;
+}
+
+    #correoTXT .cm-btn-primary:hover {
+        background-color: var(--cm-primary-dark);
+        border-color: var(--cm-primary-dark);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 88, 161, .3);
+    }
+
+#correoTXT .cm-btn-ghost {
+    background-color: #fff;
+    border-color: var(--cm-border);
+    color: var(--cm-muted);
+}
+
+    #correoTXT .cm-btn-ghost:hover {
+        background-color: #f3f6fa;
+        color: var(--cm-text);
+    }
+
+/* ── Lista de correos ───────────────────────────────────────── */
+#correoTXT .cm-toolbar {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-wrap: wrap;
+    margin-bottom: .85rem;
+}
+
+#correoTXT .cm-count {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .35rem .8rem;
+    border-radius: 999px;
+    background-color: var(--cm-primary-soft);
+    color: var(--cm-primary);
+    font-size: .76rem;
+    font-weight: 600;
+}
+
+    #correoTXT .cm-count b {
+        font-size: .88rem;
+    }
+
+#correoTXT .cm-table-wrap {
+    max-height: 320px;
+    overflow: auto;
+    border: 1px solid var(--cm-border-soft);
+    border-radius: 10px;
+}
+
+#correoTXT .cm-table {
+    width: 100% !important;
+    margin-bottom: 0 !important;
+    border-collapse: collapse;
+}
+
+    #correoTXT .cm-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        padding: .7rem .8rem;
+        background-color: var(--cm-primary-soft) !important;
+        color: var(--cm-primary) !important;
+        font-size: .76rem;
+        font-weight: 700;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        border: none !important;
+        border-bottom: 2px solid var(--cm-primary) !important;
+        box-shadow: none !important;
+    }
+
+    #correoTXT .cm-table tbody td {
+        padding: .55rem .8rem;
+        font-size: .86rem;
+        color: var(--cm-text);
+        text-align: center;
+        vertical-align: middle;
+        border-top: 1px solid var(--cm-border-soft) !important;
+        box-shadow: none !important;
+    }
+
+    #correoTXT .cm-table tbody td:first-child {
+        text-align: left;
+        word-break: break-all;
+    }
+
+    #correoTXT .cm-table tbody tr:hover > * {
+        background-color: #f3f8fd;
+    }
+
+    #correoTXT .cm-table tbody td.dataTables_empty {
+        padding: 1.4rem .8rem;
+        color: var(--cm-muted);
+        font-style: italic;
+        text-align: center;
+    }
+
+/* Boton de eliminar correo */
+#correoTXT .btn-delete-mail {
+    display: inline-grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--cm-border);
+    border-radius: 7px;
+    background-color: #fff;
+    color: var(--cm-muted);
+    font-size: .8rem;
+    cursor: pointer;
+    transition: background-color .15s, color .15s, border-color .15s;
+}
+
+    #correoTXT .btn-delete-mail:hover {
+        background-color: var(--cm-red-soft);
+        border-color: var(--cm-red-soft);
+        color: var(--cm-red);
+    }
+
+/* DataTables (largo, filtro e info dentro del modal) */
+#correoTXT .dataTables_wrapper .dataTables_length,
+#correoTXT .dataTables_wrapper .dataTables_filter {
+    margin-bottom: .7rem;
+    font-size: .8rem;
+    color: #4a5568;
+}
+
+    #correoTXT .dataTables_wrapper .dataTables_length select,
+    #correoTXT .dataTables_wrapper .dataTables_filter input {
+        height: 34px;
+        border: 1px solid var(--cm-border);
+        border-radius: 6px;
+        padding: .2rem .5rem;
+        font-size: .82rem;
+    }
+
+#correoTXT .dataTables_wrapper .dataTables_filter input {
+    min-width: 170px;
+}
+
+#correoTXT .dataTables_wrapper .dataTables_info,
+#correoTXT .dataTables_wrapper .dataTables_paginate {
+    margin-top: .75rem;
+    font-size: .8rem;
+    color: #4a5568;
+}
+
+    #correoTXT .dataTables_wrapper .dataTables_paginate .paginate_button {
+        border-radius: 6px !important;
+        border: 1px solid transparent;
+        padding: .3rem .6rem !important;
+        color: var(--cm-primary) !important;
+    }
+
+        #correoTXT .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: var(--cm-primary-soft) !important;
+            border-color: var(--cm-primary-soft) !important;
+            color: var(--cm-primary) !important;
+        }
+
+        #correoTXT .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+        #correoTXT .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            background: var(--cm-primary) !important;
+            border-color: var(--cm-primary) !important;
+            color: #fff !important;
+            font-weight: 700;
+        }
+
+        #correoTXT .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+        #correoTXT .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover {
+            color: #b6c2cf !important;
+            background: transparent !important;
+            border-color: transparent !important;
+            cursor: default;
+        }
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 575px) {
+    #correoTXT .cm-body,
+    #correoTXT .cm-header {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    #correoTXT .cm-footer .cm-btn {
+        flex: 1 1 0;
+    }
+
+    #correoTXT .dataTables_wrapper .dataTables_filter input {
+        min-width: 0;
+        width: 100%;
+        margin-left: 0;
+        margin-top: .3rem;
+    }
+}
